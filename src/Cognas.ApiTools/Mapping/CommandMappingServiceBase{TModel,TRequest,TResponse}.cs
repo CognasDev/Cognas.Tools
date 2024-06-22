@@ -8,7 +8,7 @@ namespace Cognas.ApiTools.Mapping;
 /// <typeparam name="TModel"></typeparam>
 /// <typeparam name="TRequest"></typeparam>
 /// <typeparam name="TResponse"></typeparam>
-public abstract class MappingServiceBase<TModel, TRequest, TResponse> : ICommandMappingService<TModel, TRequest, TResponse>
+public abstract class CommandMappingServiceBase<TModel, TRequest, TResponse> : QueryMappingServiceBase<TModel, TResponse>, ICommandMappingService<TModel, TRequest, TResponse>
     where TModel : class
     where TRequest : class
     where TResponse : class
@@ -16,9 +16,9 @@ public abstract class MappingServiceBase<TModel, TRequest, TResponse> : ICommand
     #region Constructor / Finaliser Declarations
 
     /// <summary>
-    /// Default constructor for <see cref="MappingServiceBase{TModel,TRequest,TResponse}"/>
+    /// Default constructor for <see cref="CommandMappingServiceBase{TModel,TRequest,TResponse}"/>
     /// </summary>
-    protected MappingServiceBase()
+    protected CommandMappingServiceBase()
     {
     }
 
@@ -31,8 +31,7 @@ public abstract class MappingServiceBase<TModel, TRequest, TResponse> : ICommand
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    /// <exception cref="MapRequestToModelNotSupportedException"></exception>
-    public virtual TModel RequestToModel(TRequest request) => throw new MapRequestToModelNotSupportedException(typeof(TRequest), typeof(TModel));
+    public abstract TModel RequestToModel(TRequest request);
 
     /// <summary>
     /// 
@@ -47,29 +46,6 @@ public abstract class MappingServiceBase<TModel, TRequest, TResponse> : ICommand
             models.Add(model);
         });
         return models;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="model"></param>
-    /// <returns></returns>
-    public abstract TResponse ModelToResponse(TModel model);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="models"></param>
-    /// <returns></returns>
-    public IEnumerable<TResponse> ModelsToResponses(IEnumerable<TModel> models)
-    {
-        List<TResponse> dtos = [];
-        models.FastForEach(model =>
-        {
-            TResponse dto = ModelToResponse(model);
-            dtos.Add(dto);
-        });
-        return dtos;
     }
 
     #endregion

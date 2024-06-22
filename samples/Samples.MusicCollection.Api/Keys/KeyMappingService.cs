@@ -5,7 +5,7 @@ namespace Samples.MusicCollection.Api.Keys;
 /// <summary>
 /// 
 /// </summary>
-public sealed class KeyMappingService : MappingServiceBase<Key, KeyRequest, KeyResponse>
+public sealed class KeyMappingService : QueryMappingServiceBase<Key, KeyResponse>
 {
     #region Constructor / Finaliser Declarations
 

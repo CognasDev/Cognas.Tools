@@ -5,7 +5,7 @@ namespace Samples.MusicCollection.Api.Labels;
 /// <summary>
 /// 
 /// </summary>
-public sealed class LabelMappingService : MappingServiceBase<Label, LabelRequest, LabelResponse>
+public sealed class LabelMappingService : CommandMappingServiceBase<Label, LabelRequest, LabelResponse>
 {
     #region Constructor / Finaliser Declarations
 

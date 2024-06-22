@@ -5,7 +5,7 @@ namespace Samples.MusicCollection.Api.Genres;
 /// <summary>
 /// 
 /// </summary>
-public sealed class GenreMappingService : MappingServiceBase<Genre, GenreRequest, GenreResponse>
+public sealed class GenreMappingService : CommandMappingServiceBase<Genre, GenreRequest, GenreResponse>
 {
     #region Constructor / Finaliser Declarations
 

@@ -6,8 +6,8 @@ namespace Samples.MusicCollection.Api.Labels;
 /// 
 /// </summary>
 [IncludeInModelIdService]
-[QueryScaffold(typeof(LabelResponse), 1)]
 [CommandScaffold(typeof(LabelRequest), typeof(LabelResponse), 1, false)]
+[QueryScaffold(typeof(LabelResponse), 1)]
 public sealed record Label
 {
     #region Property Declarations

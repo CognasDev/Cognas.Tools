@@ -6,8 +6,8 @@ namespace Samples.MusicCollection.Api.Genres;
 /// 
 /// </summary>
 [IncludeInModelIdService]
-[QueryScaffold(typeof(GenreResponse), 1)]
 [CommandScaffold(typeof(GenreRequest), typeof(GenreResponse), 1, false)]
+[QueryScaffold(typeof(GenreResponse), 1)]
 public sealed record Genre
 {
     #region Property Declarations

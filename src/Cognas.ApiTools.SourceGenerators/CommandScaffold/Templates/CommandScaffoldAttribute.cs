@@ -40,6 +40,7 @@ public sealed class CommandScaffoldAttribute : Attribute
     /// <param name="requestType"></param>
     /// <param name="responseType"></param>
     /// <param name="apiVersion"></param>
+    /// <param name="useMessaging"></param>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     public CommandScaffoldAttribute(Type requestType, Type responseType, int apiVersion, bool useMessaging)
     {

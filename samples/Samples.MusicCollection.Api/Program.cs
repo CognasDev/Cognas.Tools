@@ -1,9 +1,11 @@
 using Cognas.ApiTools;
 using Cognas.ApiTools.Extensions;
-using Cognas.ApiTools.MinimalApi;
 using Cognas.ApiTools.Shared;
 using Cognas.ApiTools.SourceGenerators;
 using Samples.MusicCollection.Api.Albums;
+using Samples.MusicCollection.Api.Genres;
+using Samples.MusicCollection.Api.Keys;
+using Samples.MusicCollection.Api.Labels;
 
 namespace Samples.MusicCollection.Api;
 
@@ -12,6 +14,8 @@ namespace Samples.MusicCollection.Api;
 /// </summary>
 public sealed class Program
 {
+    #region Public Method Declarations
+
     /// <summary>
     /// 
     /// </summary>
@@ -41,13 +45,15 @@ public sealed class Program
         WebApplication webApplication = webApplicationBuilder.Build();
         WebApplicationTools.ConfigureSwagger(webApplication);
 
-        //Map minimal API endpoints
-        ICommandApi<Album, AlbumRequest, AlbumResponse> albumCommandApi = webApplication.Services.GetCommandApi<Album, AlbumRequest, AlbumResponse>();
-        IQueryApi<Album, AlbumResponse> albumQueryApi = webApplication.Services.GetQueryApi<Album, AlbumResponse>();
-
-        albumCommandApi.MapAll(webApplication);
-        albumQueryApi.MapAll(webApplication);
+        //Initiate minimal Api endpoints
+        webApplication.InitiateApi<Album, AlbumRequest, AlbumResponse>();
+        webApplication.InitiateApi<Genre, GenreRequest, GenreResponse>();
+        webApplication.InitiateApi<Key, KeyResponse>();
+        webApplication.InitiateApi<Label, LabelRequest, LabelResponse>();
 
         WebApplicationTools.ConfigureAndRun(webApplication);
     }
+
+    #endregion
+
 }

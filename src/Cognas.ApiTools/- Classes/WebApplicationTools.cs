@@ -124,7 +124,6 @@ public sealed class WebApplicationTools
     {
         ServiceCollection.AddExceptionHandler<PaginationQueryParametersExceptionHandler>();
         ServiceCollection.AddExceptionHandler<OperationCanceledExceptionHandler>();
-        ServiceCollection.AddExceptionHandler<MapDtoToModelNotSupportedExceptionHandler>();
         ServiceCollection.AddExceptionHandler<SqlExceptionHandler>();
         ServiceCollection.AddExceptionHandler<GlobalExceptionHandler>();
     }

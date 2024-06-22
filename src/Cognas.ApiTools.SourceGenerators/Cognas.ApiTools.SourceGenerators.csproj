@@ -1,0 +1,57 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<LangVersion>Latest</LangVersion>
+		<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+		<GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
+		<Nullable>enable</Nullable>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Remove="CommandScaffold\Templates\CommandApi.cs" />
+		<Compile Remove="CommandScaffold\Templates\CommandBusinessLogic.Messaging.cs" />
+		<Compile Remove="CommandScaffold\Templates\CommandBusinessLogic.NoMessaging.cs" />
+		<Compile Remove="CommandScaffold\Templates\CommandScaffoldAttribute.cs" />
+		<Compile Remove="QueryScaffold\Templates\QueryApi.cs" />
+		<Compile Remove="QueryScaffold\Templates\QueryBusinessLogic.cs" />
+		<Compile Remove="ModelIdService\Templates\IdAttribute.cs" />
+		<Compile Remove="ModelIdService\Templates\IncludeInModelIdServiceAttribute.cs" />
+		<Compile Remove="ModelIdService\Templates\ModelIdService.cs" />
+		<Compile Remove="QueryScaffold\Templates\QueryScaffoldAttribute.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="CommandScaffold\Templates\CommandApi.cs" />
+		<EmbeddedResource Include="CommandScaffold\Templates\CommandBusinessLogic.Messaging.cs" />
+		<EmbeddedResource Include="CommandScaffold\Templates\CommandBusinessLogic.NoMessaging.cs" />
+		<EmbeddedResource Include="CommandScaffold\Templates\CommandScaffoldAttribute.cs" />
+		<EmbeddedResource Include="QueryScaffold\Templates\QueryApi.cs" />
+		<EmbeddedResource Include="QueryScaffold\Templates\QueryBusinessLogic.cs" />
+		<EmbeddedResource Include="ModelIdService\Templates\IdAttribute.cs" />
+		<EmbeddedResource Include="ModelIdService\Templates\IncludeInModelIdServiceAttribute.cs" />
+		<EmbeddedResource Include="ModelIdService\Templates\ModelIdService.cs" />
+		<EmbeddedResource Include="QueryScaffold\Templates\QueryScaffoldAttribute.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="[4.9.2]">
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="System.Text.Json" Version="8.0.3">
+			<GeneratePathProperty>true</GeneratePathProperty>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+	</ItemGroup>
+	<Target Name="GetDependencyTargetPaths">
+		<ItemGroup>
+			<TargetPathWithTargetPlatformMoniker Include="$(PKGSystem_Text_Json)\lib\netstandard2.0\System.Text.Json.dll" IncludeRuntimeDependency="false" />
+		</ItemGroup>
+	</Target>
+
+</Project>

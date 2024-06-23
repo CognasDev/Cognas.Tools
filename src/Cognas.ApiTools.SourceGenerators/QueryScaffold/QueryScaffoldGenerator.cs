@@ -107,10 +107,11 @@ public sealed class QueryScaffoldGenerator : IIncrementalGenerator
     private static void GenerateApi(SourceProductionContext context, string fullModelName, string template, QueryScaffoldDetail detail)
     {
         string queryApiSource = string.Format(template,
-                                              detail.ModelNamespace,
-                                              detail.ModelName,
                                               fullModelName,
-                                              detail.ResponseName);
+                                              detail.ResponseName,
+                                              detail.ModelNamespace,
+                                              detail.ApiVersion,
+                                              detail.ModelName);
         string versionFilename = string.Format(SourceFileNames.QueryApi, detail.ApiVersion);
         string filename = $"{detail.ModelName}.{versionFilename}";
         context.AddSource(filename, queryApiSource);
@@ -126,9 +127,10 @@ public sealed class QueryScaffoldGenerator : IIncrementalGenerator
     private static void GenerateBusinessLogic(SourceProductionContext context, string fullModelName, string template, QueryScaffoldDetail detail)
     {
         string queryBusinesssLogicSource = string.Format(template,
+                                                         fullModelName,
                                                          detail.ModelNamespace,
-                                                         detail.ModelName,
-                                                         fullModelName);
+                                                         detail.ApiVersion,
+                                                         detail.ModelName);
         string versionFilename = string.Format(SourceFileNames.QueryBusinessLogic, detail.ApiVersion);
         string filename = $"{detail.ModelName}.{versionFilename}";
         context.AddSource(filename, queryBusinesssLogicSource);

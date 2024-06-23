@@ -109,11 +109,12 @@ public sealed class CommandScaffoldGenerator : IIncrementalGenerator
     private static void GenerateApi(SourceProductionContext context, string fullModelName, string template, CommandScaffoldDetail detail)
     {
         string commandApiSource = string.Format(template,
-                                                detail.ModelNamespace,
-                                                detail.ModelName,
                                                 fullModelName,
                                                 detail.RequestName,
-                                                detail.ResponseName);
+                                                detail.ResponseName,
+                                                detail.ModelNamespace,
+                                                detail.ApiVersion,
+                                                detail.ModelName);
         string versionFilename = string.Format(SourceFileNames.CommandApi, detail.ApiVersion);
         string filename = $"{detail.ModelName}.{versionFilename}";
         context.AddSource(filename, commandApiSource);
@@ -131,13 +132,14 @@ public sealed class CommandScaffoldGenerator : IIncrementalGenerator
                           TemplateCache.GetTemplate(TemplateNames.CommandBusinessLogicMessaging) :
                           TemplateCache.GetTemplate(TemplateNames.CommandBusinessLogicNoMessaging);
 
-        string commandBusinesssLogicClass = string.Format(template,
-                                                          detail.ModelNamespace,
-                                                          detail.ModelName,
-                                                          fullModelName);
+        string commandBusinesssLogicSource = string.Format(template,
+                                                           fullModelName,
+                                                           detail.ModelNamespace,
+                                                           detail.ApiVersion,
+                                                           detail.ModelName);
         string versionFilename = string.Format(SourceFileNames.CommandBusinessLogic, detail.ApiVersion);
         string filename = $"{detail.ModelName}.{versionFilename}";
-        context.AddSource(filename, commandBusinesssLogicClass);
+        context.AddSource(filename, commandBusinesssLogicSource);
     }
 
     #endregion

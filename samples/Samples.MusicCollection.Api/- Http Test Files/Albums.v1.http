@@ -1,27 +1,27 @@
 @Samples.MusicCollection.Api_HostAddress = https://localhost:7104
 
 ### GET all albums - 200
-GET {{Samples.MusicCollection.Api_HostAddress}}/albums
+GET {{Samples.MusicCollection.Api_HostAddress}}/api/v1/albums
 Accept: application/json
 
 ### GET albums with pagination - 200
-GET {{Samples.MusicCollection.Api_HostAddress}}/albums?pageSize=2&pageNumber=1&orderBy=name&orderByAscending=true
+GET {{Samples.MusicCollection.Api_HostAddress}}/api/v1/albums?pageSize=2&pageNumber=1&orderBy=name&orderByAscending=true
 Accept: application/json
 
 ### GET albums with malformed pagination - 400
-GET {{Samples.MusicCollection.Api_HostAddress}}/albums?pageSize=2&pageNumber=1
+GET {{Samples.MusicCollection.Api_HostAddress}}/api/v1/albums?pageSize=2&pageNumber=1
 Accept: application/json
 
 ### GET an album by Id that exists - 200
-GET {{Samples.MusicCollection.Api_HostAddress}}/albums/1
+GET {{Samples.MusicCollection.Api_HostAddress}}/api/v1/albums/1
 Accept: application/json
 
 ### GET an album by Id that does not exist - 404
-GET {{Samples.MusicCollection.Api_HostAddress}}/albums/0
+GET {{Samples.MusicCollection.Api_HostAddress}}/api/v1/albums/0
 Accept: application/json
 
 ### POST a new album - 201
-POST {{Samples.MusicCollection.Api_HostAddress}}/albums/
+POST {{Samples.MusicCollection.Api_HostAddress}}/api/v1/albums/
 Content-Type: application/json
 
 {
@@ -33,7 +33,7 @@ Content-Type: application/json
 }
 
 ### PUT an existing album - 200
-PUT {{Samples.MusicCollection.Api_HostAddress}}/albums/8
+PUT {{Samples.MusicCollection.Api_HostAddress}}/api/v1/albums/8
 Content-Type: application/json
 
 {
@@ -46,7 +46,7 @@ Content-Type: application/json
 }
 
 ### DELETE an album that exists
-DELETE {{Samples.MusicCollection.Api_HostAddress}}/albums/8
+DELETE {{Samples.MusicCollection.Api_HostAddress}}/api/v1/albums/8
 
 ### DELETE an album that does not exist
-DELETE {{Samples.MusicCollection.Api_HostAddress}}/albums/0
+DELETE {{Samples.MusicCollection.Api_HostAddress}}/api/v1/albums/0

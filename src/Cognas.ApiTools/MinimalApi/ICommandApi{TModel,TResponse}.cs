@@ -1,6 +1,7 @@
 ﻿using Cognas.ApiTools.BusinessLogic;
 using Cognas.ApiTools.Mapping;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Routing;
 
 namespace Cognas.ApiTools.MinimalApi;
 
@@ -44,26 +45,26 @@ public interface ICommandApi<TModel, TRequest, TResponse>
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="webApplication"></param>
-    void MapAll(WebApplication webApplication);
+    /// <param name="endpointRouteBuilder"></param>
+    void MapAll(IEndpointRouteBuilder endpointRouteBuilder);
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="webApplication"></param>
-    void MapPost(WebApplication webApplication);
+    /// <param name="endpointRouteBuilder"></param>
+    void MapPost(IEndpointRouteBuilder endpointRouteBuilder);
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="webApplication"></param>
-    void MapPut(WebApplication webApplication);
+    /// <param name="endpointRouteBuilder"></param>
+    void MapPut(IEndpointRouteBuilder endpointRouteBuilder);
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="webApplication"></param>
-    void MapDelete(WebApplication webApplication);
+    /// <param name="endpointRouteBuilder"></param>
+    void MapDelete(IEndpointRouteBuilder endpointRouteBuilder);
 
     #endregion
 }

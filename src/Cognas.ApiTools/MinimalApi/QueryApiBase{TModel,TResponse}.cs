@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -99,20 +100,20 @@ public abstract class QueryApiBase<TModel, TResponse> : IQueryApi<TModel, TRespo
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="webApplication"></param>
-    public virtual void MapAll(WebApplication webApplication)
+    /// <param name="endpointRouteBuilder"></param>
+    public virtual void MapAll(IEndpointRouteBuilder endpointRouteBuilder)
     {
-        MapGet(webApplication);
-        MapGetById(webApplication);
+        MapGet(endpointRouteBuilder);
+        MapGetById(endpointRouteBuilder);
     }
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="webApplication"></param>
-    public virtual void MapGet(WebApplication webApplication)
+    /// <param name="endpointRouteBuilder"></param>
+    public virtual void MapGet(IEndpointRouteBuilder endpointRouteBuilder)
     {
-        webApplication.MapGet
+        endpointRouteBuilder.MapGet
         (
             $"/{LowerPluralModelName}",
             (
@@ -143,10 +144,10 @@ public abstract class QueryApiBase<TModel, TResponse> : IQueryApi<TModel, TRespo
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="webApplication"></param>
-    public virtual void MapGetById(WebApplication webApplication)
+    /// <param name="endpointRouteBuilder"></param>
+    public virtual void MapGetById(IEndpointRouteBuilder endpointRouteBuilder)
     {
-        webApplication.MapGet
+        endpointRouteBuilder.MapGet
         (
             $"/{LowerPluralModelName}/{{id}}",
             async

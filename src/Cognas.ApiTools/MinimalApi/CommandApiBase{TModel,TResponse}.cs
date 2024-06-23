@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 
 namespace Cognas.ApiTools.MinimalApi;
@@ -99,21 +100,21 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="webApplication"></param>
-    public virtual void MapAll(WebApplication webApplication)
+    /// <param name="endpointRouteBuilder"></param>
+    public virtual void MapAll(IEndpointRouteBuilder endpointRouteBuilder)
     {
-        MapPost(webApplication);
-        MapPut(webApplication);
-        MapDelete(webApplication);
+        MapPost(endpointRouteBuilder);
+        MapPut(endpointRouteBuilder);
+        MapDelete(endpointRouteBuilder);
     }
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="webApplication"></param>
-    public virtual void MapPost(WebApplication webApplication)
+    /// <param name="endpointRouteBuilder"></param>
+    public virtual void MapPost(IEndpointRouteBuilder endpointRouteBuilder)
     {
-        webApplication.MapPost
+        endpointRouteBuilder.MapPost
         (
             $"/{LowerPluralModelName}",
             async
@@ -133,10 +134,10 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="webApplication"></param>
-    public virtual void MapPut(WebApplication webApplication)
+    /// <param name="endpointRouteBuilder"></param>
+    public virtual void MapPut(IEndpointRouteBuilder endpointRouteBuilder)
     {
-        webApplication.MapPut
+        endpointRouteBuilder.MapPut
         (
             $"/{LowerPluralModelName}/{{id}}",
             async
@@ -156,10 +157,10 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="webApplication"></param>
-    public virtual void MapDelete(WebApplication webApplication)
+    /// <param name="endpointRouteBuilder"></param>
+    public virtual void MapDelete(IEndpointRouteBuilder endpointRouteBuilder)
     {
-        webApplication.MapDelete
+        endpointRouteBuilder.MapDelete
         (
             $"/{LowerPluralModelName}/{{id}}",
             async

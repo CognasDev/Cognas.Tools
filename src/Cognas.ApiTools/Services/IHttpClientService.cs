@@ -1,4 +1,4 @@
-﻿namespace Cognas.ApiTools;
+﻿namespace Cognas.ApiTools.Services;
 
 /// <summary>
 /// 

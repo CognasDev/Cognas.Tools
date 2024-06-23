@@ -1,5 +1,4 @@
 ﻿using Cognas.ApiTools.SourceGenerators.CommandScaffold.Names;
-using Cognas.ApiTools.SourceGenerators.QueryScaffold;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;

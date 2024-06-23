@@ -20,7 +20,7 @@ public sealed class ModelParameterTests
         ModelParameter<TestModel> modelParameter = new(testModel => testModel.Id, valueToTestAgainst);
 
         modelParameter.Name.Should().Be(nameof(TestModel.Id));
-        modelParameter.Value.Should().Be(valueToTestAgainst); 
+        modelParameter.Value.Should().Be(valueToTestAgainst);
     }
 
     /// <summary>
@@ -33,7 +33,7 @@ public sealed class ModelParameterTests
         ModelParameter<TestModel> modelParameter = new(testModel => testModel.Id, valueToTestAgainst);
         TestModel testModel = new() { Id = valueToTestAgainst };
         modelParameter.GetFunction().Invoke(testModel);
-        testModel.Id.Should().Be(valueToTestAgainst);    
+        testModel.Id.Should().Be(valueToTestAgainst);
     }
 
     #endregion

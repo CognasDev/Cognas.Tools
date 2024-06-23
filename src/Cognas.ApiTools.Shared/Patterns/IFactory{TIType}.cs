@@ -7,7 +7,7 @@
     public interface IFactory<TIType>
     {
         #region Method Declarations
-    
+
         /// <summary>
         /// 
         /// </summary>

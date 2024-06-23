@@ -103,7 +103,7 @@ public sealed class QueryBusinessLogicBaseTests
     /// 
     /// </summary>
     public sealed record TestModel { }
-    
+
     /// <summary>
     /// 
     /// </summary>

@@ -6,7 +6,7 @@ namespace Cognas.ApiTools.BusinessLogic;
 /// <summary>
 /// 
 /// </summary>
-public abstract class CommandOrQueryBusinessLogicBase: LoggerBusinessLogicBase, ICommandOrQueryBusinessLogic
+public abstract class CommandOrQueryBusinessLogicBase : LoggerBusinessLogicBase, ICommandOrQueryBusinessLogic
 {
     #region Property Declarations
 

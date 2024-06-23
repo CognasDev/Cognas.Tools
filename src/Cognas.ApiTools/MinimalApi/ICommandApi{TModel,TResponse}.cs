@@ -1,6 +1,5 @@
 ﻿using Cognas.ApiTools.BusinessLogic;
 using Cognas.ApiTools.Mapping;
-using Cognas.ApiTools.Pagination;
 using Microsoft.AspNetCore.Builder;
 
 namespace Cognas.ApiTools.MinimalApi;

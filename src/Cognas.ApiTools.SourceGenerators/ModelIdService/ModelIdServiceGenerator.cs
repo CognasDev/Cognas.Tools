@@ -1,7 +1,7 @@
 ﻿using Cognas.ApiTools.SourceGenerators.ModelIdService.Names;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Collections.Generic;
+using System;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
@@ -99,7 +99,8 @@ public sealed class ModelIdServiceGenerator : IIncrementalGenerator
         StringBuilder getModelIdNameBuilder = new();
 
         string template = TemplateCache.GetTemplate(TemplateNames.ModelIdService);
-        foreach (ModelIdServiceEntryDetail detail in details.OrderBy(item => item.ModelName))
+        ReadOnlySpan<ModelIdServiceEntryDetail> detailsSpan = [.. details.OrderBy(detail => detail.ModelName)];
+        foreach (ModelIdServiceEntryDetail detail in detailsSpan)
         {
             GenerateGetId.Generate(getIdsBuilder, detail);
             GenerateSetIdValue.Generate(setIdsBuilder, detail);

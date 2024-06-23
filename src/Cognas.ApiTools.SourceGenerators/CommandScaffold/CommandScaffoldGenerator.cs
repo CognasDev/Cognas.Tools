@@ -41,7 +41,7 @@ public sealed class CommandScaffoldGenerator : IIncrementalGenerator
     {
         context.RegisterPostInitializationOutput
         (
-            static postInitializationContext  => postInitializationContext.AddSource
+            static postInitializationContext => postInitializationContext.AddSource
             (
                 SourceFileNames.CommandScaffoldAttribute,
                 TemplateCache.GetTemplate(TemplateNames.CommandScaffoldAttribute)
@@ -90,10 +90,12 @@ public sealed class CommandScaffoldGenerator : IIncrementalGenerator
     private void GenerateSource(SourceProductionContext context, ImmutableArray<CommandScaffoldDetail> details)
     {
         string commandApiTemplate = TemplateCache.GetTemplate(TemplateNames.CommandApi);
-        foreach (CommandScaffoldDetail detail in details.OrderBy(item => item.ModelName))
+        ReadOnlySpan<CommandScaffoldDetail> detailsSpan = [.. details.OrderBy(detail => detail.ModelName)];
+        foreach (CommandScaffoldDetail detail in detailsSpan)
         {
-            GenerateApi(context, commandApiTemplate, detail);
-            GenerateBusinessLogic(context, detail);
+            string fullModelName = $"{detail.ModelNamespace}.{detail.ModelName}";
+            GenerateApi(context, fullModelName, commandApiTemplate, detail);
+            GenerateBusinessLogic(context, fullModelName, detail);
         }
     }
 
@@ -101,11 +103,11 @@ public sealed class CommandScaffoldGenerator : IIncrementalGenerator
     /// 
     /// </summary>
     /// <param name="context"></param>
+    /// <param name="fullModelName"></param>
     /// <param name="template"></param>
     /// <param name="detail"></param>
-    private static void GenerateApi(SourceProductionContext context, string template, CommandScaffoldDetail detail)
+    private static void GenerateApi(SourceProductionContext context, string fullModelName, string template, CommandScaffoldDetail detail)
     {
-        string fullModelName = $"{detail.ModelNamespace}.{detail.ModelName}";
         string commandApiSource = string.Format(template,
                                                 detail.ModelNamespace,
                                                 detail.ModelName,
@@ -121,14 +123,14 @@ public sealed class CommandScaffoldGenerator : IIncrementalGenerator
     /// 
     /// </summary>
     /// <param name="context"></param>
+    /// <param name="fullModelName"></param>
     /// <param name="detail"></param>
-    private static void GenerateBusinessLogic(SourceProductionContext context, CommandScaffoldDetail detail)
+    private static void GenerateBusinessLogic(SourceProductionContext context, string fullModelName, CommandScaffoldDetail detail)
     {
         string template = detail.UseMessaging ?
                           TemplateCache.GetTemplate(TemplateNames.CommandBusinessLogicMessaging) :
                           TemplateCache.GetTemplate(TemplateNames.CommandBusinessLogicNoMessaging);
 
-        string fullModelName = $"{detail.ModelNamespace}.{detail.ModelName}";
         string commandBusinesssLogicClass = string.Format(template,
                                                           detail.ModelNamespace,
                                                           detail.ModelName,

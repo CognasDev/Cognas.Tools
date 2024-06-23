@@ -10,4 +10,3 @@
 
 - Include proper versioning
 - update auto-generated files namespace with a version suffix, to allow multiple business logic / api instances (via multiple attributes).
-- make CommandScaffold and QueryScaffold generic.

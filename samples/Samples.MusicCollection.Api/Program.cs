@@ -41,10 +41,8 @@ public sealed class Program
         webApplicationBuilder.Services.AddSingleton<IModelIdService, ModelIdService>();
 
         WebApplication webApplication = webApplicationBuilder.Build();
-
-        webApplication.AddSwagger();
         InitiateVersionedApis(webApplication);
-
+        webApplication.AddSwagger();
         webApplication.ConfigureAndRun();
     }
 
@@ -61,8 +59,10 @@ public sealed class Program
         RouteGroupBuilder apiVersionOneRoutes = webApplication.GetApiVersionRoute(1);
         webApplication.InitiateApi<Album, AlbumRequest, AlbumResponse>(apiVersionOneRoutes);
         webApplication.InitiateApi<Genre, GenreRequest, GenreResponse>(apiVersionOneRoutes);
-        webApplication.InitiateApi<Key, KeyResponse>(apiVersionOneRoutes);
         webApplication.InitiateApi<Label, LabelRequest, LabelResponse>(apiVersionOneRoutes);
+
+        RouteGroupBuilder apiVersionTwoRoutes = webApplication.GetApiVersionRoute(2);
+        webApplication.InitiateApi<Key, KeyResponse>(apiVersionTwoRoutes);
     }
 
     #endregion

@@ -1,6 +1,8 @@
-﻿using Asp.Versioning.Builder;
+﻿using Asp.Versioning.ApiExplorer;
+using Asp.Versioning.Builder;
 using Asp.Versioning.Conventions;
 using Cognas.ApiTools.MinimalApi;
+using Cognas.ApiTools.Shared.Extensions;
 using HealthChecks.UI.Client;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;
@@ -26,7 +28,16 @@ public static class WebApplicationExtensions
         if (webApplication.Environment.IsDevelopment())
         {
             webApplication.UseSwagger();
-            webApplication.UseSwaggerUI();
+            webApplication.UseSwaggerUI(swaggerUiOptions =>
+            {
+                IReadOnlyList<ApiVersionDescription> apiVersionDescriptions = webApplication.DescribeApiVersions();
+                apiVersionDescriptions.FastForEach(apiVersionDescription =>
+                {
+                    string url = $"/swagger/{apiVersionDescription.GroupName}/swagger.json";
+                    string name = apiVersionDescription.GroupName.ToUpperInvariant();
+                    swaggerUiOptions.SwaggerEndpoint(url, name);
+                });
+            });
         }
     }
 

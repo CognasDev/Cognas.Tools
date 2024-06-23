@@ -14,6 +14,15 @@ namespace {2}.v{3};
 #nullable enable
 public sealed partial class {4}QueryApi : QueryApiBase<Model, Response>
 {{
+    #region Property Declarations
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public override int ApiVersion => {3};
+
+    #endregion
+
     #region Constructor / Finaliser Declarations
 
     /// <summary>

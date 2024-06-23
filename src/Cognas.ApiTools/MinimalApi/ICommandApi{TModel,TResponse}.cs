@@ -21,6 +21,11 @@ public interface ICommandApi<TModel, TRequest, TResponse>
     /// <summary>
     /// 
     /// </summary>
+    int ApiVersion { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
     string PluralModelName { get; }
 
     /// <summary>
@@ -32,6 +37,11 @@ public interface ICommandApi<TModel, TRequest, TResponse>
     /// 
     /// </summary>
     ICommandMappingService<TModel, TRequest, TResponse> CommandMappingService { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    IQueryMappingService<TModel, TResponse> QueryMappingService { get; }
 
     /// <summary>
     /// 

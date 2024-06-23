@@ -27,6 +27,11 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
     /// <summary>
     /// 
     /// </summary>
+    public abstract int ApiVersion { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
     public ILogger Logger { get; }
 
     /// <summary>
@@ -126,7 +131,8 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
                 return await PostAsync(httpContext, request).ConfigureAwait(false);
             }
         )
-        .WithName($"Post{PluralModelName}")
+        .MapToApiVersion(ApiVersion)
+        .WithName($"Post{PluralModelName}V{ApiVersion}")
         .WithTags(PluralModelName)
         .WithOpenApi();
     }
@@ -149,7 +155,8 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
                 return await PutAsync(id, request).ConfigureAwait(false);
             }
         )
-        .WithName($"Put{PluralModelName}")
+        .MapToApiVersion(ApiVersion)
+        .WithName($"Put{PluralModelName}V{ApiVersion}")
         .WithTags(PluralModelName)
         .WithOpenApi();
     }
@@ -171,7 +178,8 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
                 return await DeleteAsync(id).ConfigureAwait(false);
             }
         )
-        .WithName($"Delete{PluralModelName}")
+        .MapToApiVersion(ApiVersion)
+        .WithName($"Delete{PluralModelName}V{ApiVersion}")
         .WithTags(PluralModelName)
         .WithOpenApi();
     }

@@ -64,6 +64,8 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddMemoryCache();
         serviceCollection.AddProblemDetails();
 
+        serviceCollection.ConfigureOptions<ConfigureSwaggerGenOptions>();
+
         GenericServiceRegistration.Instance.AddServices(serviceCollection, typeof(ICommandApi<,,>), ServiceLifetime.Singleton);
         GenericServiceRegistration.Instance.AddServices(serviceCollection, typeof(ICommandBusinessLogic<>), ServiceLifetime.Singleton);
         GenericServiceRegistration.Instance.AddServices(serviceCollection, typeof(ICommandMappingService<,,>), ServiceLifetime.Singleton);
@@ -120,12 +122,17 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddApiVersioning(apiVersioningAction =>
         {
             const string xApiVersion = "x-api-version";
-            apiVersioningAction.DefaultApiVersion = new ApiVersion(1, 0);
+            apiVersioningAction.DefaultApiVersion = new ApiVersion(1);
             apiVersioningAction.AssumeDefaultVersionWhenUnspecified = true;
             apiVersioningAction.ReportApiVersions = true;
             apiVersioningAction.ApiVersionReader = ApiVersionReader.Combine(new UrlSegmentApiVersionReader(),
                                                                             new HeaderApiVersionReader(xApiVersion),
                                                                             new MediaTypeApiVersionReader(xApiVersion));
+        })
+        .AddApiExplorer(apiExplorerOptions =>
+        {
+            apiExplorerOptions.GroupNameFormat = "'v'V";
+            apiExplorerOptions.SubstituteApiVersionInUrl = true;
         });
     }
 

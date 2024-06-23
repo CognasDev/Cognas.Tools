@@ -27,6 +27,11 @@ public abstract class QueryApiBase<TModel, TResponse> : IQueryApi<TModel, TRespo
     /// <summary>
     /// 
     /// </summary>
+    public abstract int ApiVersion { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
     public ILogger Logger { get; }
 
     /// <summary>
@@ -136,7 +141,8 @@ public abstract class QueryApiBase<TModel, TResponse> : IQueryApi<TModel, TRespo
                 return Get(httpContext, paginationQuery, cancellationToken);
             }
         )
-        .WithName($"Get{PluralModelName}")
+        .MapToApiVersion(ApiVersion)
+        .WithName($"Get{PluralModelName}V{ApiVersion}")
         .WithTags(PluralModelName)
         .WithOpenApi();
     }
@@ -158,7 +164,8 @@ public abstract class QueryApiBase<TModel, TResponse> : IQueryApi<TModel, TRespo
                 return await GetAsync(id).ConfigureAwait(false);
             }
         )
-        .WithName($"Get{PluralModelName}ById")
+        .MapToApiVersion(ApiVersion)
+        .WithName($"Get{PluralModelName}ByIdV{ApiVersion}")
         .WithTags(PluralModelName)
         .WithOpenApi();
     }

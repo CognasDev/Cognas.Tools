@@ -10,6 +10,6 @@
 
 ### Versioning
 
-- Include proper versioning - also make it work with Swagger (version parameter not appearing in Swagger page)
+- Allow multiple Command/ Query Scaffold attributes with different versions (need to adjust GetDetails to return a collection)
 
 ### Caching via MemoryCache?

@@ -14,6 +14,15 @@ namespace {3}.v{4};
 #nullable enable
 public sealed partial class {5}CommandApi : CommandApiBase<Model, Request, Response>
 {{
+    #region Property Declarations
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public override int ApiVersion => {4};
+
+    #endregion
+
     #region Constructor / Finaliser Declarations
 
     /// <summary>

@@ -5,7 +5,7 @@ namespace Cognas.ApiTools.SourceGenerators.Attributes;
 /// <summary>
 /// 
 /// </summary>
-[AttributeUsage(AttributeTargets.Class)]
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 public sealed class QueryScaffoldAttribute : Attribute
 {
     #region Property Declarations

@@ -17,6 +17,11 @@ public interface IQueryApi<TModel, TResponse> where TModel : class where TRespon
     /// <summary>
     /// 
     /// </summary>
+    int ApiVersion { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
     string PluralModelName { get; }
 
     /// <summary>

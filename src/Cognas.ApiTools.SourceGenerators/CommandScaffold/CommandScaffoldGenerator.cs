@@ -47,15 +47,17 @@ public sealed class CommandScaffoldGenerator : IIncrementalGenerator
             )
         );
 
-        IncrementalValueProvider<ImmutableArray<CommandScaffoldDetail>> modelsToGenerate = context.SyntaxProvider.ForAttributeWithMetadataName
+        IncrementalValueProvider<ImmutableArray<CommandScaffoldDetail>> commandScaffoldDetails = context.SyntaxProvider.ForAttributeWithMetadataName
         (
             AttributeNames.CommandScaffoldAttribute,
             predicate: static (syntaxNode, _) => syntaxNode is RecordDeclarationSyntax recordDeclarationSyntax,
             transform: static (generatorSyntaxContext, _) => GetDetails(generatorSyntaxContext)
-        ).WithTrackingName(TrackingNames.FindModelsWithGenerateCommandBusinessLogic)
-        .Collect().WithTrackingName(TrackingNames.CollectModelsIntoArray);
+        )
+        .WithTrackingName(TrackingNames.FindCommandScaffoldAttributes)
+        .Collect()
+        .WithTrackingName(TrackingNames.CollectCommandScaffoldDetails);
 
-        context.RegisterSourceOutput(modelsToGenerate, GenerateSource);
+        context.RegisterSourceOutput(commandScaffoldDetails, GenerateSource);
     }
 
     #endregion
@@ -71,12 +73,12 @@ public sealed class CommandScaffoldGenerator : IIncrementalGenerator
     {
         RecordDeclarationSyntax modelDeclaration = (RecordDeclarationSyntax)generatorSyntaxContext.TargetNode;
         AttributeData commandScaffoldAttribute = generatorSyntaxContext.Attributes[0];
-        string requestType = commandScaffoldAttribute.ConstructorArguments[0].Value!.ToString();
-        string responseType = commandScaffoldAttribute.ConstructorArguments[1].Value!.ToString();
-        int apiVersion = (int)commandScaffoldAttribute.ConstructorArguments[2].Value!;
-        bool useMessaging = (bool)commandScaffoldAttribute.ConstructorArguments[3].Value!;
-        string modelNamespace = Functions.GetModelNamespace(modelDeclaration!.Ancestors());
-        string modelName = modelDeclaration!.Identifier.Text;
+        string requestType = commandScaffoldAttribute.GetConstructorArgumentValue(0);
+        string responseType = commandScaffoldAttribute.GetConstructorArgumentValue(1);
+        int apiVersion = commandScaffoldAttribute.GetConstructorArgumentValue<int>(2);
+        bool useMessaging = commandScaffoldAttribute.GetConstructorArgumentValue<bool>(3);
+        string modelNamespace = modelDeclaration.GetNamespace();
+        string modelName = modelDeclaration.GetName();
         CommandScaffoldDetail detail = new(modelNamespace, modelName, requestType, responseType, apiVersion, useMessaging);
         return detail;
     }

@@ -23,15 +23,15 @@ internal static class GenerateIdParameter
         idExpressionBuilder.Append(detail.CamelCaseModelName);
         idExpressionBuilder.Append("Type == typeof(");
         idExpressionBuilder.Append(detail.ModelNamespace);
-        idExpressionBuilder.Append(".");
+        idExpressionBuilder.Append('.');
         idExpressionBuilder.Append(detail.ModelName);
         idExpressionBuilder.AppendLine("):");
         idExpressionBuilder.Append("\t\t\t\t");
         idExpressionBuilder.Append("return new Parameter(nameof(");
         idExpressionBuilder.Append(detail.ModelNamespace);
-        idExpressionBuilder.Append(".");
+        idExpressionBuilder.Append('.');
         idExpressionBuilder.Append(detail.ModelName);
-        idExpressionBuilder.Append(".");
+        idExpressionBuilder.Append('.');
         idExpressionBuilder.Append(detail.IdPropertyName);
         idExpressionBuilder.AppendLine("), id);");
     }

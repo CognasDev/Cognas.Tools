@@ -30,7 +30,8 @@ The generated classes can be viewed after successfuly compilation in:
 
 *(Your Project)* > Dependencies > Analyzers > Cognas.ApiTools.SourceGenerators > *(sub folders...)*
 
-### Attributes used for source generation *(namespace: Cognas.ApiTools.SourceGenerators.Attributes)*
+### Attributes used for source generation
+#### *(namespace: Cognas.ApiTools.SourceGenerators.Attributes)*
 
 - **CommandScaffoldAttribute** - set on a model to generate command business logic and RESTful endpoints
 (POST / PUT / DELETE).

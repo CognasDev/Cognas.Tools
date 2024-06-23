@@ -10,12 +10,12 @@ internal static class TrackingNames
     /// <summary>
     /// 
     /// </summary>
-    public const string CollectModelsIntoArray = nameof(CollectModelsIntoArray);
+    public const string CollectQueryScaffoldDetails = nameof(CollectQueryScaffoldDetails);
 
     /// <summary>
     /// 
     /// </summary>
-    public const string FindModelsWithGenerateQueryBusinessLogic = nameof(FindModelsWithGenerateQueryBusinessLogic);
+    public const string FindQueryScaffoldAttributes = nameof(FindQueryScaffoldAttributes);
 
     #endregion
 }

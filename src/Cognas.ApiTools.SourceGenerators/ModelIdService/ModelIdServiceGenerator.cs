@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
@@ -56,16 +57,17 @@ public sealed class ModelIdServiceGenerator : IIncrementalGenerator
             }
         );
 
-        IncrementalValueProvider<ImmutableArray<ModelIdServiceEntryDetail>> modelsToGenerate = context.SyntaxProvider.ForAttributeWithMetadataName
+        IncrementalValueProvider<ImmutableArray<ModelIdServiceEntryDetail>> modelIdServiceEntryDetails = context.SyntaxProvider.ForAttributeWithMetadataName
         (
             AttributeNames.IncludeInModelIdServiceAttribute,
             predicate: static (syntaxNode, _) => syntaxNode is RecordDeclarationSyntax recordDeclarationSyntax,
-            transform: static (generatorSyntaxContext, _) => GetDetails(generatorSyntaxContext.TargetNode as RecordDeclarationSyntax)
+            transform: static (generatorSyntaxContext, _) => GetDetails((RecordDeclarationSyntax)generatorSyntaxContext.TargetNode)
         )
-        .WithTrackingName(TrackingNames.FindModelsWithIncludeInModelIdService)
-        .Collect().WithTrackingName(TrackingNames.CollectModelsIntoArray);
+        .WithTrackingName(TrackingNames.FindIncludeInModelIdServiceAttributes)
+        .Collect()
+        .WithTrackingName(TrackingNames.CollectModelIdServiceEntryDetails);
 
-        context.RegisterSourceOutput(modelsToGenerate, GenerateSource);
+        context.RegisterSourceOutput(modelIdServiceEntryDetails, GenerateSource);
     }
 
     #endregion
@@ -77,11 +79,11 @@ public sealed class ModelIdServiceGenerator : IIncrementalGenerator
     /// </summary>
     /// <param name="modelDeclaration"></param>
     /// <returns></returns>
-    private static ModelIdServiceEntryDetail GetDetails(RecordDeclarationSyntax? modelDeclaration)
+    private static ModelIdServiceEntryDetail GetDetails(RecordDeclarationSyntax modelDeclaration)
     {
-        string modelNamespace = Functions.GetModelNamespace(modelDeclaration!.Ancestors());
-        string modelName = modelDeclaration!.Identifier.Text;
-        string idPropertyName = Functions.GetIdPropertyNames(modelDeclaration);
+        string modelNamespace = modelDeclaration.GetNamespace();
+        string modelName = modelDeclaration.GetName();
+        string idPropertyName = GetIdPropertyNames(modelDeclaration);
         ModelIdServiceEntryDetail detail = new(modelNamespace, modelName, idPropertyName);
         return detail;
     }
@@ -115,6 +117,38 @@ public sealed class ModelIdServiceGenerator : IIncrementalGenerator
 
         string modelIdServiceSource = string.Format(template, getIds, setIds, idExpression, getModelIdName);
         context.AddSource(GeneratedFileNames.ModelIdService, modelIdServiceSource);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="record"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    /// <exception cref="KeyNotFoundException"></exception>
+    private static string GetIdPropertyNames(RecordDeclarationSyntax record)
+    {
+        IEnumerable<PropertyDeclarationSyntax> properties = record.Members.Select(memberDeclarationSyntax => memberDeclarationSyntax).OfType<PropertyDeclarationSyntax>();
+        ReadOnlySpan<PropertyDeclarationSyntax> span = [.. properties];
+        List<string> idPropertyNames = new(span.Length);
+
+        foreach (PropertyDeclarationSyntax? propertyDeclaration in span)
+        {
+            AttributeSyntax? idAttribute = propertyDeclaration!.AttributeLists
+                                                               .SelectMany(attributeListSyntax => attributeListSyntax.Attributes)
+                                                               .Where(attributeSyntax => attributeSyntax.Name.ToString() == "Id")
+                                                               .SingleOrDefault();
+            if (idAttribute != null)
+            {
+                idPropertyNames.Add(propertyDeclaration.Identifier.Text);
+            }
+        }
+        return idPropertyNames.Count switch
+        {
+            1 => idPropertyNames[0],
+            > 1 => throw new InvalidOperationException($"Multipled Id attributes found on model '{record.Identifier}'."),
+            _ => throw new KeyNotFoundException($"Id attribute not found on model '{record.Identifier}'.")
+        };
     }
 
     #endregion

@@ -47,15 +47,17 @@ public sealed class QueryScaffoldGenerator : IIncrementalGenerator
             )
         );
 
-        IncrementalValueProvider<ImmutableArray<QueryScaffoldDetail>> modelsToGenerate = context.SyntaxProvider.ForAttributeWithMetadataName
+        IncrementalValueProvider<ImmutableArray<QueryScaffoldDetail>> queryScaffoldDetails = context.SyntaxProvider.ForAttributeWithMetadataName
         (
             AttributeNames.QueryScaffoldAttribute,
             predicate: static (syntaxNode, _) => syntaxNode is RecordDeclarationSyntax recordDeclarationSyntax,
             transform: static (generatorSyntaxContext, _) => GetDetails(generatorSyntaxContext)
-        ).WithTrackingName(TrackingNames.FindModelsWithGenerateQueryBusinessLogic)
-        .Collect().WithTrackingName(TrackingNames.CollectModelsIntoArray);
+        )
+        .WithTrackingName(TrackingNames.FindQueryScaffoldAttributes)
+        .Collect()
+        .WithTrackingName(TrackingNames.CollectQueryScaffoldDetails);
 
-        context.RegisterSourceOutput(modelsToGenerate, GenerateSource);
+        context.RegisterSourceOutput(queryScaffoldDetails, GenerateSource);
     }
 
     #endregion
@@ -71,10 +73,10 @@ public sealed class QueryScaffoldGenerator : IIncrementalGenerator
     {
         RecordDeclarationSyntax modelDeclaration = (RecordDeclarationSyntax)generatorSyntaxContext.TargetNode;
         AttributeData queryScaffoldAttribute = generatorSyntaxContext.Attributes[0];
-        string responseType = queryScaffoldAttribute.ConstructorArguments[0].Value!.ToString();
-        int apiVersion = (int)queryScaffoldAttribute.ConstructorArguments[1].Value!;
-        string modelNamespace = Functions.GetModelNamespace(modelDeclaration!.Ancestors());
-        string modelName = modelDeclaration!.Identifier.Text;
+        string responseType = queryScaffoldAttribute.GetConstructorArgumentValue(0);
+        int apiVersion = queryScaffoldAttribute.GetConstructorArgumentValue<int>(1);
+        string modelNamespace = modelDeclaration.GetNamespace();
+        string modelName = modelDeclaration.GetName();
         QueryScaffoldDetail detail = new(modelNamespace, modelName, responseType, apiVersion);
         return detail;
     }

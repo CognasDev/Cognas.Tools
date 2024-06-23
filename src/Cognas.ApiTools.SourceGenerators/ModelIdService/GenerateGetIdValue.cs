@@ -20,7 +20,7 @@ internal static class GenerateGetId
         getIdsBuilder.Append(detail.ModelNamespace);
         getIdsBuilder.Append('.');
         getIdsBuilder.Append(detail.ModelName);
-        getIdsBuilder.Append(" ");
+        getIdsBuilder.Append(' ');
         getIdsBuilder.Append(detail.CamelCaseModelName);
         getIdsBuilder.Append(" => ");
         getIdsBuilder.Append(detail.CamelCaseModelName);

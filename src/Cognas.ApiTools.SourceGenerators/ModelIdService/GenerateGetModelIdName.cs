@@ -25,9 +25,13 @@ internal static class GenerateGetModelIdName
         getModelIdNameBuilder.Append('.');
         getModelIdNameBuilder.Append(detail.ModelName);
         getModelIdNameBuilder.AppendLine("):");
-        getModelIdNameBuilder.Append("\t\t\t\treturn \"");
+        getModelIdNameBuilder.Append("\t\t\t\treturn nameof(");
+        getModelIdNameBuilder.Append(detail.ModelNamespace);
+        getModelIdNameBuilder.Append('.');
+        getModelIdNameBuilder.Append(detail.ModelName);
+        getModelIdNameBuilder.Append('.');
         getModelIdNameBuilder.Append(detail.IdPropertyName);
-        getModelIdNameBuilder.AppendLine("\";");
+        getModelIdNameBuilder.AppendLine(");");
     }
 
     #endregion

@@ -1,6 +1,10 @@
-# Message for cloners...
+#### Message for cloners...
 
-Hi folks.\If you have any feedback,suggestions etc. then please feel free to get in touch - hello@cognas.co.uk.\Thanks!
+Hi folks.
+
+If you have any feedback,suggestions etc. then please feel free to get in touch - hello@cognas.co.uk.
+
+Thanks!
 
 # Cognas.ApiTools
 

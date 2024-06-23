@@ -5,35 +5,20 @@ namespace Samples.MusicCollection.Api.Genres;
 /// <summary>
 /// 
 /// </summary>
-public sealed class GenreMappingService : CommandMappingServiceBase<Genre, GenreRequest, GenreResponse>
+public sealed class GenreQueryMappingService : QueryMappingServiceBase<Genre, GenreResponse>
 {
     #region Constructor / Finaliser Declarations
 
     /// <summary>
-    /// Default constructor for <see cref="GenreMappingService"/>
+    /// Default constructor for <see cref="GenreQueryMappingService"/>
     /// </summary>
-    public GenreMappingService()
+    public GenreQueryMappingService()
     {
     }
 
     #endregion
 
     #region Public Method Declarations
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="request"></param>
-    /// <returns></returns>
-    public override Genre RequestToModel(GenreRequest request)
-    {
-        Genre model = new()
-        {
-            GenreId = request.GenreId ?? 0,
-            Name = request.Name
-        };
-        return model;
-    }
 
     /// <summary>
     /// 

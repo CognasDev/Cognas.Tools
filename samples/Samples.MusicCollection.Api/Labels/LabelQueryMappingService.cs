@@ -1,18 +1,18 @@
 ﻿using Cognas.ApiTools.Mapping;
 
-namespace Samples.MusicCollection.Api.Keys;
+namespace Samples.MusicCollection.Api.Labels;
 
 /// <summary>
 /// 
 /// </summary>
-public sealed class KeyMappingService : QueryMappingServiceBase<Key, KeyResponse>
+public sealed class LabelQueryMappingService : QueryMappingServiceBase<Label, LabelResponse>
 {
     #region Constructor / Finaliser Declarations
 
     /// <summary>
-    /// Default constructor for <see cref="KeyMappingService"/>
+    /// Default constructor for <see cref="LabelQueryMappingService"/>
     /// </summary>
-    public KeyMappingService()
+    public LabelQueryMappingService()
     {
     }
 
@@ -25,12 +25,11 @@ public sealed class KeyMappingService : QueryMappingServiceBase<Key, KeyResponse
     /// </summary>
     /// <param name="model"></param>
     /// <returns></returns>
-    public override KeyResponse ModelToResponse(Key model)
+    public override LabelResponse ModelToResponse(Label model)
     {
-        KeyResponse response = new()
+        LabelResponse response = new()
         {
-            KeyId = model.KeyId,
-            CamelotCode = model.CamelotCode,
+            LabelId = model.LabelId,
             Name = model.Name
         };
         return response;

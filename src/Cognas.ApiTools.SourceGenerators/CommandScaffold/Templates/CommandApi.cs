@@ -18,17 +18,19 @@ public sealed partial class {1}CommandApi : CommandApiBase<{2},{3},{4}>
     /// Default constructor for <see cref="{1}CommandApi"/>
     /// </summary>
     /// <param name="logger"></param>
-    /// <param name="mappingService"></param>
+    /// <param name="commandMappingService"></param>
+    /// <param name="queryMappingService"></param>
     /// <param name="modelIdService"></param>
     /// <param name="commandBusinessLogic"></param>
     public {1}CommandApi
     (
         ILogger<{1}CommandApi> logger,
-        ICommandMappingService<{2},{3},{4}> mappingService,
+        ICommandMappingService<{2},{3},{4}> commandMappingService,
+        IQueryMappingService <{2},{4}> queryMappingService,
         IModelIdService modelIdService,
         ICommandBusinessLogic<{2}> commandBusinessLogic
     )
-    : base(logger, mappingService, modelIdService, commandBusinessLogic)
+    : base(logger, commandMappingService, queryMappingService, modelIdService, commandBusinessLogic)
     {{
     }}
 

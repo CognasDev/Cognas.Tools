@@ -41,7 +41,7 @@ public abstract class QueryApiBase<TModel, TResponse> : IQueryApi<TModel, TRespo
     /// <summary>
     /// 
     /// </summary>
-    public IQueryMappingService<TModel, TResponse> MappingService { get; }
+    public IQueryMappingService<TModel, TResponse> QueryMappingService { get; }
 
     /// <summary>
     /// 
@@ -66,24 +66,24 @@ public abstract class QueryApiBase<TModel, TResponse> : IQueryApi<TModel, TRespo
     /// Default constructor for <see cref="QueryApiBase{TModel,TResponse}"/>
     /// </summary>
     /// <param name="logger"></param>
-    /// <param name="mappingService"></param>
+    /// <param name="queryMappingService"></param>
     /// <param name="modelIdService"></param>
     /// <param name="paginationFunctions"></param>
     /// <param name="queryBusinessLogic"></param>
     protected QueryApiBase(ILogger logger,
-                           IQueryMappingService<TModel, TResponse> mappingService,
+                           IQueryMappingService<TModel, TResponse> queryMappingService,
                            IModelIdService modelIdService,
                            IPaginationFunctions paginationFunctions,
                            IQueryBusinessLogic<TModel> queryBusinessLogic)
     {
         ArgumentNullException.ThrowIfNull(logger, nameof(logger));
-        ArgumentNullException.ThrowIfNull(mappingService, nameof(mappingService));
+        ArgumentNullException.ThrowIfNull(queryMappingService, nameof(queryMappingService));
         ArgumentNullException.ThrowIfNull(modelIdService, nameof(modelIdService));
         ArgumentNullException.ThrowIfNull(paginationFunctions, nameof(paginationFunctions));
         ArgumentNullException.ThrowIfNull(queryBusinessLogic, nameof(queryBusinessLogic));
 
         Logger = logger;
-        MappingService = mappingService;
+        QueryMappingService = queryMappingService;
         ModelIdService = modelIdService;
         PaginationFunctions = paginationFunctions;
         QueryBusinessLogic = queryBusinessLogic;
@@ -210,7 +210,7 @@ public abstract class QueryApiBase<TModel, TResponse> : IQueryApi<TModel, TRespo
     {
         if (model != null)
         {
-            TResponse response = MappingService.ModelToResponse(model);
+            TResponse response = QueryMappingService.ModelToResponse(model);
             return TypedResults.Ok(response);
         }
         return TypedResults.NotFound();
@@ -223,7 +223,7 @@ public abstract class QueryApiBase<TModel, TResponse> : IQueryApi<TModel, TRespo
     private async Task<IEnumerable<TResponse>> GetResponsesAsync()
     {
         IEnumerable<TModel> models = await QueryBusinessLogic.SelectModelsAsync().ConfigureAwait(false);
-        IEnumerable<TResponse> responses = MappingService.ModelsToResponses(models);
+        IEnumerable<TResponse> responses = QueryMappingService.ModelsToResponses(models);
         return responses;
     }
 
@@ -236,7 +236,7 @@ public abstract class QueryApiBase<TModel, TResponse> : IQueryApi<TModel, TRespo
     private async Task<IEnumerable<TResponse>> GetResponsesWithPaginationAsync(HttpContext httpContext, IPaginationQuery paginationQuery)
     {
         IEnumerable<TModel> models = await QueryBusinessLogic.SelectModelsAsync().ConfigureAwait(false);
-        IEnumerable<TResponse> responses = MappingService.ModelsToResponses(models);
+        IEnumerable<TResponse> responses = QueryMappingService.ModelsToResponses(models);
         PropertyDescriptor orderByProperty = PaginationFunctions.OrderByProperty<TResponse>(paginationQuery);
         int takeQuantity = PaginationFunctions.TakeQuantity(paginationQuery);
         int skipNumber = PaginationFunctions.SkipNumber(paginationQuery);

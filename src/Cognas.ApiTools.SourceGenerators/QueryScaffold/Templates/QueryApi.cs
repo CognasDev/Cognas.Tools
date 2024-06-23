@@ -19,19 +19,19 @@ public sealed partial class {1}QueryApi : QueryApiBase<{2}, {3}>
     /// Default constructor for <see cref="{1}QueryApi"/>
     /// </summary>
     /// <param name="logger"></param>
-    /// <param name="mappingService"></param>
+    /// <param name="queryMappingService"></param>
     /// <param name="modelIdService"></param>
     /// <param name="paginationFunctions"></param>
     /// <param name="queryBusinessLogic"></param>
     public {1}QueryApi
     (
         ILogger<{1}QueryApi> logger,
-        IQueryMappingService<{2}, {3}> mappingService,
+        IQueryMappingService<{2}, {3}> queryMappingService,
         IModelIdService modelIdService,
         IPaginationFunctions paginationFunctions,
         IQueryBusinessLogic<{2}> queryBusinessLogic
     )
-    : base(logger, mappingService, modelIdService, paginationFunctions, queryBusinessLogic)
+    : base(logger, queryMappingService, modelIdService, paginationFunctions, queryBusinessLogic)
     {{
     }}
 

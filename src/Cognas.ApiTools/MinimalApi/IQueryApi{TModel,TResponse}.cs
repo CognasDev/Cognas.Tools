@@ -27,7 +27,7 @@ public interface IQueryApi<TModel, TResponse> where TModel : class where TRespon
     /// <summary>
     /// 
     /// </summary>
-    IQueryMappingService<TModel, TResponse> MappingService { get; }
+    IQueryMappingService<TModel, TResponse> QueryMappingService { get; }
 
     /// <summary>
     /// 

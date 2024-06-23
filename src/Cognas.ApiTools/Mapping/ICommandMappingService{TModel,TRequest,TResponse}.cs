@@ -6,7 +6,7 @@
 /// <typeparam name="TModel"></typeparam>
 /// <typeparam name="TRequest"></typeparam>
 /// <typeparam name="TResponse"></typeparam>
-public interface ICommandMappingService<TModel, TRequest, TResponse> : IQueryMappingService<TModel, TResponse>
+public interface ICommandMappingService<TModel, TRequest, TResponse> 
     where TModel : class
     where TRequest : class
     where TResponse : class

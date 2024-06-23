@@ -31,7 +31,7 @@ public interface ICommandApi<TModel, TRequest, TResponse>
     /// <summary>
     /// 
     /// </summary>
-    ICommandMappingService<TModel, TRequest, TResponse> MappingService { get; }
+    ICommandMappingService<TModel, TRequest, TResponse> CommandMappingService { get; }
 
     /// <summary>
     /// 

@@ -41,7 +41,12 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
     /// <summary>
     /// 
     /// </summary>
-    public ICommandMappingService<TModel, TRequest, TResponse> MappingService { get; }
+    public ICommandMappingService<TModel, TRequest, TResponse> CommandMappingService { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public IQueryMappingService<TModel, TResponse> QueryMappingService { get; }
 
     /// <summary>
     /// 
@@ -61,21 +66,25 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
     /// Default constructor for <see cref="CommandApiBase{TModel,TRequest,TResponse}"/>
     /// </summary>
     /// <param name="logger"></param>
-    /// <param name="mappingService"></param>
+    /// <param name="commandMappingService"></param>
+    /// <param name="queryMappingService"></param>
     /// <param name="modelIdService"></param>
     /// <param name="commandBusinessLogic"></param>
     protected CommandApiBase(ILogger logger,
-                             ICommandMappingService<TModel, TRequest, TResponse> mappingService,
+                             ICommandMappingService<TModel, TRequest, TResponse> commandMappingService,
+                             IQueryMappingService<TModel, TResponse> queryMappingService,
                              IModelIdService modelIdService,
                              ICommandBusinessLogic<TModel> commandBusinessLogic)
     {
         ArgumentNullException.ThrowIfNull(logger, nameof(logger));
-        ArgumentNullException.ThrowIfNull(mappingService, nameof(mappingService));
+        ArgumentNullException.ThrowIfNull(commandMappingService, nameof(commandMappingService));
+        ArgumentNullException.ThrowIfNull(queryMappingService, nameof(queryMappingService));
         ArgumentNullException.ThrowIfNull(modelIdService, nameof(modelIdService));
         ArgumentNullException.ThrowIfNull(commandBusinessLogic, nameof(commandBusinessLogic));
 
         Logger = logger;
-        MappingService = mappingService;
+        CommandMappingService = commandMappingService;
+        QueryMappingService = queryMappingService;
         ModelIdService = modelIdService;
         CommandBusinessLogic = commandBusinessLogic;
 
@@ -178,12 +187,12 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
     /// <returns></returns>
     private async Task<Results<Created<TResponse>, BadRequest>> PostAsync(HttpContext httpContext, TRequest request)
     {
-        TModel model = MappingService.RequestToModel(request);
+        TModel model = CommandMappingService.RequestToModel(request);
         TModel? insertedModel = await CommandBusinessLogic.InsertModelAsync(model).ConfigureAwait(false);
         if (insertedModel != null)
         {
             int id = ModelIdService.GetId(insertedModel);
-            TResponse response = MappingService.ModelToResponse(insertedModel);
+            TResponse response = QueryMappingService.ModelToResponse(insertedModel);
             string uri = BuildNewModelUri(httpContext, id);
             return TypedResults.Created(uri, response);
         }
@@ -198,7 +207,7 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
     /// <returns></returns>
     private async Task<Results<Ok<TResponse>, BadRequest>> PutAsync(int id, TRequest request)
     {
-        TModel model = MappingService.RequestToModel(request);
+        TModel model = CommandMappingService.RequestToModel(request);
         if (ModelIdService.GetId(model) != id)
         {
             return TypedResults.BadRequest();
@@ -206,7 +215,7 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
         TModel? updatedModel = await CommandBusinessLogic.UpdateModelAsync(model).ConfigureAwait(false);
         if (updatedModel != null)
         {
-            TResponse response = MappingService.ModelToResponse(updatedModel);
+            TResponse response = QueryMappingService.ModelToResponse(updatedModel);
             return TypedResults.Ok(response);
         }
         return TypedResults.BadRequest();

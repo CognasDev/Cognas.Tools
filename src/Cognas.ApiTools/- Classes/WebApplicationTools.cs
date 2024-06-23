@@ -1,4 +1,6 @@
 ﻿using Asp.Versioning;
+using Asp.Versioning.Builder;
+using Asp.Versioning.Conventions;
 using Azure.Extensions.AspNetCore.Configuration.Secrets;
 using Azure.Identity;
 using Cognas.ApiTools.BusinessLogic;
@@ -16,6 +18,7 @@ using Cognas.ApiTools.Shared.Extensions;
 using HealthChecks.UI.Client;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -179,6 +182,23 @@ public sealed class WebApplicationTools
     /// <summary>
     /// 
     /// </summary>
+    public void AddVersioning()
+    {
+        ServiceCollection.AddApiVersioning(apiVersioningAction =>
+        {
+            const string xApiVersion = "x-api-version";
+            apiVersioningAction.DefaultApiVersion = new ApiVersion(1, 0);
+            apiVersioningAction.AssumeDefaultVersionWhenUnspecified = true;
+            apiVersioningAction.ReportApiVersions = true;
+            apiVersioningAction.ApiVersionReader = ApiVersionReader.Combine(new UrlSegmentApiVersionReader(),
+                                                                            new HeaderApiVersionReader(xApiVersion),
+                                                                            new MediaTypeApiVersionReader(xApiVersion));
+        });
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
     /// <typeparam name="TBind"></typeparam>
     public void BindConfigurationSection<TBind>() where TBind : class => ServiceCollection.Configure<TBind>(ConfigurationManager.GetSection(typeof(TBind).Name));
 
@@ -262,18 +282,15 @@ public sealed class WebApplicationTools
     /// <summary>
     /// 
     /// </summary>
-    public void ConfigureVersioning()
+    /// <param name="webApplication"></param>
+    /// <param name="majorVersion"></param>
+    /// <param name="minorVersion"></param>
+    /// <returns></returns>
+    public static RouteGroupBuilder GetApiVersionRoute(WebApplication webApplication, int majorVersion, int? minorVersion = null)
     {
-        ServiceCollection.AddApiVersioning(apiVersioningAction =>
-        {
-            const string xApiVersion = "x-api-version";
-            apiVersioningAction.DefaultApiVersion = new ApiVersion(1, 0);
-            apiVersioningAction.AssumeDefaultVersionWhenUnspecified = true;
-            apiVersioningAction.ReportApiVersions = true;
-            apiVersioningAction.ApiVersionReader = ApiVersionReader.Combine(new UrlSegmentApiVersionReader(),
-                                                                            new HeaderApiVersionReader(xApiVersion),
-                                                                            new MediaTypeApiVersionReader(xApiVersion));
-        });
+        ApiVersionSet apiVersionSet = webApplication.NewApiVersionSet().HasApiVersion(majorVersion, minorVersion).ReportApiVersions().Build();
+        RouteGroupBuilder routeGroupBuilder = webApplication.MapGroup("api/v{version:apiVersion}").WithApiVersionSet(apiVersionSet);
+        return routeGroupBuilder;
     }
 
     #endregion

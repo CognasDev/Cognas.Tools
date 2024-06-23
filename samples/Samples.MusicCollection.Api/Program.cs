@@ -33,10 +33,10 @@ public sealed class Program
         webApplicationTools.AddHttpClient();
         webApplicationTools.AddPagination();
         webApplicationTools.AddSignalR();
-
+        webApplicationTools.AddVersioning();
         webApplicationTools.ConfigureLocalLogging();
         webApplicationTools.ConfigureSwaggerGen();
-        webApplicationTools.ConfigureVersioning();
+
         webApplicationTools.BindConfigurationSection<MicroserviceUris>();
 
         //ModelIdService is auto-generated via SourceGeneration
@@ -44,12 +44,13 @@ public sealed class Program
 
         WebApplication webApplication = webApplicationBuilder.Build();
         WebApplicationTools.ConfigureSwagger(webApplication);
+        RouteGroupBuilder apiVersionOneRoutes = WebApplicationTools.GetApiVersionRoute(webApplication, 1);
 
         //Initiate minimal Api endpoints
-        webApplication.InitiateApi<Album, AlbumRequest, AlbumResponse>();
-        webApplication.InitiateApi<Genre, GenreRequest, GenreResponse>();
-        webApplication.InitiateApi<Key, KeyResponse>();
-        webApplication.InitiateApi<Label, LabelRequest, LabelResponse>();
+        webApplication.InitiateApi<Album, AlbumRequest, AlbumResponse>(apiVersionOneRoutes);
+        webApplication.InitiateApi<Genre, GenreRequest, GenreResponse>(apiVersionOneRoutes);
+        webApplication.InitiateApi<Key, KeyResponse>(apiVersionOneRoutes);
+        webApplication.InitiateApi<Label, LabelRequest, LabelResponse>(apiVersionOneRoutes);
 
         WebApplicationTools.ConfigureAndRun(webApplication);
     }

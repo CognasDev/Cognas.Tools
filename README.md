@@ -2,7 +2,7 @@
 
 Hi folks.
 
-If you have any feedback,suggestions etc. then please feel free to get in touch - hello@cognas.co.uk.
+If you have any feedback, suggestions etc. then please feel free to get in touch - hello@cognas.co.uk.
 
 Thanks!
 
@@ -16,7 +16,7 @@ Contains various classes for data access. Uses Dapper and stored procedures.
 
 ## Cognas.ApiTools.Shared
 
-Various extension methods and services used throughout the solution.
+Various abstractions, extension methods and services used throughout the solution.
 
 ## Cognas.ApiTools.SourceGenerators
 
@@ -32,7 +32,10 @@ The generated classes can be viewed after successfuly compilation in:
 
 ### Attributes used for source generation *(namespace: Cognas.ApiTools.SourceGenerators.Attributes)*
 
-- **CommandScaffoldAttribute** - set on a model to generate command business logic and RESTful endpoints (POST / PUT / DELETE).
-- **QueryScaffoldAttribute** - set on a model to generate query business logic and RESTful endpoints (GET all / GET by id).
+- **CommandScaffoldAttribute** - set on a model to generate command business logic and RESTful endpoints
+(POST / PUT / DELETE).
+- **QueryScaffoldAttribute** - set on a model to generate query business logic and RESTful endpoints
+(GET all / GET by id).
 - **IdAttribute** - set on a property of a model to flag correspondence with a primary key in SQL.
-- **IncludeInModelIdServiceAttribute** - set on a model to include the model within the ModelIdService\(used to get / set Id properties of a model to avoid reflection).
+- **IncludeInModelIdServiceAttribute** - set on a model to include it within the ModelIdService
+(used to get / set Id properties of a model to avoid reflection).

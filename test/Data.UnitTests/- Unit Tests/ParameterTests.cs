@@ -22,7 +22,7 @@ public sealed class ParameterTests
         Parameter parameter = new(name, value);
 
         parameter.Name.Should().Be(name);
-        parameter.Value.Should().Be(value); 
+        parameter.Value.Should().Be(value);
     }
 
     /// <summary>

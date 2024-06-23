@@ -1,9 +1,9 @@
 ﻿using Cognas.ApiTools.SourceGenerators.QueryScaffold.Names;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
 using System.Collections.Immutable;
 using System.Linq;
-using System;
 
 namespace Cognas.ApiTools.SourceGenerators.QueryScaffold;
 
@@ -88,10 +88,12 @@ public sealed class QueryScaffoldGenerator : IIncrementalGenerator
     {
         string queryApiTemplate = TemplateCache.GetTemplate(TemplateNames.QueryApi);
         string queryBusinessLogicTemplate = TemplateCache.GetTemplate(TemplateNames.QueryBusinessLogic);
-        foreach (QueryScaffoldDetail detail in details.OrderBy(detail => detail.ModelName))
+        ReadOnlySpan<QueryScaffoldDetail> detailsSpan = [.. details.OrderBy(detail => detail.ModelName)];
+        foreach (QueryScaffoldDetail detail in detailsSpan)
         {
-            GenerateApi(context, queryApiTemplate, detail);
-            GenerateBusinessLogic(context, queryBusinessLogicTemplate, detail);
+            string fullModelName = $"{detail.ModelNamespace}.{detail.ModelName}";
+            GenerateApi(context, fullModelName, queryApiTemplate, detail);
+            GenerateBusinessLogic(context, fullModelName, queryBusinessLogicTemplate, detail);
         }
     }
 
@@ -99,16 +101,17 @@ public sealed class QueryScaffoldGenerator : IIncrementalGenerator
     /// 
     /// </summary>
     /// <param name="context"></param>
+    /// <param name="fullModelName"></param>
     /// <param name="template"></param>
     /// <param name="detail"></param>
-    private static void GenerateApi(SourceProductionContext context, string template, QueryScaffoldDetail detail)
+    private static void GenerateApi(SourceProductionContext context, string fullModelName, string template, QueryScaffoldDetail detail)
     {
-        string fullModelName = $"{detail.ModelNamespace}.{detail.ModelName}";
         string queryApiSource = string.Format(template,
-                                              detail.ModelNamespace,
-                                              detail.ModelName,
                                               fullModelName,
-                                              detail.ResponseName);
+                                              detail.ResponseName,
+                                              detail.ModelNamespace,
+                                              detail.ApiVersion,
+                                              detail.ModelName);
         string versionFilename = string.Format(SourceFileNames.QueryApi, detail.ApiVersion);
         string filename = $"{detail.ModelName}.{versionFilename}";
         context.AddSource(filename, queryApiSource);
@@ -118,15 +121,16 @@ public sealed class QueryScaffoldGenerator : IIncrementalGenerator
     /// 
     /// </summary>
     /// <param name="context"></param>
+    /// <param name="fullModelName"></param>
     /// <param name="template"></param>
     /// <param name="detail"></param>
-    private static void GenerateBusinessLogic(SourceProductionContext context, string template, QueryScaffoldDetail detail)
+    private static void GenerateBusinessLogic(SourceProductionContext context, string fullModelName, string template, QueryScaffoldDetail detail)
     {
-        string fullModelName = $"{detail.ModelNamespace}.{detail.ModelName}";
         string queryBusinesssLogicSource = string.Format(template,
+                                                         fullModelName,
                                                          detail.ModelNamespace,
-                                                         detail.ModelName,
-                                                         fullModelName);
+                                                         detail.ApiVersion,
+                                                         detail.ModelName);
         string versionFilename = string.Format(SourceFileNames.QueryBusinessLogic, detail.ApiVersion);
         string filename = $"{detail.ModelName}.{versionFilename}";
         context.AddSource(filename, queryBusinesssLogicSource);

@@ -5,39 +5,20 @@ namespace Samples.MusicCollection.Api.Albums;
 /// <summary>
 /// 
 /// </summary>
-public sealed class AlbumMappingService : CommandMappingServiceBase<Album, AlbumRequest, AlbumResponse>
+public sealed class AlbumQueryMappingService : QueryMappingServiceBase<Album, AlbumResponse>
 {
     #region Constructor / Finaliser Declarations
 
     /// <summary>
-    /// Default constructor for <see cref="AlbumMappingService"/>
+    /// Default constructor for <see cref="AlbumQueryMappingService"/>
     /// </summary>
-    public AlbumMappingService()
+    public AlbumQueryMappingService()
     {
     }
 
     #endregion
 
     #region Public Method Declarations
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="request"></param>
-    /// <returns></returns>
-    public override Album RequestToModel(AlbumRequest request)
-    {
-        Album model = new()
-        {
-            AlbumId = request.AlbumId ?? 0,
-            ArtistId = request.ArtistId,
-            GenreId = request.GenreId,
-            LabelId = request.LabelId,
-            Name = request.Name,
-            ReleaseDate = request.ReleaseDate
-        };
-        return model;
-    }
 
     /// <summary>
     /// 

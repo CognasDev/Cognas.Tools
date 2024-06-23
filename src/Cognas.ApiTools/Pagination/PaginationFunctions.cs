@@ -1,10 +1,7 @@
-﻿using Azure.Core;
-using Cognas.ApiTools.Extensions;
+﻿using Cognas.ApiTools.Extensions;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Concurrent;
 using System.ComponentModel;
-using System.Drawing.Printing;
-using System.Linq;
 
 namespace Cognas.ApiTools.Pagination;
 

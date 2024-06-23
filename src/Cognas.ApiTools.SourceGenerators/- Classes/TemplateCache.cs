@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -14,6 +15,8 @@ internal static class TemplateCache
     #region Field Declarations
 
     private static readonly Dictionary<string, string> _cache = [];
+    private static readonly Lazy<Assembly> _executingAssembly = new(() => Assembly.GetExecutingAssembly());
+    private static readonly Lazy<string[]> _manifestResourceStreams = new(() => _executingAssembly.Value.GetManifestResourceNames());
 
     #endregion
 
@@ -26,12 +29,13 @@ internal static class TemplateCache
     /// <returns></returns>
     public static string GetTemplate(string templateName)
     {
-        if (!_cache.ContainsKey(templateName))
+        bool containsTemplate = _cache.TryGetValue(templateName, out string template);
+        if (!containsTemplate)
         {
-            string resource = ReadResourceTemplateAsync(templateName).Result;
-            _cache.Add(templateName, resource);
+            template = ReadResourceTemplateAsync(templateName).Result;
+            _cache.Add(templateName, template);
         }
-        return _cache[templateName];
+        return template;
     }
 
     #endregion
@@ -45,9 +49,8 @@ internal static class TemplateCache
     /// <returns></returns>
     private static async Task<string> ReadResourceTemplateAsync(string templateName)
     {
-        Assembly assembly = Assembly.GetExecutingAssembly();
-        string resourcePath = assembly.GetManifestResourceNames().Single(name => name.EndsWith(templateName));
-        using Stream stream = assembly.GetManifestResourceStream(resourcePath);
+        string resourcePath = _manifestResourceStreams.Value.Single(name => name.EndsWith(templateName));
+        using Stream stream = _executingAssembly.Value.GetManifestResourceStream(resourcePath);
         using StreamReader streamReader = new(stream);
         string resource = await streamReader.ReadToEndAsync().ConfigureAwait(false);
         return resource;

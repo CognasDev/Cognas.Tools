@@ -8,7 +8,7 @@ namespace Cognas.ApiTools.Mapping;
 /// <typeparam name="TModel"></typeparam>
 /// <typeparam name="TRequest"></typeparam>
 /// <typeparam name="TResponse"></typeparam>
-public abstract class CommandMappingServiceBase<TModel, TRequest, TResponse> : QueryMappingServiceBase<TModel, TResponse>, ICommandMappingService<TModel, TRequest, TResponse>
+public abstract class CommandMappingServiceBase<TModel, TRequest, TResponse> : ICommandMappingService<TModel, TRequest, TResponse>
     where TModel : class
     where TRequest : class
     where TResponse : class

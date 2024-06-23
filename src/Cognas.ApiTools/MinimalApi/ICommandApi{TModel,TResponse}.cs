@@ -1,6 +1,5 @@
 ﻿using Cognas.ApiTools.BusinessLogic;
 using Cognas.ApiTools.Mapping;
-using Cognas.ApiTools.Pagination;
 using Microsoft.AspNetCore.Builder;
 
 namespace Cognas.ApiTools.MinimalApi;
@@ -31,7 +30,7 @@ public interface ICommandApi<TModel, TRequest, TResponse>
     /// <summary>
     /// 
     /// </summary>
-    ICommandMappingService<TModel, TRequest, TResponse> MappingService { get; }
+    ICommandMappingService<TModel, TRequest, TResponse> CommandMappingService { get; }
 
     /// <summary>
     /// 

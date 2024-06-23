@@ -52,5 +52,4 @@ public static class HeaderDictionaryExtensions
     }
 
     #endregion
-
 }

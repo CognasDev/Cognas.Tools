@@ -39,7 +39,7 @@ public interface IPaginationFunctions
     /// <typeparam name="TDto"></typeparam>
     /// <param name="paginationQuery"></param>
     /// <returns></returns>
-    bool? IsPaginationQueryValidOrDefault<TDto>(IPaginationQuery paginationQuery) where TDto : class;
+    bool? IsPaginationQueryValidOrNotRequested<TDto>(IPaginationQuery paginationQuery) where TDto : class;
 
     /// <summary>
     /// 

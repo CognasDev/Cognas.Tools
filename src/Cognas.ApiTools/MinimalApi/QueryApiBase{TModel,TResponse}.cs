@@ -9,8 +9,11 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using System.ComponentModel;
+using System.Net.Mime;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace Cognas.ApiTools.MinimalApi;
 
@@ -115,9 +118,9 @@ public abstract class QueryApiBase<TModel, TResponse> : IQueryApi<TModel, TRespo
     /// 
     /// </summary>
     /// <param name="endpointRouteBuilder"></param>
-    public virtual void MapGet(IEndpointRouteBuilder endpointRouteBuilder)
+    public virtual RouteHandlerBuilder MapGet(IEndpointRouteBuilder endpointRouteBuilder)
     {
-        endpointRouteBuilder.MapGet
+        return endpointRouteBuilder.MapGet
         (
             $"/{LowerPluralModelName}",
             (
@@ -132,16 +135,19 @@ public abstract class QueryApiBase<TModel, TResponse> : IQueryApi<TModel, TRespo
         .MapToApiVersion(ApiVersion)
         .WithName($"Get{PluralModelName}V{ApiVersion}")
         .WithTags(PluralModelName)
-        .WithOpenApi();
+        .WithOpenApi(configureOperation => BuildGetAllOpenApi(configureOperation))
+        .Produces<IEnumerable<TResponse>>(StatusCodes.Status200OK, MediaTypeNames.Application.Json)
+        .Produces(StatusCodes.Status400BadRequest)
+        .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError, MediaTypeNames.Application.Json);
     }
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="endpointRouteBuilder"></param>
-    public virtual void MapGetById(IEndpointRouteBuilder endpointRouteBuilder)
+    public virtual RouteHandlerBuilder MapGetById(IEndpointRouteBuilder endpointRouteBuilder)
     {
-        endpointRouteBuilder.MapGet
+        return endpointRouteBuilder.MapGet
         (
             $"/{LowerPluralModelName}/{{id}}",
             async
@@ -155,7 +161,14 @@ public abstract class QueryApiBase<TModel, TResponse> : IQueryApi<TModel, TRespo
         .MapToApiVersion(ApiVersion)
         .WithName($"Get{PluralModelName}ByIdV{ApiVersion}")
         .WithTags(PluralModelName)
-        .WithOpenApi();
+        .WithOpenApi(configureOperation => new(configureOperation)
+            {
+                Summary = $"Gets a single model as the '{typeof(TResponse).Name}' response via the required '{configureOperation.Parameters[0].Name}' parameter.",
+                Tags = [new() { Name = PluralModelName }]
+            })
+        .Produces<TResponse>(StatusCodes.Status200OK, MediaTypeNames.Application.Json)
+        .Produces(StatusCodes.Status404NotFound)
+        .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError, MediaTypeNames.Application.Json);
     }
 
     #endregion
@@ -172,7 +185,7 @@ public abstract class QueryApiBase<TModel, TResponse> : IQueryApi<TModel, TRespo
     /// <exception cref="PaginationQueryParametersException"></exception>
     private async IAsyncEnumerable<TResponse> Get(HttpContext httpContext, PaginationQuery paginationQuery, [EnumeratorCancellation] CancellationToken cancellationToken)
     {
-        IEnumerable<TResponse> responses = PaginationFunctions.IsPaginationQueryValidOrDefault<TResponse>(paginationQuery) switch
+        IEnumerable<TResponse> responses = PaginationFunctions.IsPaginationQueryValidOrNotRequested<TResponse>(paginationQuery) switch
         {
             false => throw new PaginationQueryParametersException(paginationQuery!),
             true => await GetResponsesWithPaginationAsync(httpContext, paginationQuery!).ConfigureAwait(false),
@@ -193,7 +206,8 @@ public abstract class QueryApiBase<TModel, TResponse> : IQueryApi<TModel, TRespo
     /// <returns></returns>
     private async Task<Results<Ok<TResponse>, NotFound>> GetAsync(int id)
     {
-        TModel? model = await QueryBusinessLogic.SelectModelAsync(id, ModelIdService.IdParameter<TModel>(id)).ConfigureAwait(false);
+        IParameter idParameter = ModelIdService.IdParameter<TModel>(id);
+        TModel? model = await QueryBusinessLogic.SelectModelAsync(id, idParameter).ConfigureAwait(false);
         return TryMapModelToDto(model);
     }
 
@@ -248,6 +262,34 @@ public abstract class QueryApiBase<TModel, TResponse> : IQueryApi<TModel, TRespo
 
         PaginationFunctions.BuildPaginationResponseHeader(paginationQuery, models, httpContext);
         return responses;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="configureOperation"></param>
+    /// <returns></returns>
+    private OpenApiOperation BuildGetAllOpenApi(OpenApiOperation configureOperation)
+    {
+        IList<OpenApiParameter> parameters = configureOperation.Parameters;
+        StringBuilder openApiStringBuilder = new();
+        openApiStringBuilder.Append("Gets a collection of models as '");
+        openApiStringBuilder.Append(typeof(TResponse).Name);
+        openApiStringBuilder.Append("' responses. Optional pagination is provided via the parameters '");
+        openApiStringBuilder.Append(parameters[0].Name);
+        openApiStringBuilder.Append("', '");
+        openApiStringBuilder.Append(parameters[1].Name);
+        openApiStringBuilder.Append("', '");
+        openApiStringBuilder.Append(parameters[2].Name);
+        openApiStringBuilder.Append("' and '");
+        openApiStringBuilder.Append(parameters[3].Name);
+        openApiStringBuilder.Append("'.");
+        OpenApiOperation openApiOperation = new(configureOperation)
+        {
+            Summary = openApiStringBuilder.ToString(),
+            Tags = [new() { Name = PluralModelName }]
+        };
+        return openApiOperation;
     }
 
     #endregion

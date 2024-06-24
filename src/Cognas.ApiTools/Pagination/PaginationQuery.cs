@@ -1,4 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace Cognas.ApiTools.Pagination;
 
@@ -13,22 +16,31 @@ public sealed record PaginationQuery : IPaginationQuery
     /// <summary>
     /// 
     /// </summary>
+    [FromQuery(Name = "pageSize")]
+    [JsonPropertyName("pageSize")]
     public required int? PageSize { get; set; }
 
     /// <summary>
     /// 
     /// </summary>
+    [FromQuery(Name = "pageNumber")]
+    [JsonPropertyName("pageNumber")]
     public required int? PageNumber { get; set; }
 
     /// <summary>
     /// 
     /// </summary>
+    [FromQuery(Name = "orderBy")]
+    [JsonPropertyName("orderBy")]
+    [StringLength(250)]
     public required string? OrderBy { get; set; }
 
     /// <summary>
     /// 
     /// </summary>
-    public required bool OrderByAscending { get; set; } = true;
+    [FromQuery(Name = "orderByAscending")]
+    [JsonPropertyName("orderByAscending")]
+    public required bool? OrderByAscending { get; set; }
 
     #endregion
 

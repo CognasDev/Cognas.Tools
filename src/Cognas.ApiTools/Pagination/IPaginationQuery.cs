@@ -25,7 +25,7 @@ public interface IPaginationQuery
     /// <summary>
     /// 
     /// </summary>
-    bool OrderByAscending { get; set; }
+    bool? OrderByAscending { get; set; }
 
     #endregion
 }

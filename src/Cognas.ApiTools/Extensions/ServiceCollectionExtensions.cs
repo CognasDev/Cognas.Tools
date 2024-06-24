@@ -13,6 +13,7 @@ using Cognas.ApiTools.ServiceRegistration;
 using Cognas.ApiTools.Services;
 using Cognas.ApiTools.Shared.Extensions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using System.Reflection;
 
 namespace Cognas.ApiTools.Extensions;

@@ -93,7 +93,7 @@ public sealed class PaginationFunctionsTests
         mockPaginationQuery.SetupGet(paginationQuery => paginationQuery.OrderBy).Returns(nameof(TestDto.Name));
 
         PaginationFunctions paginationFunctions = new();
-        paginationFunctions.IsPaginationQueryValidOrDefault<TestDto>(mockPaginationQuery.Object).Should().BeTrue();
+        paginationFunctions.IsPaginationQueryValidOrNotRequested<TestDto>(mockPaginationQuery.Object).Should().BeTrue();
     }
 
     /// <summary>
@@ -109,7 +109,7 @@ public sealed class PaginationFunctionsTests
         mockPaginationQuery.SetupGet(paginationQuery => paginationQuery.OrderBy).Returns(nameof(TestDto.Name));
 
         PaginationFunctions paginationFunctions = new();
-        paginationFunctions.IsPaginationQueryValidOrDefault<TestDto>(mockPaginationQuery.Object).Should().BeFalse();
+        paginationFunctions.IsPaginationQueryValidOrNotRequested<TestDto>(mockPaginationQuery.Object).Should().BeFalse();
     }
 
     /// <summary>
@@ -125,7 +125,7 @@ public sealed class PaginationFunctionsTests
         mockPaginationQuery.SetupGet(paginationQuery => paginationQuery.OrderBy).Returns(nameof(TestDto.Name));
 
         PaginationFunctions paginationFunctions = new();
-        paginationFunctions.IsPaginationQueryValidOrDefault<TestDto>(mockPaginationQuery.Object).Should().BeFalse();
+        paginationFunctions.IsPaginationQueryValidOrNotRequested<TestDto>(mockPaginationQuery.Object).Should().BeFalse();
     }
 
     /// <summary>

@@ -64,7 +64,7 @@ public sealed class PaginationFunctions : IPaginationFunctions
     /// <typeparam name="TDto"></typeparam>
     /// <param name="paginationQuery"></param>
     /// <returns></returns>
-    public bool? IsPaginationQueryValidOrDefault<TDto>(IPaginationQuery paginationQuery) where TDto : class
+    public bool? IsPaginationQueryValidOrNotRequested<TDto>(IPaginationQuery paginationQuery) where TDto : class
     {
         if (!paginationQuery.PageNumber.HasValue && !paginationQuery.PageSize.HasValue && string.IsNullOrWhiteSpace(paginationQuery.OrderBy))
         {

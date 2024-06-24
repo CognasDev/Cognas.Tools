@@ -61,9 +61,9 @@ public interface IQueryBusinessLogic<TModel> : ICommandOrQueryBusinessLogic wher
     /// 
     /// </summary>
     /// <param name="id"></param>
-    /// <param name="idExpression"></param>
+    /// <param name="idParameter"></param>
     /// <returns></returns>
-    Task<TModel?> SelectModelAsync(int id, IParameter idExpression);
+    Task<TModel?> SelectModelAsync(int id, IParameter idParameter);
 
     /// <summary>
     /// 

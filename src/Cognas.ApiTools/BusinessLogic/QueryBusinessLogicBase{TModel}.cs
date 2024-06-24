@@ -106,10 +106,10 @@ public abstract class QueryBusinessLogicBase<TModel> : CommandOrQueryBusinessLog
     /// 
     /// </summary>
     /// <param name="id"></param>
-    /// <param name="idExpression"></param>
+    /// <param name="idParameter"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public async Task<TModel?> SelectModelAsync(int id, IParameter idExpression)
+    public async Task<TModel?> SelectModelAsync(int id, IParameter idParameter)
     {
         TModel? selectedModel;
         if (UseCache)
@@ -119,7 +119,7 @@ public abstract class QueryBusinessLogicBase<TModel> : CommandOrQueryBusinessLog
         }
         else
         {
-            selectedModel = await DatabaseService.SelectModelAsync<TModel>(SelectByIdStoredProcedure, idExpression).ConfigureAwait(false);
+            selectedModel = await DatabaseService.SelectModelAsync<TModel>(SelectByIdStoredProcedure, idParameter).ConfigureAwait(false);
         }
         return selectedModel;
     }

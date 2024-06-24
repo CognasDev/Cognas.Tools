@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
+using System.Net.Mime;
 
 namespace Cognas.ApiTools.MinimalApi;
 
@@ -117,9 +118,9 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
     /// 
     /// </summary>
     /// <param name="endpointRouteBuilder"></param>
-    public virtual void MapPost(IEndpointRouteBuilder endpointRouteBuilder)
+    public virtual RouteHandlerBuilder MapPost(IEndpointRouteBuilder endpointRouteBuilder)
     {
-        endpointRouteBuilder.MapPost
+        return endpointRouteBuilder.MapPost
         (
             $"/{LowerPluralModelName}",
             async
@@ -134,16 +135,24 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
         .MapToApiVersion(ApiVersion)
         .WithName($"Post{PluralModelName}V{ApiVersion}")
         .WithTags(PluralModelName)
-        .WithOpenApi();
+        .WithOpenApi(configureOperation => new(configureOperation)
+            {
+                Summary = $"Posts a new model via the '{typeof(TRequest).Name}' request.",
+                Tags = [new() { Name = PluralModelName }]
+            })
+        .Accepts<TRequest>(MediaTypeNames.Application.Json)
+        .Produces<TResponse>(StatusCodes.Status200OK, MediaTypeNames.Application.Json)
+        .Produces(StatusCodes.Status400BadRequest)
+        .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError, MediaTypeNames.Application.Json);
     }
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="endpointRouteBuilder"></param>
-    public virtual void MapPut(IEndpointRouteBuilder endpointRouteBuilder)
+    public virtual RouteHandlerBuilder MapPut(IEndpointRouteBuilder endpointRouteBuilder)
     {
-        endpointRouteBuilder.MapPut
+        return endpointRouteBuilder.MapPut
         (
             $"/{LowerPluralModelName}/{{id}}",
             async
@@ -158,16 +167,24 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
         .MapToApiVersion(ApiVersion)
         .WithName($"Put{PluralModelName}V{ApiVersion}")
         .WithTags(PluralModelName)
-        .WithOpenApi();
+        .WithOpenApi(configureOperation => new(configureOperation)
+            {
+                Summary = $"Puts an existing model via the '{typeof(TRequest).Name}' request. The required '{configureOperation.Parameters[0].Name}' parameter should match the {configureOperation.Parameters[0].Name} in the request.",
+                Tags = [new() { Name = PluralModelName }]
+            })
+        .Accepts<TRequest>(MediaTypeNames.Application.Json)
+        .Produces<TResponse>(StatusCodes.Status200OK, MediaTypeNames.Application.Json)
+        .Produces(StatusCodes.Status400BadRequest)
+        .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError, MediaTypeNames.Application.Json);
     }
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="endpointRouteBuilder"></param>
-    public virtual void MapDelete(IEndpointRouteBuilder endpointRouteBuilder)
+    public virtual RouteHandlerBuilder MapDelete(IEndpointRouteBuilder endpointRouteBuilder)
     {
-        endpointRouteBuilder.MapDelete
+        return endpointRouteBuilder.MapDelete
         (
             $"/{LowerPluralModelName}/{{id}}",
             async
@@ -181,7 +198,14 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
         .MapToApiVersion(ApiVersion)
         .WithName($"Delete{PluralModelName}V{ApiVersion}")
         .WithTags(PluralModelName)
-        .WithOpenApi();
+        .WithOpenApi(configureOperation => new(configureOperation)
+            {
+                Summary = $"Deletes a single model via the required '{configureOperation.Parameters[0].Name}' parameter.",
+                Tags = [new() { Name = PluralModelName }]
+            })
+        .Produces(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status404NotFound)
+        .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError, MediaTypeNames.Application.Json);
     }
 
     #endregion

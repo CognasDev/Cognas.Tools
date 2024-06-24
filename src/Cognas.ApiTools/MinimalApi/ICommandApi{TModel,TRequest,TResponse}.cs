@@ -50,7 +50,7 @@ public interface ICommandApi<TModel, TRequest, TResponse>
 
     #endregion
 
-    #region Public Method Declarations
+    #region Method Declarations
 
     /// <summary>
     /// 
@@ -62,19 +62,19 @@ public interface ICommandApi<TModel, TRequest, TResponse>
     /// 
     /// </summary>
     /// <param name="endpointRouteBuilder"></param>
-    void MapPost(IEndpointRouteBuilder endpointRouteBuilder);
+    RouteHandlerBuilder MapPost(IEndpointRouteBuilder endpointRouteBuilder);
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="endpointRouteBuilder"></param>
-    void MapPut(IEndpointRouteBuilder endpointRouteBuilder);
+    RouteHandlerBuilder MapPut(IEndpointRouteBuilder endpointRouteBuilder);
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="endpointRouteBuilder"></param>
-    void MapDelete(IEndpointRouteBuilder endpointRouteBuilder);
+    RouteHandlerBuilder MapDelete(IEndpointRouteBuilder endpointRouteBuilder);
 
     #endregion
 }

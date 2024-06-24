@@ -1,6 +1,7 @@
 ﻿using Cognas.ApiTools.BusinessLogic;
 using Cognas.ApiTools.Mapping;
 using Cognas.ApiTools.Pagination;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 
 namespace Cognas.ApiTools.MinimalApi;
@@ -46,7 +47,7 @@ public interface IQueryApi<TModel, TResponse> where TModel : class where TRespon
 
     #endregion
 
-    #region Public Method Declarations
+    #region Method Declarations
 
     /// <summary>
     /// 
@@ -58,13 +59,13 @@ public interface IQueryApi<TModel, TResponse> where TModel : class where TRespon
     /// 
     /// </summary>
     /// <param name="endpointRouteBuilder"></param>
-    void MapGet(IEndpointRouteBuilder endpointRouteBuilder);
+    RouteHandlerBuilder MapGet(IEndpointRouteBuilder endpointRouteBuilder);
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="endpointRouteBuilder"></param>
-    void MapGetById(IEndpointRouteBuilder endpointRouteBuilder);
+    RouteHandlerBuilder MapGetById(IEndpointRouteBuilder endpointRouteBuilder);
 
     #endregion
 }

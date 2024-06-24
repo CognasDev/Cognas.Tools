@@ -10,6 +10,7 @@
 
 ### Versioning
 
-- Allow multiple Command/ Query Scaffold attributes with different versions (need to adjust GetDetails to return a collection)
+- Allow multiple Command/ Query Scaffold attributes with different versions - Details objects need to take params int[] for api versions,
+  then enumerate those in GenerateSource (NB: look at loop flattening to avoid nested loop).
 
 ### Caching via MemoryCache?

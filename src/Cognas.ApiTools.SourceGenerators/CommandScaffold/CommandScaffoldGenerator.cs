@@ -73,8 +73,8 @@ public sealed class CommandScaffoldGenerator : IIncrementalGenerator
     {
         RecordDeclarationSyntax modelDeclaration = (RecordDeclarationSyntax)generatorSyntaxContext.TargetNode;
         AttributeData commandScaffoldAttribute = generatorSyntaxContext.Attributes[0];
-        string requestType = commandScaffoldAttribute.GetConstructorArgumentValue(0);
-        string responseType = commandScaffoldAttribute.GetConstructorArgumentValue(1);
+        string requestType = commandScaffoldAttribute.GetConstructorArgumentValue<string>(0);
+        string responseType = commandScaffoldAttribute.GetConstructorArgumentValue<string>(1);
         int apiVersion = commandScaffoldAttribute.GetConstructorArgumentValue<int>(2);
         bool useMessaging = commandScaffoldAttribute.GetConstructorArgumentValue<bool>(3);
         string modelNamespace = modelDeclaration.GetNamespace();

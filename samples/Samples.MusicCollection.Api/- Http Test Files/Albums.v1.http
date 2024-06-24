@@ -5,7 +5,7 @@ GET {{Samples.MusicCollection.Api_HostAddress}}/api/v1/albums
 Accept: application/json
 
 ### GET albums with pagination - 200
-GET {{Samples.MusicCollection.Api_HostAddress}}/api/v1/albums?pageSize=2&pageNumber=1&orderBy=name&orderByAscending=true
+GET {{Samples.MusicCollection.Api_HostAddress}}/api/v1/albums?pageSize=2&pageNumber=1&orderBy=name
 Accept: application/json
 
 ### GET albums with malformed pagination - 400

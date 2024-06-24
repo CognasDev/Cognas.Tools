@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
 
 namespace Cognas.ApiTools.MinimalApi;
@@ -124,20 +123,9 @@ public abstract class QueryApiBase<TModel, TResponse> : IQueryApi<TModel, TRespo
             (
                 CancellationToken cancellationToken,
                 HttpContext httpContext,
-                [FromQuery][Range(1, int.MaxValue)] int? pageSize = null,
-                [FromQuery][Range(1, int.MaxValue)] int? pageNumber = null,
-                [FromQuery] string? orderBy = null,
-                [FromQuery] bool? orderByAscending = null
-
+                [AsParameters] PaginationQuery paginationQuery
             ) =>
             {
-                PaginationQuery paginationQuery = new()
-                {
-                    PageSize = pageSize,
-                    PageNumber = pageNumber,
-                    OrderBy = orderBy,
-                    OrderByAscending = orderByAscending ?? true
-                };
                 return Get(httpContext, paginationQuery, cancellationToken);
             }
         )
@@ -186,8 +174,8 @@ public abstract class QueryApiBase<TModel, TResponse> : IQueryApi<TModel, TRespo
     {
         IEnumerable<TResponse> responses = PaginationFunctions.IsPaginationQueryValidOrDefault<TResponse>(paginationQuery) switch
         {
-            false => throw new PaginationQueryParametersException(paginationQuery),
-            true => await GetResponsesWithPaginationAsync(httpContext, paginationQuery).ConfigureAwait(false),
+            false => throw new PaginationQueryParametersException(paginationQuery!),
+            true => await GetResponsesWithPaginationAsync(httpContext, paginationQuery!).ConfigureAwait(false),
             _ => await GetResponsesAsync().ConfigureAwait(false),
         };
 
@@ -249,7 +237,7 @@ public abstract class QueryApiBase<TModel, TResponse> : IQueryApi<TModel, TRespo
         int takeQuantity = PaginationFunctions.TakeQuantity(paginationQuery);
         int skipNumber = PaginationFunctions.SkipNumber(paginationQuery);
 
-        if (paginationQuery.OrderByAscending)
+        if (paginationQuery.OrderByAscending ?? true == true)
         {
             responses = responses.OrderBy(model => orderByProperty.GetValue(model)).Skip(skipNumber).Take(takeQuantity);
         }

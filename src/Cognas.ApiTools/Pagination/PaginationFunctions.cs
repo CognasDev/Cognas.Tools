@@ -101,7 +101,7 @@ public sealed class PaginationFunctions : IPaginationFunctions
         headers.AppendSanitised("x-page-size", paginationQuery.PageSize!.Value);
         headers.AppendSanitised("x-page-number", paginationQuery.PageNumber!.Value);
         headers.AppendSanitised($"x-page-{nameof(paginationQuery.OrderBy).ToLower()}", paginationQuery.OrderBy!);
-        headers.AppendSanitised($"x-page-{nameof(paginationQuery.OrderByAscending).ToLower()}", paginationQuery.OrderByAscending);
+        headers.AppendSanitised($"x-page-{nameof(paginationQuery.OrderByAscending).ToLower()}", paginationQuery.OrderByAscending ?? true);
     }
 
     #endregion

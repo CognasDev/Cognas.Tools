@@ -73,7 +73,7 @@ public sealed class QueryScaffoldGenerator : IIncrementalGenerator
     {
         RecordDeclarationSyntax modelDeclaration = (RecordDeclarationSyntax)generatorSyntaxContext.TargetNode;
         AttributeData queryScaffoldAttribute = generatorSyntaxContext.Attributes[0];
-        string responseType = queryScaffoldAttribute.GetConstructorArgumentValue(0);
+        string responseType = queryScaffoldAttribute.GetConstructorArgumentValue<string>(0);
         int apiVersion = queryScaffoldAttribute.GetConstructorArgumentValue<int>(1);
         string modelNamespace = modelDeclaration.GetNamespace();
         string modelName = modelDeclaration.GetName();

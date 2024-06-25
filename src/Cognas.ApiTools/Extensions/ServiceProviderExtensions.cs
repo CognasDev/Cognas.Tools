@@ -1,4 +1,5 @@
 ﻿using Cognas.ApiTools.MinimalApi;
+using Cognas.ApiTools.Shared.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Cognas.ApiTools.Extensions;
@@ -16,13 +17,17 @@ public static class ServiceProviderExtensions
     /// <typeparam name="TModel"></typeparam>
     /// <typeparam name="TRequest"></typeparam>
     /// <typeparam name="TResponse"></typeparam>
+    /// <param name="serviceProvider"></param>
+    /// <param name="apiVersion"></param>
+    /// <returns></returns>
     /// <exception cref="NullReferenceException"></exception>
-    public static ICommandApi<TModel, TRequest, TResponse> GetCommandApi<TModel, TRequest, TResponse>(this IServiceProvider serviceProvider)
+    public static ICommandApi<TModel, TRequest, TResponse> GetCommandApi<TModel, TRequest, TResponse>(this IServiceProvider serviceProvider, int apiVersion)
         where TModel : class
         where TRequest : class
         where TResponse : class
     {
-        ICommandApi<TModel, TRequest, TResponse> commandApi = serviceProvider.GetService<ICommandApi<TModel, TRequest, TResponse>>() ?? throw new NullReferenceException();
+        IEnumerable<ICommandApi<TModel, TRequest, TResponse>> commandApis = serviceProvider.GetServices<ICommandApi<TModel, TRequest, TResponse>>();
+        ICommandApi<TModel, TRequest, TResponse> commandApi = commandApis.FastFirstOrDefault(commandApi => commandApi.ApiVersion == apiVersion) ?? throw new NullReferenceException();
         return commandApi;
     }
 
@@ -31,11 +36,15 @@ public static class ServiceProviderExtensions
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
     /// <typeparam name="TResponse"></typeparam>
+    /// <param name="serviceProvider"></param>
+    /// <param name="apiVersion"></param>
+    /// <returns></returns>
     /// <exception cref="NullReferenceException"></exception>
-    public static IQueryApi<TModel, TResponse> GetQueryApi<TModel, TResponse>(this IServiceProvider serviceProvider)
+    public static IQueryApi<TModel, TResponse> GetQueryApi<TModel, TResponse>(this IServiceProvider serviceProvider, int apiVersion)
         where TModel : class where TResponse : class
     {
-        IQueryApi<TModel, TResponse> queryApi = serviceProvider.GetService<IQueryApi<TModel, TResponse>>() ?? throw new NullReferenceException();
+        IEnumerable<IQueryApi<TModel, TResponse>> queryApis = serviceProvider.GetServices<IQueryApi<TModel, TResponse>>();
+        IQueryApi<TModel, TResponse> queryApi = queryApis.FastFirstOrDefault(queryApi => queryApi.ApiVersion == apiVersion) ?? throw new NullReferenceException();
         return queryApi;
     }
 

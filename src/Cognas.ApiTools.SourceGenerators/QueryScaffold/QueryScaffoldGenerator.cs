@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -47,7 +48,7 @@ public sealed class QueryScaffoldGenerator : IIncrementalGenerator
             )
         );
 
-        IncrementalValueProvider<ImmutableArray<QueryScaffoldDetail>> queryScaffoldDetails = context.SyntaxProvider.ForAttributeWithMetadataName
+        IncrementalValueProvider<ImmutableArray<List<QueryScaffoldDetail>>> queryScaffoldDetails = context.SyntaxProvider.ForAttributeWithMetadataName
         (
             AttributeNames.QueryScaffoldAttribute,
             predicate: static (syntaxNode, _) => syntaxNode is RecordDeclarationSyntax recordDeclarationSyntax,
@@ -69,16 +70,20 @@ public sealed class QueryScaffoldGenerator : IIncrementalGenerator
     /// </summary>
     /// <param name="generatorSyntaxContext"></param>
     /// <returns></returns>
-    private static QueryScaffoldDetail GetDetails(GeneratorAttributeSyntaxContext generatorSyntaxContext)
+    private static List<QueryScaffoldDetail> GetDetails(GeneratorAttributeSyntaxContext generatorSyntaxContext)
     {
         RecordDeclarationSyntax modelDeclaration = (RecordDeclarationSyntax)generatorSyntaxContext.TargetNode;
-        AttributeData queryScaffoldAttribute = generatorSyntaxContext.Attributes[0];
-        string responseType = queryScaffoldAttribute.GetConstructorArgumentValue<string>(0);
-        int apiVersion = queryScaffoldAttribute.GetConstructorArgumentValue<int>(1);
-        string modelNamespace = modelDeclaration.GetNamespace();
-        string modelName = modelDeclaration.GetName();
-        QueryScaffoldDetail detail = new(modelNamespace, modelName, responseType, apiVersion);
-        return detail;
+        List<QueryScaffoldDetail> details = [];
+        foreach (AttributeData queryScaffoldAttribute in generatorSyntaxContext.Attributes)
+        {
+            string responseType = queryScaffoldAttribute.GetConstructorArgumentValue<string>(0);
+            int apiVersion = queryScaffoldAttribute.GetConstructorArgumentValue<int>(1);
+            string modelNamespace = modelDeclaration.GetNamespace();
+            string modelName = modelDeclaration.GetName();
+            QueryScaffoldDetail detail = new(modelNamespace, modelName, responseType, apiVersion);
+            details.Add(detail);
+        }
+        return details;
     }
 
     /// <summary>
@@ -86,16 +91,20 @@ public sealed class QueryScaffoldGenerator : IIncrementalGenerator
     /// </summary>
     /// <param name="context"></param>
     /// <param name="details"></param>
-    private void GenerateSource(SourceProductionContext context, ImmutableArray<QueryScaffoldDetail> details)
+    private void GenerateSource(SourceProductionContext context, ImmutableArray<List<QueryScaffoldDetail>> details)
     {
         string queryApiTemplate = TemplateCache.GetTemplate(TemplateNames.QueryApi);
         string queryBusinessLogicTemplate = TemplateCache.GetTemplate(TemplateNames.QueryBusinessLogic);
-        ReadOnlySpan<QueryScaffoldDetail> detailsSpan = [.. details.OrderBy(detail => detail.ModelName)];
-        foreach (QueryScaffoldDetail detail in detailsSpan)
+
+        foreach (List<QueryScaffoldDetail > detailsList in details)
         {
-            string fullModelName = $"{detail.ModelNamespace}.{detail.ModelName}";
-            GenerateApi(context, fullModelName, queryApiTemplate, detail);
-            GenerateBusinessLogic(context, fullModelName, queryBusinessLogicTemplate, detail);
+            ReadOnlySpan<QueryScaffoldDetail> detailsSpan = [.. detailsList.OrderBy(detail => detail.ModelName)];
+            foreach (QueryScaffoldDetail detail in detailsSpan)
+            {
+                string fullModelName = $"{detail.ModelNamespace}.{detail.ModelName}";
+                GenerateApi(context, fullModelName, queryApiTemplate, detail);
+                GenerateBusinessLogic(context, fullModelName, queryBusinessLogicTemplate, detail);
+            }
         }
     }
 

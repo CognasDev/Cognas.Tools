@@ -54,10 +54,10 @@ public sealed class GenericServiceRegistration : IServiceRegistration
         _typesFromEntryAssembly.Value.FastForEach(type =>
         {
             Type? implementedInterfaceType = type.GetInterface(interfaceName);
-            if (implementedInterfaceType != null)
+            if (implementedInterfaceType  != null)
             {
                 Type[] genericArgumentTypes = implementedInterfaceType.GetGenericArguments();
-                if (genericArgumentTypes.Length > 0)
+                if (genericArgumentTypes.Any())
                 {
                     switch (serviceLifetime)
                     {

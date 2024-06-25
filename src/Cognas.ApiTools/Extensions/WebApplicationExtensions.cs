@@ -64,12 +64,13 @@ public static class WebApplicationExtensions
     /// <typeparam name="TModel"></typeparam>
     /// <typeparam name="TResponse"></typeparam>
     /// <param name="webApplication"></param>
+    /// <param name="apiVersion"></param>
     /// <param name="endpointRouteBuilder"></param>
-    public static void InitiateApi<TModel, TResponse>(this WebApplication webApplication, IEndpointRouteBuilder? endpointRouteBuilder = null)
+    public static void InitiateApi<TModel, TResponse>(this WebApplication webApplication, int apiVersion, IEndpointRouteBuilder? endpointRouteBuilder = null)
         where TModel : class
         where TResponse : class
     {
-        IQueryApi<TModel, TResponse> queryApi = webApplication.Services.GetQueryApi<TModel, TResponse>();
+        IQueryApi<TModel, TResponse> queryApi = webApplication.Services.GetQueryApi<TModel, TResponse>(apiVersion);
         queryApi.MapAll(endpointRouteBuilder ?? webApplication);
     }
 
@@ -80,15 +81,16 @@ public static class WebApplicationExtensions
     /// <typeparam name="TRequest"></typeparam>
     /// <typeparam name="TResponse"></typeparam>
     /// <param name="webApplication"></param>
+    /// <param name="apiVersion"></param>
     /// <param name="endpointRouteBuilder"></param>
-    public static void InitiateApi<TModel, TRequest, TResponse>(this WebApplication webApplication, IEndpointRouteBuilder? endpointRouteBuilder = null)
+    public static void InitiateApi<TModel, TRequest, TResponse>(this WebApplication webApplication, int apiVersion, IEndpointRouteBuilder? endpointRouteBuilder = null)
         where TModel : class
         where TRequest : class
         where TResponse : class
     {
-        ICommandApi<TModel, TRequest, TResponse> commandApi = webApplication.Services.GetCommandApi<TModel, TRequest, TResponse>();
+        ICommandApi<TModel, TRequest, TResponse> commandApi = webApplication.Services.GetCommandApi<TModel, TRequest, TResponse>(apiVersion);
         commandApi.MapAll(endpointRouteBuilder ?? webApplication);
-        webApplication.InitiateApi<TModel, TResponse>(endpointRouteBuilder);
+        webApplication.InitiateApi<TModel, TResponse>(apiVersion, endpointRouteBuilder);
     }
 
     /// <summary>
@@ -96,11 +98,10 @@ public static class WebApplicationExtensions
     /// </summary>
     /// <param name="webApplication"></param>
     /// <param name="majorVersion"></param>
-    /// <param name="minorVersion"></param>
     /// <returns></returns>
-    public static RouteGroupBuilder GetApiVersionRoute(this WebApplication webApplication, int majorVersion, int? minorVersion = null)
+    public static RouteGroupBuilder GetApiVersionRoute(this WebApplication webApplication, int majorVersion)
     {
-        ApiVersionSet apiVersionSet = webApplication.NewApiVersionSet().HasApiVersion(majorVersion, minorVersion).ReportApiVersions().Build();
+        ApiVersionSet apiVersionSet = webApplication.NewApiVersionSet().HasApiVersion(majorVersion).ReportApiVersions().Build();
         RouteGroupBuilder routeGroupBuilder = webApplication.MapGroup("api/v{version:apiVersion}").WithApiVersionSet(apiVersionSet);
         return routeGroupBuilder;
     }

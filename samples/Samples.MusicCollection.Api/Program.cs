@@ -57,12 +57,14 @@ public sealed class Program
     private static void InitiateVersionedApis(WebApplication webApplication)
     {
         RouteGroupBuilder apiVersionOneRoutes = webApplication.GetApiVersionRoute(1);
-        webApplication.InitiateApi<Album, AlbumRequest, AlbumResponse>(apiVersionOneRoutes);
-        webApplication.InitiateApi<Genre, GenreRequest, GenreResponse>(apiVersionOneRoutes);
-        webApplication.InitiateApi<Label, LabelRequest, LabelResponse>(apiVersionOneRoutes);
+        webApplication.InitiateApi<Album, AlbumRequest, AlbumResponse>(1, apiVersionOneRoutes);
+        webApplication.InitiateApi<Genre, GenreRequest, GenreResponse>(1, apiVersionOneRoutes);
+        webApplication.InitiateApi<Key, KeyResponse>(1, apiVersionOneRoutes);
+        webApplication.InitiateApi<Label, LabelRequest, LabelResponse>(1, apiVersionOneRoutes);
 
         RouteGroupBuilder apiVersionTwoRoutes = webApplication.GetApiVersionRoute(2);
-        webApplication.InitiateApi<Key, KeyResponse>(apiVersionTwoRoutes);
+        webApplication.InitiateApi<Album, AlbumRequest, AlbumResponse>(2, apiVersionTwoRoutes);
+        webApplication.InitiateApi<Key, KeyResponse>(2, apiVersionTwoRoutes);
     }
 
     #endregion

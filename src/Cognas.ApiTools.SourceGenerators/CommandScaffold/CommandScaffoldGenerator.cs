@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -47,7 +48,7 @@ public sealed class CommandScaffoldGenerator : IIncrementalGenerator
             )
         );
 
-        IncrementalValueProvider<ImmutableArray<CommandScaffoldDetail>> commandScaffoldDetails = context.SyntaxProvider.ForAttributeWithMetadataName
+        IncrementalValueProvider<ImmutableArray<List<CommandScaffoldDetail>>> commandScaffoldDetails = context.SyntaxProvider.ForAttributeWithMetadataName
         (
             AttributeNames.CommandScaffoldAttribute,
             predicate: static (syntaxNode, _) => syntaxNode is RecordDeclarationSyntax recordDeclarationSyntax,
@@ -69,18 +70,22 @@ public sealed class CommandScaffoldGenerator : IIncrementalGenerator
     /// </summary>
     /// <param name="generatorSyntaxContext"></param>
     /// <returns></returns>
-    private static CommandScaffoldDetail GetDetails(GeneratorAttributeSyntaxContext generatorSyntaxContext)
+    private static List<CommandScaffoldDetail> GetDetails(GeneratorAttributeSyntaxContext generatorSyntaxContext)
     {
         RecordDeclarationSyntax modelDeclaration = (RecordDeclarationSyntax)generatorSyntaxContext.TargetNode;
-        AttributeData commandScaffoldAttribute = generatorSyntaxContext.Attributes[0];
-        string requestType = commandScaffoldAttribute.GetConstructorArgumentValue<string>(0);
-        string responseType = commandScaffoldAttribute.GetConstructorArgumentValue<string>(1);
-        int apiVersion = commandScaffoldAttribute.GetConstructorArgumentValue<int>(2);
-        bool useMessaging = commandScaffoldAttribute.GetConstructorArgumentValue<bool>(3);
-        string modelNamespace = modelDeclaration.GetNamespace();
-        string modelName = modelDeclaration.GetName();
-        CommandScaffoldDetail detail = new(modelNamespace, modelName, requestType, responseType, apiVersion, useMessaging);
-        return detail;
+        List<CommandScaffoldDetail> details = [];
+        foreach (AttributeData commandScaffoldAttribute in generatorSyntaxContext.Attributes)
+        {
+            string requestType = commandScaffoldAttribute.GetConstructorArgumentValue<string>(0);
+            string responseType = commandScaffoldAttribute.GetConstructorArgumentValue<string>(1);
+            int apiVersion = commandScaffoldAttribute.GetConstructorArgumentValue<int>(2);
+            bool useMessaging = commandScaffoldAttribute.GetConstructorArgumentValue<bool>(3);
+            string modelNamespace = modelDeclaration.GetNamespace();
+            string modelName = modelDeclaration.GetName();
+            CommandScaffoldDetail detail = new(modelNamespace, modelName, requestType, responseType, apiVersion, useMessaging);
+            details.Add(detail);
+        }
+        return details;
     }
 
     /// <summary>
@@ -88,15 +93,18 @@ public sealed class CommandScaffoldGenerator : IIncrementalGenerator
     /// </summary>
     /// <param name="context"></param>
     /// <param name="details"></param>
-    private void GenerateSource(SourceProductionContext context, ImmutableArray<CommandScaffoldDetail> details)
+    private void GenerateSource(SourceProductionContext context, ImmutableArray<List<CommandScaffoldDetail>> details)
     {
         string commandApiTemplate = TemplateCache.GetTemplate(TemplateNames.CommandApi);
-        ReadOnlySpan<CommandScaffoldDetail> detailsSpan = [.. details.OrderBy(detail => detail.ModelName)];
-        foreach (CommandScaffoldDetail detail in detailsSpan)
+        foreach (List<CommandScaffoldDetail> detailsList in details)
         {
-            string fullModelName = $"{detail.ModelNamespace}.{detail.ModelName}";
-            GenerateApi(context, fullModelName, commandApiTemplate, detail);
-            GenerateBusinessLogic(context, fullModelName, detail);
+            ReadOnlySpan<CommandScaffoldDetail> detailsSpan = [.. detailsList.OrderBy(detail => detail.ModelName)];
+            foreach (CommandScaffoldDetail detail in detailsSpan)
+            {
+                string fullModelName = $"{detail.ModelNamespace}.{detail.ModelName}";
+                GenerateApi(context, fullModelName, commandApiTemplate, detail);
+                GenerateBusinessLogic(context, fullModelName, detail);
+            }
         }
     }
 

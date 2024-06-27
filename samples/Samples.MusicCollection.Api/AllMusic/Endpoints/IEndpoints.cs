@@ -3,7 +3,7 @@
 /// <summary>
 /// 
 /// </summary>
-public interface IAlbumEndpoints
+public interface IEndpoints
 {
     #region Method Declarations
 

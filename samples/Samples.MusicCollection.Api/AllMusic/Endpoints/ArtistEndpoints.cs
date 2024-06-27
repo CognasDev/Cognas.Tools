@@ -1,19 +1,19 @@
 ﻿using Cognas.ApiTools.Pagination;
 using Microsoft.AspNetCore.Mvc;
-using Samples.MusicCollection.Api.Albums;
 using Samples.MusicCollection.Api.AllMusic.BusinessLogic;
 using Samples.MusicCollection.Api.AllMusic.Extensions;
+using Samples.MusicCollection.Api.Artists;
 
 namespace Samples.MusicCollection.Api.AllMusic.Endpoints;
 
 /// <summary>
 /// 
 /// </summary>
-public sealed class AlbumEndpoints : MicroserviceEndpointsBase<Album>, IEndpoints
+public sealed class ArtistEndpoints : MicroserviceEndpointsBase<Artist>, IEndpoints
 {
     #region Field Declarations
 
-    private readonly IAlbumMicroserviceBusinessLogic _albumMicroserviceBusinessLogic;
+    private readonly IArtistMicroserviceBusinessLogic _artistMicroserviceBusinessLogic;
 
     #endregion
 
@@ -29,13 +29,13 @@ public sealed class AlbumEndpoints : MicroserviceEndpointsBase<Album>, IEndpoint
     #region Constructor / Finaliser Declarations
 
     /// <summary>
-    /// Default constructor for <see cref="AlbumEndpoints"/>
+    /// Default constructor for <see cref="ArtistEndpoints"/>
     /// </summary>
-    /// <param name="albumMicroserviceBusinessLogic"></param>
-    public AlbumEndpoints(IAlbumMicroserviceBusinessLogic albumMicroserviceBusinessLogic)
+    /// <param name="artistMicroserviceBusinessLogic"></param>
+    public ArtistEndpoints(IArtistMicroserviceBusinessLogic artistMicroserviceBusinessLogic)
     {
-        ArgumentNullException.ThrowIfNull(albumMicroserviceBusinessLogic, nameof(albumMicroserviceBusinessLogic));
-        _albumMicroserviceBusinessLogic = albumMicroserviceBusinessLogic;
+        ArgumentNullException.ThrowIfNull(artistMicroserviceBusinessLogic, nameof(artistMicroserviceBusinessLogic));
+        _artistMicroserviceBusinessLogic = artistMicroserviceBusinessLogic;
     }
 
     #endregion
@@ -54,9 +54,9 @@ public sealed class AlbumEndpoints : MicroserviceEndpointsBase<Album>, IEndpoint
             (
                 CancellationToken cancellationToken,
                 [AsParameters] PaginationQuery paginationQuery
-            ) => _albumMicroserviceBusinessLogic.Get(paginationQuery, cancellationToken)
+            ) => _artistMicroserviceBusinessLogic.Get(paginationQuery, cancellationToken)
         )
-        .MapGetConfiguration<AlbumResponse>(ApiVersion, Tag);
+        .MapGetConfiguration<ArtistResponse>(ApiVersion, Tag);
     }
 
     /// <summary>
@@ -68,9 +68,9 @@ public sealed class AlbumEndpoints : MicroserviceEndpointsBase<Album>, IEndpoint
         endpointRouteBuilder.MapGet
         (
             $"/{Uri}/{{id}}",
-            async ([FromRoute] int id) => await _albumMicroserviceBusinessLogic.GetByIdAsync(id).ConfigureAwait(false)
+            async ([FromRoute] int id) => await _artistMicroserviceBusinessLogic.GetByIdAsync(id).ConfigureAwait(false)
         )
-        .MapGetByIdConfiguration<AlbumResponse>(ApiVersion, Tag);
+        .MapGetByIdConfiguration<ArtistResponse>(ApiVersion, Tag);
     }
 
     /// <summary>
@@ -82,9 +82,9 @@ public sealed class AlbumEndpoints : MicroserviceEndpointsBase<Album>, IEndpoint
         endpointRouteBuilder.MapPost
         (
             $"/{Uri}",
-            async ([FromBody] AlbumRequest request) => await _albumMicroserviceBusinessLogic.PostAsync(request).ConfigureAwait(false)
+            async ([FromBody] ArtistRequest request) => await _artistMicroserviceBusinessLogic.PostAsync(request).ConfigureAwait(false)
         )
-        .MapPostConfiguration<AlbumRequest, AlbumResponse>(ApiVersion, Tag);
+        .MapPostConfiguration<ArtistRequest, ArtistResponse>(ApiVersion, Tag);
     }
 
     /// <summary>
@@ -96,9 +96,9 @@ public sealed class AlbumEndpoints : MicroserviceEndpointsBase<Album>, IEndpoint
         endpointRouteBuilder.MapPut
         (
             $"/{Uri}/{{id}}",
-            async ([FromRoute] int id, [FromBody] AlbumRequest request) => await _albumMicroserviceBusinessLogic.PutAsync(request).ConfigureAwait(false)
+            async ([FromRoute] int id, [FromBody] ArtistRequest request) => await _artistMicroserviceBusinessLogic.PutAsync(request).ConfigureAwait(false)
         )
-        .MapPutConfiguration<AlbumRequest, AlbumResponse>(ApiVersion, Tag);
+        .MapPutConfiguration<ArtistRequest, ArtistResponse>(ApiVersion, Tag);
     }
 
     /// <summary>
@@ -110,7 +110,7 @@ public sealed class AlbumEndpoints : MicroserviceEndpointsBase<Album>, IEndpoint
         endpointRouteBuilder.MapDelete
         (
             $"/{Uri}/{{id}}",
-            async ([FromRoute] int id) => await _albumMicroserviceBusinessLogic.DeleteAsync(id).ConfigureAwait(false)
+            async ([FromRoute] int id) => await _artistMicroserviceBusinessLogic.DeleteAsync(id).ConfigureAwait(false)
         )
         .MapDeleteConfiguration(ApiVersion, Tag);
     }

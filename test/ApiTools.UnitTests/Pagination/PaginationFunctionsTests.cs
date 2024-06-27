@@ -85,7 +85,7 @@ public sealed class PaginationFunctionsTests
     /// <param name="pageNumber"></param>
     [Theory]
     [InlineData(5, 1)]
-    public void IsPaginationQueryValidOrDefault_Valid(int pageSize, int pageNumber)
+    public void IsPaginationQueryValidOrNotRequested_Valid(int pageSize, int pageNumber)
     {
         Mock<IPaginationQuery> mockPaginationQuery = new();
         mockPaginationQuery.SetupGet(paginationQuery => paginationQuery.PageSize).Returns(pageSize);
@@ -102,7 +102,7 @@ public sealed class PaginationFunctionsTests
     /// <param name="pageNumber"></param>
     [Theory]
     [InlineData(1)]
-    public void IsPaginationQueryValidOrDefault_Invalid_MissingPageSize(int pageNumber)
+    public void IsPaginationQueryValidOrNotRequested_Invalid_MissingPageSize(int pageNumber)
     {
         Mock<IPaginationQuery> mockPaginationQuery = new();
         mockPaginationQuery.SetupGet(paginationQuery => paginationQuery.PageNumber).Returns(pageNumber);
@@ -118,7 +118,7 @@ public sealed class PaginationFunctionsTests
     /// <param name="pageSize"></param>
     [Theory]
     [InlineData(1)]
-    public void IsPaginationQueryValidOrDefault_Invalid_MissingPageNumber(int pageSize)
+    public void IsPaginationQueryValidOrNotRequested_Invalid_MissingPageNumber(int pageSize)
     {
         Mock<IPaginationQuery> mockPaginationQuery = new();
         mockPaginationQuery.SetupGet(paginationQuery => paginationQuery.PageSize).Returns(pageSize);

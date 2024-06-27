@@ -8,12 +8,11 @@ namespace Cognas.ApiTools.ServiceRegistration;
 /// <summary>
 /// 
 /// </summary>
-public sealed class GenericServiceRegistration : IServiceRegistration
+public sealed class GenericServiceRegistration : ServiceRegistrationBase
 {
     #region Field Declarations
 
     private static readonly Lazy<IServiceRegistration> _lazyInstance = new(() => new GenericServiceRegistration());
-    private static readonly Lazy<IEnumerable<Type>> _typesFromEntryAssembly = new(() => GetNonAbstractTypes());
 
     #endregion
 
@@ -48,10 +47,10 @@ public sealed class GenericServiceRegistration : IServiceRegistration
     /// <param name="assembly"></param>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     /// <exception cref="NotSupportedException"></exception>
-    public void AddServices(IServiceCollection serviceCollection, Type interfaceType, ServiceLifetime serviceLifetime, Assembly? assembly = null)
+    public override void AddServices(IServiceCollection serviceCollection, Type interfaceType, ServiceLifetime serviceLifetime, Assembly? assembly = null)
     {
         string interfaceName = interfaceType.Name;
-        _typesFromEntryAssembly.Value.FastForEach(type =>
+        GetNonAbstractTypes().FastForEach(type =>
         {
             Type? implementedInterfaceType = type.GetInterface(interfaceName);
             if (implementedInterfaceType  != null)

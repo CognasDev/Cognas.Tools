@@ -10,7 +10,7 @@ internal static class GenerateInitiateCommandEndpoints
 {
     #region Field Declarations
 
-    private static readonly HashSet<int> _apiVersions = [];
+    private static readonly HashSet<int> _commandApiVersions = [];
 
     #endregion
 
@@ -19,7 +19,7 @@ internal static class GenerateInitiateCommandEndpoints
     /// <summary>
     /// 
     /// </summary>
-    public static void ClearApiVersions() => _apiVersions.Clear();
+    public static void ClearApiVersions() => _commandApiVersions.Clear();
 
     /// <summary>
     /// 
@@ -28,7 +28,7 @@ internal static class GenerateInitiateCommandEndpoints
     /// <param name="detail"></param>
     public static void Generate(StringBuilder queryEndpointInitiatorBuilder, CommandScaffoldDetail detail)
     {
-        if (_apiVersions.Add(detail.ApiVersion))
+        if (_commandApiVersions.Add(detail.ApiVersion))
         {
             queryEndpointInitiatorBuilder.Append("\t\tRouteGroupBuilder apiVersionRouteV");
             queryEndpointInitiatorBuilder.Append(detail.ApiVersion);

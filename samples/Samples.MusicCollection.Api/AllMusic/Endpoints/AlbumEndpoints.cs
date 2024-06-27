@@ -17,15 +17,6 @@ public sealed class AlbumEndpoints : MicroserviceEndpointsBase<Album>, IEndpoint
 
     #endregion
 
-    #region Property Declaration
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public override int ApiVersion => 3;
-
-    #endregion
-
     #region Constructor / Finaliser Declarations
 
     /// <summary>

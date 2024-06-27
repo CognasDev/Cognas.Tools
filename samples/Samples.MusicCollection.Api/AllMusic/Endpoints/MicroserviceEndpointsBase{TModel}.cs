@@ -13,7 +13,7 @@ public abstract class MicroserviceEndpointsBase<TModel> where TModel : class
     /// <summary>
     /// 
     /// </summary>
-    public abstract int ApiVersion { get; }
+    public virtual int ApiVersion { get; } = 3;
 
     /// <summary>
     /// 

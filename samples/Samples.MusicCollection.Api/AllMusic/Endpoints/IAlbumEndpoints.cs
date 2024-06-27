@@ -19,5 +19,23 @@ public interface IAlbumEndpoints
     /// <param name="endpointRouteBuilder"></param>
     void MapGetById(IEndpointRouteBuilder endpointRouteBuilder);
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="endpointRouteBuilder"></param>
+    void MapPost(IEndpointRouteBuilder endpointRouteBuilder);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="endpointRouteBuilder"></param>
+    void MapPut(IEndpointRouteBuilder endpointRouteBuilder);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="endpointRouteBuilder"></param>
+    void MapDelete(IEndpointRouteBuilder endpointRouteBuilder);
+
     #endregion
 }

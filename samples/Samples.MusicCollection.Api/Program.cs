@@ -53,10 +53,13 @@ public sealed class Program
         webApplication.InitiateCommandEndpoints();
         webApplication.InitiateQueryEndpoints();
 
-        RouteGroupBuilder apiVersionRouteV1 = webApplication.GetApiVersionRoute(1);
+        RouteGroupBuilder apiVersionRouteV3 = webApplication.GetApiVersionRoute(3);
         IAlbumEndpoints albumEndpoints = webApplication.Services.GetService<IAlbumEndpoints>() ?? throw new NullReferenceException(nameof(AlbumEndpoints));
-        albumEndpoints.MapGet(apiVersionRouteV1);
-        albumEndpoints.MapGetById(apiVersionRouteV1);
+        albumEndpoints.MapGet(apiVersionRouteV3);
+        albumEndpoints.MapGetById(apiVersionRouteV3);
+        albumEndpoints.MapPost(apiVersionRouteV3);
+        albumEndpoints.MapPut(apiVersionRouteV3);
+        albumEndpoints.MapDelete(apiVersionRouteV3);
 
         webApplication.AddSwagger();
         webApplication.ConfigureAndRun();

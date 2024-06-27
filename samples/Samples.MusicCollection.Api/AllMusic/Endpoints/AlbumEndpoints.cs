@@ -1,8 +1,9 @@
 ﻿using Cognas.ApiTools.Pagination;
+using Cognas.ApiTools.Shared.Services;
 using Microsoft.AspNetCore.Mvc;
 using Samples.MusicCollection.Api.Albums;
 using Samples.MusicCollection.Api.AllMusic.BusinessLogic;
-using System.Net.Mime;
+using Samples.MusicCollection.Api.AllMusic.Extensions;
 
 namespace Samples.MusicCollection.Api.AllMusic.Endpoints;
 
@@ -14,6 +15,10 @@ public sealed class AlbumEndpoints : IAlbumEndpoints
     #region Field Declarations
 
     private readonly IAlbumMicroserviceBusinessLogic _albumMicroserviceBusinessLogic;
+    private const string _route = "allmusic";
+    private const string _tag = "All Music";
+    private readonly string _albums;
+    private const int _apiVersion = 3;
 
     #endregion
 
@@ -27,6 +32,7 @@ public sealed class AlbumEndpoints : IAlbumEndpoints
     {
         ArgumentNullException.ThrowIfNull(albumMicroserviceBusinessLogic, nameof(albumMicroserviceBusinessLogic));
         _albumMicroserviceBusinessLogic = albumMicroserviceBusinessLogic;
+        _albums = PluralsService.Instance.PluraliseModelName<Album>().ToLowerInvariant();
     }
 
     #endregion
@@ -41,21 +47,16 @@ public sealed class AlbumEndpoints : IAlbumEndpoints
     {
         endpointRouteBuilder.MapGet
         (
-            $"/allmusic/albums",
+            $"/{_route}/{_albums}",
             (
                 CancellationToken cancellationToken,
                 [AsParameters] PaginationQuery paginationQuery
             ) =>
             {
-                return _albumMicroserviceBusinessLogic.GetAlbums(paginationQuery, cancellationToken);
+                return _albumMicroserviceBusinessLogic.Get(paginationQuery, cancellationToken);
             }
         )
-        .MapToApiVersion(1)
-        .WithTags("- All Music")
-        .WithOpenApi()
-        .Produces<IEnumerable<AlbumResponse>>(StatusCodes.Status200OK, MediaTypeNames.Application.Json)
-        .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
-        .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError, MediaTypeNames.Application.Json);
+        .MapGetConfiguration<AlbumResponse>(_apiVersion, _tag);
     }
 
     /// <summary>
@@ -66,21 +67,79 @@ public sealed class AlbumEndpoints : IAlbumEndpoints
     {
         endpointRouteBuilder.MapGet
         (
-            $"/allmusic/albums/{{id}}",
+            $"/{_route}/{_albums}/{{id}}",
             async
             (
                 [FromRoute] int id
             ) =>
             {
-                return await _albumMicroserviceBusinessLogic.GetAlbumByAlbumIdAsync(id).ConfigureAwait(false);
+                return await _albumMicroserviceBusinessLogic.GetByIdAsync(id).ConfigureAwait(false);
             }
         )
-        .MapToApiVersion(1)
-        .WithTags("- All Music")
-        .WithOpenApi()
-        .Produces<AlbumResponse>(StatusCodes.Status200OK, MediaTypeNames.Application.Json)
-        .Produces(StatusCodes.Status404NotFound)
-        .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError, MediaTypeNames.Application.Json);
+        .MapGetByIdConfiguration<AlbumResponse>(_apiVersion, _tag);
+
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="endpointRouteBuilder"></param>
+    public void MapPost(IEndpointRouteBuilder endpointRouteBuilder)
+    {
+        endpointRouteBuilder.MapPost
+        (
+            $"/{_route}/{_albums}",
+            async
+            (
+                HttpContext httpContext,
+                [FromBody] AlbumRequest request
+            ) =>
+            {
+                return await _albumMicroserviceBusinessLogic.PostAsync(request).ConfigureAwait(false);
+            }
+        )
+        .MapPostConfiguration<AlbumRequest, AlbumResponse>(_apiVersion, _tag);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="endpointRouteBuilder"></param>
+    public void MapPut(IEndpointRouteBuilder endpointRouteBuilder)
+    {
+        endpointRouteBuilder.MapPut
+        (
+            $"/{_route}/{_albums}/{{id}}",
+            async
+            (
+                [FromRoute] int id,
+                [FromBody] AlbumRequest request
+            ) =>
+            {
+                return await _albumMicroserviceBusinessLogic.PutAsync(request).ConfigureAwait(false);
+            }
+        )
+        .MapPutConfiguration<AlbumRequest, AlbumResponse>(_apiVersion, _tag);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="endpointRouteBuilder"></param>
+    public void MapDelete(IEndpointRouteBuilder endpointRouteBuilder)
+    {
+        endpointRouteBuilder.MapDelete
+        (
+            $"/{_route}/{_albums}/{{id}}",
+            async
+            (
+                [FromRoute] int id
+            ) =>
+            {
+                await _albumMicroserviceBusinessLogic.DeleteAsync(id).ConfigureAwait(false);
+            }
+        )
+        .MapDeleteConfiguration(_apiVersion, _tag);
     }
 
     #endregion

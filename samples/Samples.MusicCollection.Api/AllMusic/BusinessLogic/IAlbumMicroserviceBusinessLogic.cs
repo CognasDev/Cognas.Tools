@@ -16,35 +16,35 @@ public interface IAlbumMicroserviceBusinessLogic
     /// <param name="paginationQuery"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    IAsyncEnumerable<AlbumResponse> GetAlbums(IPaginationQuery paginationQuery, CancellationToken cancellationToken);
+    IAsyncEnumerable<AlbumResponse> Get(IPaginationQuery paginationQuery, CancellationToken cancellationToken);
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="albumId"></param>
+    /// <param name="id"></param>
     /// <returns></returns>
-    Task<AlbumResponse?> GetAlbumByAlbumIdAsync(int albumId);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="album"></param>
-    /// <returns></returns>
-    Task<AlbumResponse?> PostAlbumAsync(AlbumResponse album);
+    Task<AlbumResponse?> GetByIdAsync(int id);
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="album"></param>
     /// <returns></returns>
-    Task<AlbumResponse?> PutAlbumAsync(AlbumResponse album);
+    Task<AlbumResponse?> PostAsync(AlbumRequest album);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="album"></param>
+    /// <returns></returns>
+    Task<AlbumResponse?> PutAsync(AlbumRequest album);
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="albumId"></param>
     /// <returns></returns>
-    Task DeleteAlbumAsync(int albumId);
+    Task DeleteAsync(int albumId);
 
     #endregion
 }

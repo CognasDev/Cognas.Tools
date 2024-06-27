@@ -10,44 +10,46 @@ public interface IHttpClientService
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TItem"></typeparam>
+    /// <typeparam name="TResponse"></typeparam>
     /// <param name="requestUri"></param>
     /// <returns></returns>
-    Task<TItem?> GetAsync<TItem>(string requestUri);
+    Task<TResponse?> GetAsync<TResponse>(string requestUri);
 
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TItem"></typeparam>
+    /// <typeparam name="TResponse"></typeparam>
     /// <param name="requestUri"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    IAsyncEnumerable<TItem> GetAsyncEnumerable<TItem>(string requestUri, CancellationToken cancellationToken);
+    IAsyncEnumerable<TResponse> GetAsyncEnumerable<TResponse>(string requestUri, CancellationToken cancellationToken);
 
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TItem"></typeparam>
+    /// <typeparam name="TRequest"></typeparam>
+    /// <typeparam name="TResponse"></typeparam>
     /// <param name="requestUri"></param>
-    /// <param name="item"></param>
+    /// <param name="request"></param>
     /// <returns></returns>
-    Task<TItem?> PostAsync<TItem>(string requestUri, TItem item);
+    Task<TResponse?> PostAsync<TRequest, TResponse>(string requestUri, TRequest request);
 
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TItem"></typeparam>
+    /// <typeparam name="TRequest"></typeparam>
+    /// <typeparam name="TResponse"></typeparam>
     /// <param name="requestUri"></param>
-    /// <param name="item"></param>
+    /// <param name="request"></param>
     /// <returns></returns>
-    Task<TItem?> PutAsync<TItem>(string requestUri, TItem item);
+    Task<TResponse?> PutAsync<TRequest, TResponse>(string requestUri, TRequest request);
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="requestUri"></param>
     /// <returns></returns>
-    Task DeleteAsync<TItem>(string requestUri);
+    Task DeleteAsync(string requestUri);
 
     #endregion
 }

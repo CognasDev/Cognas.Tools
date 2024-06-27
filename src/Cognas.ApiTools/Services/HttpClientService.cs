@@ -35,10 +35,10 @@ public sealed class HttpClientService : IHttpClientService
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TItem"></typeparam>
+    /// <typeparam name="TResponse"></typeparam>
     /// <param name="requestUri"></param>
     /// <returns></returns>
-    public async Task<TItem?> GetAsync<TItem>(string requestUri)
+    public async Task<TResponse?> GetAsync<TResponse>(string requestUri)
     {
         HttpClient httpClient = CreateHttpClient();
         using HttpResponseMessage response = await httpClient.GetAsync(requestUri).ConfigureAwait(false);
@@ -48,61 +48,63 @@ public sealed class HttpClientService : IHttpClientService
         }
         response.EnsureSuccessStatusCode();
         using Stream responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-        return await JsonSerializer.DeserializeAsync<TItem>(responseStream, _caseInsensitiveSerializer).ConfigureAwait(false);
+        return await JsonSerializer.DeserializeAsync<TResponse>(responseStream, _caseInsensitiveSerializer).ConfigureAwait(false);
     }
 
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TItem"></typeparam>
+    /// <typeparam name="TResponse"></typeparam>
     /// <param name="requestUri"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <exception cref="NullReferenceException"></exception>
-    public async IAsyncEnumerable<TItem> GetAsyncEnumerable<TItem>(string requestUri, [EnumeratorCancellation] CancellationToken cancellationToken)
+    public async IAsyncEnumerable<TResponse> GetAsyncEnumerable<TResponse>(string requestUri, [EnumeratorCancellation] CancellationToken cancellationToken)
     {
         HttpClient httpClient = CreateHttpClient();
         using HttpResponseMessage response = await httpClient.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
 
         response.EnsureSuccessStatusCode();
         using Stream responseStream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
-        await foreach (TItem? item in JsonSerializer.DeserializeAsyncEnumerable<TItem>(responseStream, _caseInsensitiveSerializer, cancellationToken).ConfigureAwait(false))
+        await foreach (TResponse? responseItem in JsonSerializer.DeserializeAsyncEnumerable<TResponse>(responseStream, _caseInsensitiveSerializer, cancellationToken).ConfigureAwait(false))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            yield return item ?? throw new NullReferenceException(nameof(item));
+            yield return responseItem ?? throw new NullReferenceException(nameof(responseItem));
         }
     }
 
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TItem"></typeparam>
+    /// <typeparam name="TRequest"></typeparam>
+    /// <typeparam name="TResponse"></typeparam>
     /// <param name="requestUri"></param>
-    /// <param name="item"></param>
+    /// <param name="request"></param>
     /// <returns></returns>
-    public async Task<TItem?> PostAsync<TItem>(string requestUri, TItem item)
+    public async Task<TResponse?> PostAsync<TRequest, TResponse>(string requestUri, TRequest request)
     {
         HttpClient httpClient = CreateHttpClient();
-        using HttpResponseMessage response = await httpClient.PostAsJsonAsync(requestUri, item).ConfigureAwait(false);
+        using HttpResponseMessage response = await httpClient.PostAsJsonAsync(requestUri, request).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
         using Stream responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-        return await JsonSerializer.DeserializeAsync<TItem>(responseStream, _caseInsensitiveSerializer).ConfigureAwait(false);
+        return await JsonSerializer.DeserializeAsync<TResponse>(responseStream, _caseInsensitiveSerializer).ConfigureAwait(false);
     }
 
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TItem"></typeparam>
+    /// <typeparam name="TRequest"></typeparam>
+    /// <typeparam name="TResponse"></typeparam>
     /// <param name="requestUri"></param>
-    /// <param name="item"></param>
+    /// <param name="request"></param>
     /// <returns></returns>
-    public async Task<TItem?> PutAsync<TItem>(string requestUri, TItem item)
+    public async Task<TResponse?> PutAsync<TRequest, TResponse>(string requestUri, TRequest request)
     {
         HttpClient httpClient = CreateHttpClient();
-        using HttpResponseMessage response = await httpClient.PutAsJsonAsync(requestUri, item).ConfigureAwait(false);
+        using HttpResponseMessage response = await httpClient.PutAsJsonAsync(requestUri, request).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
         using Stream responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-        return await JsonSerializer.DeserializeAsync<TItem>(responseStream, _caseInsensitiveSerializer).ConfigureAwait(false);
+        return await JsonSerializer.DeserializeAsync<TResponse>(responseStream, _caseInsensitiveSerializer).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -110,7 +112,7 @@ public sealed class HttpClientService : IHttpClientService
     /// </summary>
     /// <param name="requestUri"></param>
     /// <returns></returns>
-    public async Task DeleteAsync<TItem>(string requestUri)
+    public async Task DeleteAsync(string requestUri)
     {
         HttpClient httpClient = CreateHttpClient();
         using HttpResponseMessage response = await httpClient.DeleteAsync(requestUri).ConfigureAwait(false);

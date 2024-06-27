@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Text;
 
 namespace Cognas.ApiTools.SourceGenerators.CommandScaffold;
 
@@ -96,16 +97,20 @@ public sealed class CommandScaffoldGenerator : IIncrementalGenerator
     private void GenerateSource(SourceProductionContext context, ImmutableArray<List<CommandScaffoldDetail>> details)
     {
         string commandApiTemplate = TemplateCache.GetTemplate(TemplateNames.CommandApi);
-        foreach (List<CommandScaffoldDetail> detailsList in details)
+        IEnumerable<CommandScaffoldDetail> detailsCollection = from detailsList in details
+                                                             from detail in detailsList.OrderBy(detail => detail.ModelName)
+                                                             select detail;
+        ReadOnlySpan<CommandScaffoldDetail> detailsSpan = [.. detailsCollection];
+        StringBuilder commandEndpointInitiatorBuilder = new();
+        GenerateInitiateCommandEndpoints.ClearApiVersions();
+        foreach (CommandScaffoldDetail detail in detailsSpan)
         {
-            ReadOnlySpan<CommandScaffoldDetail> detailsSpan = [.. detailsList.OrderBy(detail => detail.ModelName)];
-            foreach (CommandScaffoldDetail detail in detailsSpan)
-            {
-                string fullModelName = $"{detail.ModelNamespace}.{detail.ModelName}";
-                GenerateApi(context, fullModelName, commandApiTemplate, detail);
-                GenerateBusinessLogic(context, fullModelName, detail);
-            }
+            string fullModelName = $"{detail.ModelNamespace}.{detail.ModelName}";
+            GenerateApi(context, fullModelName, commandApiTemplate, detail);
+            GenerateBusinessLogic(context, fullModelName, detail);
+            GenerateInitiateCommandEndpoints.Generate(commandEndpointInitiatorBuilder, detail);
         }
+        GenerateCommandEndpointInitiator(context, commandEndpointInitiatorBuilder);
     }
 
     /// <summary>
@@ -149,6 +154,18 @@ public sealed class CommandScaffoldGenerator : IIncrementalGenerator
         string versionFilename = string.Format(SourceFileNames.CommandBusinessLogic, detail.ApiVersion);
         string filename = $"{detail.ModelName}.{versionFilename}";
         context.AddSource(filename, commandBusinesssLogicSource);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="commandEndpointInitiatorBuilder"></param>
+    private static void GenerateCommandEndpointInitiator(SourceProductionContext context, StringBuilder commandEndpointInitiatorBuilder)
+    {
+        string commandEndpointInitiatorTemplate = TemplateCache.GetTemplate(TemplateNames.CommandEndpointInitiator);
+        string commandEndpointInitiatorSource = string.Format(commandEndpointInitiatorTemplate, commandEndpointInitiatorBuilder.ToString());
+        context.AddSource(SourceFileNames.CommandEndpointInitiator, commandEndpointInitiatorSource);
     }
 
     #endregion

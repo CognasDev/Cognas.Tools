@@ -27,5 +27,10 @@ internal static class TemplateNames
     /// </summary>
     public const string CommandBusinessLogicNoMessaging = "CommandBusinessLogic.NoMessaging.cs";
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public const string CommandEndpointInitiator = "EndpointInitiator.Command.cs";
+
     #endregion
 }

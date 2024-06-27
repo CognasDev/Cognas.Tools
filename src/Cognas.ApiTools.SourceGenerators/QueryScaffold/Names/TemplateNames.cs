@@ -22,5 +22,10 @@ internal static class TemplateNames
     /// </summary>
     public const string QueryBusinessLogic = "QueryBusinessLogic.cs";
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public const string QueryEndpointInitiator = "EndpointInitiator.Query.cs";
+
     #endregion
 }

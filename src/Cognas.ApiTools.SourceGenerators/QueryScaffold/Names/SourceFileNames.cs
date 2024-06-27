@@ -22,5 +22,10 @@ internal static class SourceFileNames
     /// </summary>
     public const string QueryBusinessLogic = "QueryBusinessLogic.v{0}.g.cs";
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public const string QueryEndpointInitiator = "EndpointInitiator.Query.g.cs";
+
     #endregion
 }

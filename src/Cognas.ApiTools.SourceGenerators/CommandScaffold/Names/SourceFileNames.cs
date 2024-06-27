@@ -22,5 +22,10 @@ internal static class SourceFileNames
     /// </summary>
     public const string CommandBusinessLogic = "CommandBusinessLogic.v{0}.g.cs";
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public const string CommandEndpointInitiator = "EndpointInitiator.Command.g.cs";
+
     #endregion
 }

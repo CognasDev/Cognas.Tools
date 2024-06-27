@@ -14,6 +14,8 @@
 		<Compile Remove="CommandScaffold\Templates\CommandBusinessLogic.Messaging.cs" />
 		<Compile Remove="CommandScaffold\Templates\CommandBusinessLogic.NoMessaging.cs" />
 		<Compile Remove="CommandScaffold\Templates\CommandScaffoldAttribute.cs" />
+		<Compile Remove="CommandScaffold\Templates\EndpointInitiator.Command.cs" />
+		<Compile Remove="QueryScaffold\Templates\EndpointInitiator.Query.cs" />
 		<Compile Remove="QueryScaffold\Templates\QueryApi.cs" />
 		<Compile Remove="QueryScaffold\Templates\QueryBusinessLogic.cs" />
 		<Compile Remove="ModelIdService\Templates\IdAttribute.cs" />
@@ -27,7 +29,9 @@
 		<EmbeddedResource Include="CommandScaffold\Templates\CommandBusinessLogic.Messaging.cs" />
 		<EmbeddedResource Include="CommandScaffold\Templates\CommandBusinessLogic.NoMessaging.cs" />
 		<EmbeddedResource Include="CommandScaffold\Templates\CommandScaffoldAttribute.cs" />
+		<EmbeddedResource Include="CommandScaffold\Templates\EndpointInitiator.Command.cs" />
 		<EmbeddedResource Include="QueryScaffold\Templates\QueryApi.cs" />
+		<EmbeddedResource Include="QueryScaffold\Templates\EndpointInitiator.Query.cs" />
 		<EmbeddedResource Include="QueryScaffold\Templates\QueryBusinessLogic.cs" />
 		<EmbeddedResource Include="ModelIdService\Templates\IdAttribute.cs" />
 		<EmbeddedResource Include="ModelIdService\Templates\IncludeInModelIdServiceAttribute.cs" />

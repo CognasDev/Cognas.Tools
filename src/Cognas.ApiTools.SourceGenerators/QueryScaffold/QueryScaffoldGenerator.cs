@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Text;
 
 namespace Cognas.ApiTools.SourceGenerators.QueryScaffold;
 
@@ -95,17 +96,20 @@ public sealed class QueryScaffoldGenerator : IIncrementalGenerator
     {
         string queryApiTemplate = TemplateCache.GetTemplate(TemplateNames.QueryApi);
         string queryBusinessLogicTemplate = TemplateCache.GetTemplate(TemplateNames.QueryBusinessLogic);
-
-        foreach (List<QueryScaffoldDetail > detailsList in details)
+        IEnumerable<QueryScaffoldDetail> detailsCollection = from detailsList in details
+                                                             from detail in detailsList.OrderBy(detail => detail.ModelName)
+                                                             select detail;
+        ReadOnlySpan<QueryScaffoldDetail> detailsSpan = [.. detailsCollection];
+        StringBuilder queryEndpointInitiatorBuilder = new();
+        GenerateInitiateQueryEndpoints.ClearApiVersions();
+        foreach (QueryScaffoldDetail detail in detailsSpan)
         {
-            ReadOnlySpan<QueryScaffoldDetail> detailsSpan = [.. detailsList.OrderBy(detail => detail.ModelName)];
-            foreach (QueryScaffoldDetail detail in detailsSpan)
-            {
-                string fullModelName = $"{detail.ModelNamespace}.{detail.ModelName}";
-                GenerateApi(context, fullModelName, queryApiTemplate, detail);
-                GenerateBusinessLogic(context, fullModelName, queryBusinessLogicTemplate, detail);
-            }
+            string fullModelName = $"{detail.ModelNamespace}.{detail.ModelName}";
+            GenerateApi(context, fullModelName, queryApiTemplate, detail);
+            GenerateBusinessLogic(context, fullModelName, queryBusinessLogicTemplate, detail);
+            GenerateInitiateQueryEndpoints.Generate(queryEndpointInitiatorBuilder, detail);
         }
+        GenerateQueryEndpointInitiator(context, queryEndpointInitiatorBuilder);
     }
 
     /// <summary>
@@ -145,6 +149,18 @@ public sealed class QueryScaffoldGenerator : IIncrementalGenerator
         string versionFilename = string.Format(SourceFileNames.QueryBusinessLogic, detail.ApiVersion);
         string filename = $"{detail.ModelName}.{versionFilename}";
         context.AddSource(filename, queryBusinesssLogicSource);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="queryEndpointInitiatorBuilder"></param>
+    private static void GenerateQueryEndpointInitiator(SourceProductionContext context, StringBuilder queryEndpointInitiatorBuilder)
+    {
+        string queryEndpointInitiatorTemplate = TemplateCache.GetTemplate(TemplateNames.QueryEndpointInitiator);
+        string queryEndpointInitiatorSource = string.Format(queryEndpointInitiatorTemplate, queryEndpointInitiatorBuilder.ToString());
+        context.AddSource(SourceFileNames.QueryEndpointInitiator, queryEndpointInitiatorSource);
     }
 
     #endregion

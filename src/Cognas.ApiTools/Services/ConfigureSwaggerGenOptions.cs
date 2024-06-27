@@ -34,6 +34,7 @@ public sealed class ConfigureSwaggerGenOptions : IConfigureNamedOptions<SwaggerG
     #endregion
 
     #region Public Method Declarations
+
     /// <summary>
     /// 
     /// </summary>
@@ -52,7 +53,7 @@ public sealed class ConfigureSwaggerGenOptions : IConfigureNamedOptions<SwaggerG
         {
             OpenApiInfo openApiInfo = new()
             {
-                Title = Assembly.GetEntryAssembly()!.GetName().Name,
+                Title = Assembly.GetEntryAssembly()!.GetName().Name + (apiVersionDescription.IsDeprecated ? " - depreceated." : string.Empty),
                 Version = apiVersionDescription.ApiVersion.ToString()
             };
             options.SwaggerDoc(apiVersionDescription.GroupName, openApiInfo);

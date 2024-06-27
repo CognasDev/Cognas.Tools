@@ -90,7 +90,6 @@ public static class WebApplicationExtensions
     {
         ICommandApi<TModel, TRequest, TResponse> commandApi = webApplication.Services.GetCommandApi<TModel, TRequest, TResponse>(apiVersion);
         commandApi.MapAll(endpointRouteBuilder ?? webApplication);
-        webApplication.InitiateApi<TModel, TResponse>(apiVersion, endpointRouteBuilder);
     }
 
     /// <summary>

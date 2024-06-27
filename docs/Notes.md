@@ -8,9 +8,6 @@
 
 ### Caching via MemoryCache?
 
-## 2024-06-25
+## 2024-06-27
 
-### Versioning
-
-- look at InitiateVersionedApis to see if this can be automated (could become clunky with many versions)
-- look at loop flattening to avoid nested loop
+- Unit testing

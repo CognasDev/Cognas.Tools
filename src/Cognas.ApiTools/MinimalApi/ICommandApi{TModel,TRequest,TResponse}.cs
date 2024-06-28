@@ -1,6 +1,4 @@
-﻿using Cognas.ApiTools.BusinessLogic;
-using Cognas.ApiTools.Mapping;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 
 namespace Cognas.ApiTools.MinimalApi;
@@ -13,7 +11,7 @@ namespace Cognas.ApiTools.MinimalApi;
 /// <typeparam name="TResponse"></typeparam>
 public interface ICommandApi<TModel, TRequest, TResponse>
     where TModel : class
-    where TRequest : class
+    where TRequest : notnull
     where TResponse : class
 {
     #region Property Declarations
@@ -22,31 +20,6 @@ public interface ICommandApi<TModel, TRequest, TResponse>
     /// 
     /// </summary>
     int ApiVersion { get; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    string PluralModelName { get; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    string LowerPluralModelName { get; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    ICommandMappingService<TModel, TRequest, TResponse> CommandMappingService { get; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    IQueryMappingService<TModel, TResponse> QueryMappingService { get; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    ICommandBusinessLogic<TModel> CommandBusinessLogic { get; }
 
     #endregion
 

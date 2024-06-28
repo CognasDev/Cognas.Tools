@@ -34,7 +34,7 @@ public static partial class EndpointInitiator
     /// <param name="endpointRouteBuilder"></param>
     public static void InitiateApi<TModel, TRequest, TResponse>(this WebApplication webApplication, int apiVersion, IEndpointRouteBuilder? endpointRouteBuilder = null)
         where TModel : class
-        where TRequest : class
+        where TRequest : notnull
         where TResponse : class
     {{
         ICommandApi<TModel, TRequest, TResponse> commandApi = webApplication.Services.GetCommandApi<TModel, TRequest, TResponse>(apiVersion);
@@ -53,7 +53,7 @@ public static partial class EndpointInitiator
     /// <exception cref="NullReferenceException"></exception>
     public static ICommandApi<TModel, TRequest, TResponse> GetCommandApi<TModel, TRequest, TResponse>(this IServiceProvider serviceProvider, int apiVersion)
         where TModel : class
-        where TRequest : class
+        where TRequest : notnull
         where TResponse : class
     {{
         IEnumerable<ICommandApi<TModel, TRequest, TResponse>> commandApis = serviceProvider.GetServices<ICommandApi<TModel, TRequest, TResponse>>();

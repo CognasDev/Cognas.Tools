@@ -34,37 +34,37 @@ public abstract class QueryApiBase<TModel, TResponse> : IQueryApi<TModel, TRespo
     /// <summary>
     /// 
     /// </summary>
-    public ILogger Logger { get; }
+    protected ILogger Logger { get; }
 
     /// <summary>
     /// 
     /// </summary>
-    public string PluralModelName { get; }
+    protected string PluralModelName { get; }
 
     /// <summary>
     /// 
     /// </summary>
-    public string LowerPluralModelName { get; }
+    protected string LowerPluralModelName { get; }
 
     /// <summary>
     /// 
     /// </summary>
-    public IQueryMappingService<TModel, TResponse> QueryMappingService { get; }
+    protected IQueryMappingService<TModel, TResponse> QueryMappingService { get; }
 
     /// <summary>
     /// 
     /// </summary>
-    public IModelIdService ModelIdService { get; }
+    protected IModelIdService ModelIdService { get; }
 
     /// <summary>
     /// 
     /// </summary>
-    public IPaginationFunctions PaginationFunctions { get; }
+    protected IPaginationFunctions PaginationFunctions { get; }
 
     /// <summary>
     /// 
     /// </summary>
-    public IQueryBusinessLogic<TModel> QueryBusinessLogic { get; }
+    protected IQueryBusinessLogic<TModel> QueryBusinessLogic { get; }
 
     #endregion
 
@@ -162,10 +162,10 @@ public abstract class QueryApiBase<TModel, TResponse> : IQueryApi<TModel, TRespo
         .WithName($"Get{PluralModelName}ByIdV{ApiVersion}")
         .WithTags(PluralModelName)
         .WithOpenApi(configureOperation => new(configureOperation)
-            {
-                Summary = $"Gets a single model as the '{typeof(TResponse).Name}' response via the required '{configureOperation.Parameters[0].Name}' parameter.",
-                Tags = [new() { Name = PluralModelName }]
-            })
+        {
+            Summary = $"Gets a single model as the '{typeof(TResponse).Name}' response via the required '{configureOperation.Parameters[0].Name}' parameter.",
+            Tags = [new() { Name = PluralModelName }]
+        })
         .Produces<TResponse>(StatusCodes.Status200OK, MediaTypeNames.Application.Json)
         .Produces(StatusCodes.Status404NotFound)
         .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError, MediaTypeNames.Application.Json);

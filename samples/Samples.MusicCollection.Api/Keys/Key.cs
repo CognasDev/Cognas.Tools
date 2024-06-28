@@ -7,7 +7,6 @@ namespace Samples.MusicCollection.Api.Keys;
 /// </summary>
 [IncludeInModelIdService]
 [QueryScaffold(typeof(KeyResponse), 1)]
-[QueryScaffold(typeof(KeyResponse), 2)]
 public sealed record Key
 {
     #region Property Declarations

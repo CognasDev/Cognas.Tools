@@ -42,6 +42,18 @@ public sealed record PaginationQuery : IPaginationQuery
     [JsonPropertyName("orderByAscending")]
     public required bool? OrderByAscending { get; set; }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public static PaginationQuery Empty => new()
+    {
+        PageSize = null,
+        PageNumber = null,
+        OrderBy = null,
+        OrderByAscending = null
+    };
+
     #endregion
 
     #region Constructor / Finaliser Declarations

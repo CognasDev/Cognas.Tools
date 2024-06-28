@@ -33,37 +33,37 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
     /// <summary>
     /// 
     /// </summary>
-    public ILogger Logger { get; }
+    protected ILogger Logger { get; }
 
     /// <summary>
     /// 
     /// </summary>
-    public string PluralModelName { get; }
+    protected string PluralModelName { get; }
 
     /// <summary>
     /// 
     /// </summary>
-    public string LowerPluralModelName { get; }
+    protected string LowerPluralModelName { get; }
 
     /// <summary>
     /// 
     /// </summary>
-    public ICommandMappingService<TModel, TRequest, TResponse> CommandMappingService { get; }
+    protected ICommandMappingService<TModel, TRequest, TResponse> CommandMappingService { get; }
 
     /// <summary>
     /// 
     /// </summary>
-    public IQueryMappingService<TModel, TResponse> QueryMappingService { get; }
+    protected IQueryMappingService<TModel, TResponse> QueryMappingService { get; }
 
     /// <summary>
     /// 
     /// </summary>
-    public IModelIdService ModelIdService { get; }
+    protected IModelIdService ModelIdService { get; }
 
     /// <summary>
     /// 
     /// </summary>
-    public ICommandBusinessLogic<TModel> CommandBusinessLogic { get; }
+    protected ICommandBusinessLogic<TModel> CommandBusinessLogic { get; }
 
     #endregion
 

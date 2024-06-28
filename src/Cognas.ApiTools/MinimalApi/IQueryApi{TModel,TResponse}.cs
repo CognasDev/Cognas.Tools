@@ -1,7 +1,4 @@
-﻿using Cognas.ApiTools.BusinessLogic;
-using Cognas.ApiTools.Mapping;
-using Cognas.ApiTools.Pagination;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 
 namespace Cognas.ApiTools.MinimalApi;
@@ -19,31 +16,6 @@ public interface IQueryApi<TModel, TResponse> where TModel : class where TRespon
     /// 
     /// </summary>
     int ApiVersion { get; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    string PluralModelName { get; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    string LowerPluralModelName { get; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    IQueryMappingService<TModel, TResponse> QueryMappingService { get; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    IPaginationFunctions PaginationFunctions { get; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    IQueryBusinessLogic<TModel> QueryBusinessLogic { get; }
 
     #endregion
 

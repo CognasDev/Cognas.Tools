@@ -28,7 +28,7 @@ public abstract class QueryMicroserviceEndpointsBase<TResponse> : IQueryMicroser
     /// <summary>
     /// 
     /// </summary>
-    public virtual string Tag { get; } = "All Music";
+    public virtual string Tag { get; } = MicroserviceTags.Models;
 
     /// <summary>
     /// 
@@ -75,8 +75,7 @@ public abstract class QueryMicroserviceEndpointsBase<TResponse> : IQueryMicroser
         (
             $"/{Route(Routes.Value)}",
             (
-                CancellationToken cancellationToken,
-                [AsParameters] PaginationQuery paginationQuery
+                CancellationToken cancellationToken, [AsParameters] PaginationQuery paginationQuery
             ) => QueryBusinessLogic.Get(paginationQuery, cancellationToken)
         ).MapGetConfiguration<TResponse>(ApiVersion, Tag);
     }

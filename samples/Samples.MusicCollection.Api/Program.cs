@@ -4,7 +4,9 @@ using Cognas.ApiTools.ServiceRegistration;
 using Cognas.ApiTools.Shared;
 using Cognas.ApiTools.SourceGenerators;
 using Samples.MusicCollection.Api.Albums;
+using Samples.MusicCollection.Api.AllMusic;
 using Samples.MusicCollection.Api.AllMusic.Abstractions;
+using Samples.MusicCollection.Api.AllMusic.BusinessLogic;
 using Samples.MusicCollection.Api.AllMusic.Endpoints;
 using Samples.MusicCollection.Api.AllMusic.TrackRules;
 using Samples.MusicCollection.Api.Artists;
@@ -54,12 +56,21 @@ public sealed class Program
         GenericServiceRegistration.Instance.AddServices(webApplicationBuilder.Services, typeof(IQueryMicroserviceBusinessLogic<>), ServiceLifetime.Singleton);
 
         //API gateway - simulated microservices
-        webApplicationBuilder.Services.AddKeyedSingleton<ICommandQueryMicroserviceEndpoints, AlbumsMicroserviceEndpoints>(nameof(Album));
-        webApplicationBuilder.Services.AddKeyedSingleton<ICommandQueryMicroserviceEndpoints, ArtistsMicroserviceEndpoints>(nameof(Artist));
-        webApplicationBuilder.Services.AddKeyedSingleton<ICommandQueryMicroserviceEndpoints, GenresMicroserviceEndpoints>(nameof(Genre));
-        webApplicationBuilder.Services.AddKeyedSingleton<IQueryMicroserviceEndpoints, KeysMicroserviceEndpoints>(nameof(Key));
-        webApplicationBuilder.Services.AddKeyedSingleton<ICommandQueryMicroserviceEndpoints, LabelsMicroserviceEndpoints>(nameof(Label));
-        webApplicationBuilder.Services.AddKeyedSingleton<ICommandQueryMicroserviceEndpoints, TracksMicroserviceEndpoints>(nameof(Track));
+        webApplicationBuilder.Services.AddKeyedSingleton<ICommandQueryMicroserviceEndpoints, AlbumsMicroserviceEndpoints>(MicroserviceDependencyKeys.Albums);
+        webApplicationBuilder.Services.AddKeyedSingleton<ICommandQueryMicroserviceEndpoints, ArtistsMicroserviceEndpoints>(MicroserviceDependencyKeys.Artists);
+        webApplicationBuilder.Services.AddKeyedSingleton<ICommandQueryMicroserviceEndpoints, GenresMicroserviceEndpoints>(MicroserviceDependencyKeys.Genres);
+        webApplicationBuilder.Services.AddKeyedSingleton<ICommandQueryMicroserviceEndpoints, LabelsMicroserviceEndpoints>(MicroserviceDependencyKeys.Labels);
+        webApplicationBuilder.Services.AddKeyedSingleton<ICommandQueryMicroserviceEndpoints, TracksMicroserviceEndpoints>(MicroserviceDependencyKeys.Tracks);
+
+        webApplicationBuilder.Services.AddKeyedSingleton<IQueryMicroserviceEndpoints, AlbumsMicroserviceEndpoints>(MicroserviceDependencyKeys.Albums);
+        webApplicationBuilder.Services.AddKeyedSingleton<IQueryMicroserviceEndpoints, ArtistsMicroserviceEndpoints>(MicroserviceDependencyKeys.Artists);
+        webApplicationBuilder.Services.AddKeyedSingleton<IQueryMicroserviceEndpoints, GenresMicroserviceEndpoints>(MicroserviceDependencyKeys.Genres);
+        webApplicationBuilder.Services.AddKeyedSingleton<IQueryMicroserviceEndpoints, KeysMicroserviceEndpoints>(MicroserviceDependencyKeys.Keys);
+        webApplicationBuilder.Services.AddKeyedSingleton<IQueryMicroserviceEndpoints, LabelsMicroserviceEndpoints>(MicroserviceDependencyKeys.Labels);
+        webApplicationBuilder.Services.AddKeyedSingleton<IQueryMicroserviceEndpoints, TracksMicroserviceEndpoints>(MicroserviceDependencyKeys.Tracks);
+
+        webApplicationBuilder.Services.AddSingleton<IAllMusicBusinessLogic, AllMusicBusinessLogic>();
+        webApplicationBuilder.Services.AddSingleton<IAllMusicEndpoints, AllMusicEndpoints>();
 
         WebApplication webApplication = webApplicationBuilder.Build();
 
@@ -68,12 +79,15 @@ public sealed class Program
         webApplication.InitiateQueryEndpoints();
 
         RouteGroupBuilder apiVersionRouteV2 = webApplication.GetApiVersionRoute(2);
-        MapCommandQueryEndpoints(webApplication, apiVersionRouteV2, nameof(Album));
-        MapCommandQueryEndpoints(webApplication, apiVersionRouteV2, nameof(Artist));
-        MapCommandQueryEndpoints(webApplication, apiVersionRouteV2, nameof(Genre));
-        MapQueryEndpoints(webApplication, apiVersionRouteV2, nameof(Key));
-        MapCommandQueryEndpoints(webApplication, apiVersionRouteV2, nameof(Label));
-        MapCommandQueryEndpoints(webApplication, apiVersionRouteV2, nameof(Track));
+        MapCommandQueryEndpoints(webApplication, apiVersionRouteV2, MicroserviceDependencyKeys.Albums);
+        MapCommandQueryEndpoints(webApplication, apiVersionRouteV2, MicroserviceDependencyKeys.Artists);
+        MapCommandQueryEndpoints(webApplication, apiVersionRouteV2, MicroserviceDependencyKeys.Genres);
+        MapQueryEndpoints(webApplication, apiVersionRouteV2, MicroserviceDependencyKeys.Keys);
+        MapCommandQueryEndpoints(webApplication, apiVersionRouteV2, MicroserviceDependencyKeys.Labels);
+        MapCommandQueryEndpoints(webApplication, apiVersionRouteV2, MicroserviceDependencyKeys.Tracks);
+
+        IAllMusicEndpoints allMusicEndpoints = webApplication.Services.GetService<IAllMusicEndpoints>() ?? throw new NullReferenceException(nameof(AllMusicEndpoints));
+        allMusicEndpoints.MapGet(apiVersionRouteV2);
 
         webApplication.AddSwagger();
         webApplication.ConfigureAndRun();

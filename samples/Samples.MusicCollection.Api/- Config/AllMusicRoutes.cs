@@ -10,6 +10,11 @@ public sealed record AllMusicRoutes
     /// <summary>
     /// 
     /// </summary>
+    public string Home { get; set; } = null!;
+
+    /// <summary>
+    /// 
+    /// </summary>
     public string Albums { get; set; } = null!;
 
     /// <summary>

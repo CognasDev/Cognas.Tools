@@ -17,3 +17,4 @@
 - look at moving GenericServiceRegistration and MultipleServiceRegistration to extensions
 - TODO: update Ensure response success for delete when 404 is expected (microservice translates to 500)
 - TODO: consistent operation ordering in Swagger
+- TODO: https://www.youtube.com/watch?v=CkGFV5bekbY

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
-using Samples.MusicCollection.Api.AllMusic.BusinessLogic;
+using Samples.MusicCollection.Api.AllMusic.Abstractions;
+using Samples.MusicCollection.Api.AllMusic.Base;
 using Samples.MusicCollection.Api.Artists;
 using Samples.MusicCollection.Api.Config;
 
@@ -8,18 +9,20 @@ namespace Samples.MusicCollection.Api.AllMusic.Endpoints;
 /// <summary>
 /// 
 /// </summary>
-public sealed class ArtistsMicroserviceEndpoints : MicroserviceEndpointsBase<ArtistRequest, ArtistResponse>
+public sealed class ArtistsMicroserviceEndpoints : CommandQueryMicroserviceEndpointsBase<ArtistRequest, ArtistResponse>
 {
     #region Constructor / Finaliser Declarations
 
     /// <summary>
     /// Default constructor for <see cref="ArtistsMicroserviceEndpoints"/>
     /// </summary>
-    /// <param name="businessLogic"></param>
+    /// <param name="commandBusinessLogic"></param>
+    /// <param name="queryBusinessLogic"></param>
     /// <param name="routes"></param>
-    public ArtistsMicroserviceEndpoints(IMicroserviceBusinessLogic<ArtistRequest, ArtistResponse> businessLogic,
+    public ArtistsMicroserviceEndpoints(ICommandQueryMicroserviceBusinessLogic<ArtistRequest, ArtistResponse> commandBusinessLogic,
+                                        IQueryMicroserviceBusinessLogic<ArtistResponse> queryBusinessLogic,
                                         IOptions<AllMusicRoutes> routes)
-        : base(businessLogic, routes)
+        : base(commandBusinessLogic, queryBusinessLogic, routes)
     {
     }
 
@@ -32,7 +35,7 @@ public sealed class ArtistsMicroserviceEndpoints : MicroserviceEndpointsBase<Art
     /// </summary>
     /// <param name="routes"></param>
     /// <returns></returns>
-    public override string Route(AllMusicRoutes routes) => routes.Artist;
+    public override string Route(AllMusicRoutes routes) => routes.Artists;
 
     #endregion
 }

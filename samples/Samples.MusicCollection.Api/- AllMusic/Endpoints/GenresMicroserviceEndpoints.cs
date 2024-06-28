@@ -1,25 +1,28 @@
 ﻿using Microsoft.Extensions.Options;
-using Samples.MusicCollection.Api.Genres;
-using Samples.MusicCollection.Api.AllMusic.BusinessLogic;
+using Samples.MusicCollection.Api.AllMusic.Abstractions;
+using Samples.MusicCollection.Api.AllMusic.Base;
 using Samples.MusicCollection.Api.Config;
+using Samples.MusicCollection.Api.Genres;
 
 namespace Samples.MusicCollection.Api.AllMusic.Endpoints;
 
 /// <summary>
 /// 
 /// </summary>
-public sealed class GenresMicroserviceEndpoints : MicroserviceEndpointsBase<GenreRequest, GenreResponse>
+public sealed class GenresMicroserviceEndpoints : CommandQueryMicroserviceEndpointsBase<GenreRequest, GenreResponse>
 {
     #region Constructor / Finaliser Declarations
 
     /// <summary>
     /// Default constructor for <see cref="GenresMicroserviceEndpoints"/>
     /// </summary>
-    /// <param name="businessLogic"></param>
+    /// <param name="commandBusinessLogic"></param>
+    /// <param name="queryBusinessLogic"></param>
     /// <param name="routes"></param>
-    public GenresMicroserviceEndpoints(IMicroserviceBusinessLogic<GenreRequest, GenreResponse> businessLogic,
+    public GenresMicroserviceEndpoints(ICommandQueryMicroserviceBusinessLogic<GenreRequest, GenreResponse> commandBusinessLogic,
+                                       IQueryMicroserviceBusinessLogic<GenreResponse> queryBusinessLogic,
                                        IOptions<AllMusicRoutes> routes)
-        : base (businessLogic, routes)
+        : base(commandBusinessLogic, queryBusinessLogic, routes)
     {
     }
 
@@ -32,7 +35,7 @@ public sealed class GenresMicroserviceEndpoints : MicroserviceEndpointsBase<Genr
     /// </summary>
     /// <param name="routes"></param>
     /// <returns></returns>
-    public override string Route(AllMusicRoutes routes) => routes.Genre;
+    public override string Route(AllMusicRoutes routes) => routes.Genres;
 
     #endregion
 }

@@ -1,6 +1,7 @@
 ﻿using Cognas.ApiTools.Pagination;
 using Cognas.ApiTools.Services;
 using Microsoft.Extensions.Options;
+using Samples.MusicCollection.Api.AllMusic.Base;
 using Samples.MusicCollection.Api.Artists;
 using Samples.MusicCollection.Api.Config;
 
@@ -9,7 +10,7 @@ namespace Samples.MusicCollection.Api.AllMusic.BusinessLogic;
 /// <summary>
 /// 
 /// </summary>
-public sealed class ArtistsMicroserviceBusinessLogic : MicroserviceBusinessLogicBase<ArtistRequest, ArtistResponse>
+public sealed class ArtistsMicroserviceBusinessLogic : CommandQueryMicroserviceBusinessLogicBase<ArtistRequest, ArtistResponse>
 {
     #region Constructor / Finaliser Declarations
 
@@ -37,7 +38,7 @@ public sealed class ArtistsMicroserviceBusinessLogic : MicroserviceBusinessLogic
     /// </summary>
     /// <param name="microserviceUris"></param>
     /// <returns></returns>
-    public override string MicroserviceUri(MicroserviceUris microserviceUris) => microserviceUris.Artist;
+    public override string MicroserviceUri(MicroserviceUris microserviceUris) => microserviceUris.Artists;
 
     #endregion
 }

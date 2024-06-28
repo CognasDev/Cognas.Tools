@@ -1,23 +1,11 @@
-﻿namespace Samples.MusicCollection.Api.AllMusic.Endpoints;
+﻿namespace Samples.MusicCollection.Api.AllMusic.Abstractions;
 
 /// <summary>
 /// 
 /// </summary>
-public interface IMicroserviceEndpoints
+public interface ICommandQueryMicroserviceEndpoints : IQueryMicroserviceEndpoints
 {
     #region Method Declarations
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="endpointRouteBuilder"></param>
-    RouteHandlerBuilder MapGet(IEndpointRouteBuilder endpointRouteBuilder);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="endpointRouteBuilder"></param>
-    RouteHandlerBuilder MapGetById(IEndpointRouteBuilder endpointRouteBuilder);
 
     /// <summary>
     /// 

@@ -1,15 +1,16 @@
 ﻿using Cognas.ApiTools.Pagination;
 using Cognas.ApiTools.Services;
 using Microsoft.Extensions.Options;
-using Samples.MusicCollection.Api.Tracks;
+using Samples.MusicCollection.Api.AllMusic.Base;
 using Samples.MusicCollection.Api.Config;
+using Samples.MusicCollection.Api.Tracks;
 
 namespace Samples.MusicCollection.Api.AllMusic.BusinessLogic;
 
 /// <summary>
 /// 
 /// </summary>
-public sealed class TracksMicroserviceBusinessLogic : MicroserviceBusinessLogicBase<TrackRequest, TrackResponse>
+public sealed class TracksMicroserviceBusinessLogic : CommandQueryMicroserviceBusinessLogicBase<TrackRequest, TrackResponse>
 {
     #region Constructor / Finaliser Declarations
 
@@ -37,7 +38,7 @@ public sealed class TracksMicroserviceBusinessLogic : MicroserviceBusinessLogicB
     /// </summary>
     /// <param name="microserviceUris"></param>
     /// <returns></returns>
-    public override string MicroserviceUri(MicroserviceUris microserviceUris) => microserviceUris.Track;
+    public override string MicroserviceUri(MicroserviceUris microserviceUris) => microserviceUris.Tracks;
 
     #endregion
 }

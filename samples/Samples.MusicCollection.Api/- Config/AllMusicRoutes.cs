@@ -3,48 +3,48 @@
 /// <summary>
 /// 
 /// </summary>
-public sealed record MicroserviceUris
+public sealed record AllMusicRoutes
 {
     #region Property Declarations
 
     /// <summary>
     /// 
     /// </summary>
-    public string Album { get; set; } = null!;
+    public string Albums { get; set; } = null!;
 
     /// <summary>
     /// 
     /// </summary>
-    public string Artist { get; set; } = null!;
+    public string Artists { get; set; } = null!;
 
     /// <summary>
     /// 
     /// </summary>
-    public string Genre { get; set; } = null!;
+    public string Genres { get; set; } = null!;
 
     /// <summary>
     /// 
     /// </summary>
-    public string Label { get; set; } = null!;
+    public string Labels { get; set; } = null!;
 
     /// <summary>
     /// 
     /// </summary>
-    public string Key { get; set; } = null!;
+    public string Keys { get; set; } = null!;
 
     /// <summary>
     /// 
     /// </summary>
-    public string Track { get; set; } = null!;
+    public string Tracks { get; set; } = null!;
 
     #endregion
 
     #region Constructor / Finaliser Declarations
 
     /// <summary>
-    /// Default constructor for <see cref="MicroserviceUris"/>
+    /// Default constructor for <see cref="AllMusicRoutes"/>
     /// </summary>
-    public MicroserviceUris()
+    public AllMusicRoutes()
     {
     }
 

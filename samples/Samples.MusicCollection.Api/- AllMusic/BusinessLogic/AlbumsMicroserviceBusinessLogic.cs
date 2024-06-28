@@ -2,6 +2,7 @@
 using Cognas.ApiTools.Services;
 using Microsoft.Extensions.Options;
 using Samples.MusicCollection.Api.Albums;
+using Samples.MusicCollection.Api.AllMusic.Base;
 using Samples.MusicCollection.Api.Config;
 
 namespace Samples.MusicCollection.Api.AllMusic.BusinessLogic;
@@ -9,7 +10,7 @@ namespace Samples.MusicCollection.Api.AllMusic.BusinessLogic;
 /// <summary>
 /// 
 /// </summary>
-public sealed class AlbumsMicroserviceBusinessLogic : MicroserviceBusinessLogicBase<AlbumRequest, AlbumResponse>
+public sealed class AlbumsMicroserviceBusinessLogic : CommandQueryMicroserviceBusinessLogicBase<AlbumRequest, AlbumResponse>
 {
     #region Constructor / Finaliser Declarations
 
@@ -37,7 +38,7 @@ public sealed class AlbumsMicroserviceBusinessLogic : MicroserviceBusinessLogicB
     /// </summary>
     /// <param name="microserviceUris"></param>
     /// <returns></returns>
-    public override string MicroserviceUri(MicroserviceUris microserviceUris) => microserviceUris.Album;
+    public override string MicroserviceUri(MicroserviceUris microserviceUris) => microserviceUris.Albums;
 
     #endregion
 }

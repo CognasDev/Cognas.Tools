@@ -2,51 +2,64 @@
 using Cognas.ApiTools.Pagination;
 using Cognas.ApiTools.Services;
 using Microsoft.Extensions.Options;
+using Samples.MusicCollection.Api.AllMusic.Abstractions;
 using Samples.MusicCollection.Api.Config;
 using System.Text;
 
-namespace Samples.MusicCollection.Api.AllMusic.BusinessLogic;
+namespace Samples.MusicCollection.Api.AllMusic.Base;
 
 /// <summary>
 /// 
 /// </summary>
-public abstract class MicroserviceBusinessLogicBase<TRequest, TResponse> : LoggerBusinessLogicBase, IDisposable, IMicroserviceBusinessLogic<TRequest,TResponse>
-    where TRequest : class
+public abstract class QueryMicroserviceBusinessLogicBase<TResponse> :
+    LoggerBusinessLogicBase, IDisposable, IQueryMicroserviceBusinessLogic<TResponse>
     where TResponse : class
 {
     #region Field Declarations
 
-    private readonly IHttpClientService _httpClientService;
     private readonly IPaginationFunctions _paginationFunctions;
-    private MicroserviceUris _microserviceUris;
     private readonly IDisposable? _microserviceUrisChangedListener;
     private bool _isDisposed;
+
+    #endregion
+
+    #region Property Declarations
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected IHttpClientService HttpClientService { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected MicroserviceUris MicroserviceUris { get; private set; }
 
     #endregion
 
     #region Constructor / Finaliser Declarations
 
     /// <summary>
-    /// Default constructor for <see cref="MicroserviceBusinessLogicBase{TRequest, TResponse}"/>
+    /// Default constructor for <see cref="QueryMicroserviceBusinessLogicBase{TResponse}"/>
     /// </summary>
     /// <param name="logger"></param>
     /// <param name="httpClientService"></param>
     /// <param name="microserviceUrisMonitor"></param>
     /// <param name="paginationFunctions"></param>
-    public MicroserviceBusinessLogicBase(ILogger logger,
-                                         IHttpClientService httpClientService,
-                                         IOptionsMonitor<MicroserviceUris> microserviceUrisMonitor,
-                                         IPaginationFunctions paginationFunctions) : base(logger)
+    protected QueryMicroserviceBusinessLogicBase(ILogger logger,
+                                                 IHttpClientService httpClientService,
+                                                 IOptionsMonitor<MicroserviceUris> microserviceUrisMonitor,
+                                                 IPaginationFunctions paginationFunctions) : base(logger)
     {
         ArgumentNullException.ThrowIfNull(httpClientService, nameof(httpClientService));
         ArgumentNullException.ThrowIfNull(microserviceUrisMonitor, nameof(microserviceUrisMonitor));
         ArgumentNullException.ThrowIfNull(paginationFunctions, nameof(paginationFunctions));
 
-        _httpClientService = httpClientService;
+        HttpClientService = httpClientService;
         _paginationFunctions = paginationFunctions;
 
         _microserviceUrisChangedListener = microserviceUrisMonitor.OnChange(OnMicroserviceUrisChanged);
-        _microserviceUris = microserviceUrisMonitor.CurrentValue;
+        MicroserviceUris = microserviceUrisMonitor.CurrentValue;
     }
 
     #endregion
@@ -68,9 +81,9 @@ public abstract class MicroserviceBusinessLogicBase<TRequest, TResponse> : Logge
     /// <returns></returns>
     public IAsyncEnumerable<TResponse> Get(IPaginationQuery paginationQuery, CancellationToken cancellationToken)
     {
-        bool? paginationQueryValidOrDefault = _paginationFunctions.IsPaginationQueryValidOrNotRequested<TRequest>(paginationQuery);
-        string requestUri = paginationQueryValidOrDefault == true ? BuildPaginatedQueryString(paginationQuery, MicroserviceUri(_microserviceUris)) : MicroserviceUri(_microserviceUris);
-        return _httpClientService.GetAsyncEnumerable<TResponse>(requestUri, cancellationToken);
+        bool? paginationQueryValidOrDefault = _paginationFunctions.IsPaginationQueryValidOrNotRequested<TResponse>(paginationQuery);
+        string requestUri = paginationQueryValidOrDefault == true ? BuildPaginatedQueryString(paginationQuery, MicroserviceUri(MicroserviceUris)) : MicroserviceUri(MicroserviceUris);
+        return HttpClientService.GetAsyncEnumerable<TResponse>(requestUri, cancellationToken);
     }
 
     /// <summary>
@@ -80,44 +93,9 @@ public abstract class MicroserviceBusinessLogicBase<TRequest, TResponse> : Logge
     /// <returns></returns>
     public async Task<TResponse?> GetByIdAsync(int id)
     {
-        string requestUri = $"{MicroserviceUri(_microserviceUris)}/{id}";
-        TResponse? album = await _httpClientService.GetAsync<TResponse>(requestUri).ConfigureAwait(false);
+        string requestUri = $"{MicroserviceUri(MicroserviceUris)}/{id}";
+        TResponse? album = await HttpClientService.GetAsync<TResponse>(requestUri).ConfigureAwait(false);
         return album;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="request"></param>
-    /// <returns></returns>
-    public async Task<TResponse?> PostAsync(TRequest request)
-    {
-        string requestUri = $"{MicroserviceUri(_microserviceUris)}";
-        TResponse? postedResponse = await _httpClientService.PostAsync<TRequest, TResponse>(requestUri, request).ConfigureAwait(false);
-        return postedResponse;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="request"></param>
-    /// <returns></returns>
-    public async Task<TResponse?> PutAsync(TRequest request)
-    {
-        string requestUri = $"{MicroserviceUri(_microserviceUris)}";
-        TResponse? putResponse = await _httpClientService.PutAsync<TRequest, TResponse>(requestUri, request).ConfigureAwait(false);
-        return putResponse;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    public async Task DeleteAsync(int id)
-    {
-        string requestUri = $"{MicroserviceUri(_microserviceUris)}/{id}";
-        await _httpClientService.DeleteAsync(requestUri).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -137,7 +115,7 @@ public abstract class MicroserviceBusinessLogicBase<TRequest, TResponse> : Logge
     /// 
     /// </summary>
     /// <param name="microserviceUris"></param>
-    private void OnMicroserviceUrisChanged(MicroserviceUris microserviceUris) => _microserviceUris = microserviceUris;
+    private void OnMicroserviceUrisChanged(MicroserviceUris microserviceUris) => MicroserviceUris = microserviceUris;
 
     /// <summary>
     /// 

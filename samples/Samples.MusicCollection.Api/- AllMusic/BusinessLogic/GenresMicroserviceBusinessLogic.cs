@@ -3,13 +3,14 @@ using Cognas.ApiTools.Services;
 using Microsoft.Extensions.Options;
 using Samples.MusicCollection.Api.Genres;
 using Samples.MusicCollection.Api.Config;
+using Samples.MusicCollection.Api.AllMusic.Base;
 
 namespace Samples.MusicCollection.Api.AllMusic.BusinessLogic;
 
 /// <summary>
 /// 
 /// </summary>
-public sealed class GenresMicroserviceBusinessLogic : MicroserviceBusinessLogicBase<GenreRequest, GenreResponse>
+public sealed class GenresMicroserviceBusinessLogic : CommandQueryMicroserviceBusinessLogicBase<GenreRequest, GenreResponse>
 {
     #region Constructor / Finaliser Declarations
 
@@ -37,7 +38,7 @@ public sealed class GenresMicroserviceBusinessLogic : MicroserviceBusinessLogicB
     /// </summary>
     /// <param name="microserviceUris"></param>
     /// <returns></returns>
-    public override string MicroserviceUri(MicroserviceUris microserviceUris) => microserviceUris.Genre;
+    public override string MicroserviceUri(MicroserviceUris microserviceUris) => microserviceUris.Genres;
 
     #endregion
 }

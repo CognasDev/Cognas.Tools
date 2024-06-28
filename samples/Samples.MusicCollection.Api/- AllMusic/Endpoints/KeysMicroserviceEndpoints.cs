@@ -20,7 +20,7 @@ public sealed class KeysMicroserviceEndpoints : QueryMicroserviceEndpointsBase<K
     /// <param name="routes"></param>
     public KeysMicroserviceEndpoints(IQueryMicroserviceBusinessLogic<KeyResponse> queryBusinessLogic,
                                      IOptions<AllMusicRoutes> routes)
-        : base( queryBusinessLogic, routes)
+        : base(queryBusinessLogic, routes)
     {
     }
 

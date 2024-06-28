@@ -21,13 +21,13 @@ internal static class RouteHandlerBuilderExtensions
     /// <returns></returns>
     public static RouteHandlerBuilder MapGetConfiguration<TResponse>(this RouteHandlerBuilder routeHandlerBuilder, int apiVersion, string tag)
     {
-         return routeHandlerBuilder
-            .MapToApiVersion(apiVersion)
-            .WithTags(tag)
-            .WithOpenApi()
-            .Produces<IEnumerable<TResponse>>(StatusCodes.Status200OK, MediaTypeNames.Application.Json)
-            .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
-            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError, MediaTypeNames.Application.Json);
+        return routeHandlerBuilder
+           .MapToApiVersion(apiVersion)
+           .WithTags(tag)
+           .WithOpenApi()
+           .Produces<IEnumerable<TResponse>>(StatusCodes.Status200OK, MediaTypeNames.Application.Json)
+           .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
+           .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError, MediaTypeNames.Application.Json);
     }
 
     /// <summary>

@@ -1,4 +1,4 @@
-﻿using Samples.MusicCollection.Api.AllMusic.Strategies;
+﻿using Samples.MusicCollection.Api.AllMusic.Abstractions;
 
 namespace Samples.MusicCollection.Api.AllMusic.Responses;
 

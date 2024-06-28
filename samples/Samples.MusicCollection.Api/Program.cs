@@ -5,7 +5,6 @@ using Cognas.ApiTools.Shared;
 using Cognas.ApiTools.SourceGenerators;
 using Samples.MusicCollection.Api.Albums;
 using Samples.MusicCollection.Api.AllMusic.Abstractions;
-using Samples.MusicCollection.Api.AllMusic.BusinessLogic;
 using Samples.MusicCollection.Api.AllMusic.Endpoints;
 using Samples.MusicCollection.Api.AllMusic.TrackRules;
 using Samples.MusicCollection.Api.Artists;

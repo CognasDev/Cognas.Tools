@@ -13,7 +13,7 @@ namespace Cognas.ApiTools.MinimalApi;
 /// <typeparam name="TResponse"></typeparam>
 public interface ICommandApi<TModel, TRequest, TResponse>
     where TModel : class
-    where TRequest : class
+    where TRequest : notnull
     where TResponse : class
 {
     #region Property Declarations

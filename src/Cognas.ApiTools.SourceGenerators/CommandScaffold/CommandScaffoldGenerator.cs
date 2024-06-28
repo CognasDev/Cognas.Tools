@@ -98,8 +98,8 @@ public sealed class CommandScaffoldGenerator : IIncrementalGenerator
     {
         string commandApiTemplate = TemplateCache.GetTemplate(TemplateNames.CommandApi);
         IEnumerable<CommandScaffoldDetail> detailsCollection = from detailsList in details
-                                                             from detail in detailsList.OrderBy(detail => detail.ModelName)
-                                                             select detail;
+                                                               from detail in detailsList.OrderBy(detail => detail.ModelName)
+                                                               select detail;
         ReadOnlySpan<CommandScaffoldDetail> detailsSpan = [.. detailsCollection];
         StringBuilder commandEndpointInitiatorBuilder = new();
         GenerateInitiateCommandEndpoints.ClearApiVersions();

@@ -162,10 +162,10 @@ public abstract class QueryApiBase<TModel, TResponse> : IQueryApi<TModel, TRespo
         .WithName($"Get{PluralModelName}ByIdV{ApiVersion}")
         .WithTags(PluralModelName)
         .WithOpenApi(configureOperation => new(configureOperation)
-            {
-                Summary = $"Gets a single model as the '{typeof(TResponse).Name}' response via the required '{configureOperation.Parameters[0].Name}' parameter.",
-                Tags = [new() { Name = PluralModelName }]
-            })
+        {
+            Summary = $"Gets a single model as the '{typeof(TResponse).Name}' response via the required '{configureOperation.Parameters[0].Name}' parameter.",
+            Tags = [new() { Name = PluralModelName }]
+        })
         .Produces<TResponse>(StatusCodes.Status200OK, MediaTypeNames.Application.Json)
         .Produces(StatusCodes.Status404NotFound)
         .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError, MediaTypeNames.Application.Json);

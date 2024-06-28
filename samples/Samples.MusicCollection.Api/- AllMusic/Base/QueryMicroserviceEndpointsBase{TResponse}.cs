@@ -11,7 +11,7 @@ namespace Samples.MusicCollection.Api.AllMusic.Base;
 /// 
 /// </summary>
 /// <typeparam name="TResponse"></typeparam>
-public abstract class QueryMicroserviceEndpointsBase<TResponse> : IQueryMicroserviceEndpoints
+public abstract class QueryMicroserviceEndpointsBase<TResponse> : IQueryMicroserviceEndpoints where TResponse : class
 {
     #region Property Declarations
 
@@ -44,7 +44,7 @@ public abstract class QueryMicroserviceEndpointsBase<TResponse> : IQueryMicroser
     /// </summary>
     /// <param name="queryBusinessLogic"></param>
     /// <param name="routes"></param>
-    protected QueryMicroserviceEndpointsBase(IQueryMicroserviceBusinessLogic<TResponse> queryBusinessLogic,                           
+    protected QueryMicroserviceEndpointsBase(IQueryMicroserviceBusinessLogic<TResponse> queryBusinessLogic,
                                              IOptions<AllMusicRoutes> routes)
     {
         ArgumentNullException.ThrowIfNull(queryBusinessLogic, nameof(queryBusinessLogic));

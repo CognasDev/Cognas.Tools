@@ -20,7 +20,7 @@ namespace Cognas.ApiTools.MinimalApi;
 /// <typeparam name="TResponse"></typeparam>
 public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<TModel, TRequest, TResponse>
     where TModel : class
-    where TRequest : class
+    where TRequest : notnull
     where TResponse : class
 {
     #region Property Declarations
@@ -136,10 +136,10 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
         .WithName($"Post{PluralModelName}V{ApiVersion}")
         .WithTags(PluralModelName)
         .WithOpenApi(configureOperation => new(configureOperation)
-            {
-                Summary = $"Posts a new model via the '{typeof(TRequest).Name}' request.",
-                Tags = [new() { Name = PluralModelName }]
-            })
+        {
+            Summary = $"Posts a new model via the '{typeof(TRequest).Name}' request.",
+            Tags = [new() { Name = PluralModelName }]
+        })
         .Accepts<TRequest>(MediaTypeNames.Application.Json)
         .Produces<TResponse>(StatusCodes.Status200OK, MediaTypeNames.Application.Json)
         .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
@@ -168,10 +168,10 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
         .WithName($"Put{PluralModelName}V{ApiVersion}")
         .WithTags(PluralModelName)
         .WithOpenApi(configureOperation => new(configureOperation)
-            {
-                Summary = $"Puts an existing model via the '{typeof(TRequest).Name}' request. The required '{configureOperation.Parameters[0].Name}' parameter should match the {configureOperation.Parameters[0].Name} in the request.",
-                Tags = [new() { Name = PluralModelName }]
-            })
+        {
+            Summary = $"Puts an existing model via the '{typeof(TRequest).Name}' request. The required '{configureOperation.Parameters[0].Name}' parameter should match the {configureOperation.Parameters[0].Name} in the request.",
+            Tags = [new() { Name = PluralModelName }]
+        })
         .Accepts<TRequest>(MediaTypeNames.Application.Json)
         .Produces<TResponse>(StatusCodes.Status200OK, MediaTypeNames.Application.Json)
         .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
@@ -199,10 +199,10 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
         .WithName($"Delete{PluralModelName}V{ApiVersion}")
         .WithTags(PluralModelName)
         .WithOpenApi(configureOperation => new(configureOperation)
-            {
-                Summary = $"Deletes a single model via the required '{configureOperation.Parameters[0].Name}' parameter.",
-                Tags = [new() { Name = PluralModelName }]
-            })
+        {
+            Summary = $"Deletes a single model via the required '{configureOperation.Parameters[0].Name}' parameter.",
+            Tags = [new() { Name = PluralModelName }]
+        })
         .Produces(StatusCodes.Status200OK)
         .Produces(StatusCodes.Status404NotFound)
         .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError, MediaTypeNames.Application.Json);

@@ -14,13 +14,14 @@ namespace Samples.MusicCollection.Api.AllMusic.Base;
 public abstract class CommandQueryMicroserviceEndpointsBase<TRequest, TResponse> :
     QueryMicroserviceEndpointsBase<TResponse>, ICommandQueryMicroserviceEndpoints
     where TRequest : notnull
+    where TResponse : class
 {
     #region Property Declarations
 
     /// <summary>
     /// 
     /// </summary>
-    public  ICommandQueryMicroserviceBusinessLogic<TRequest, TResponse> CommandBusinessLogic { get; }
+    public ICommandQueryMicroserviceBusinessLogic<TRequest, TResponse> CommandBusinessLogic { get; }
 
     #endregion
 

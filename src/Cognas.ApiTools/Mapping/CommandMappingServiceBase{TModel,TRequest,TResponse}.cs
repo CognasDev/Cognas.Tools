@@ -10,7 +10,7 @@ namespace Cognas.ApiTools.Mapping;
 /// <typeparam name="TResponse"></typeparam>
 public abstract class CommandMappingServiceBase<TModel, TRequest, TResponse> : ICommandMappingService<TModel, TRequest, TResponse>
     where TModel : class
-    where TRequest : class
+    where TRequest : notnull
     where TResponse : class
 {
     #region Constructor / Finaliser Declarations

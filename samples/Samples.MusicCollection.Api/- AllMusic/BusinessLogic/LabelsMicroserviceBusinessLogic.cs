@@ -1,9 +1,9 @@
 ﻿using Cognas.ApiTools.Pagination;
 using Cognas.ApiTools.Services;
 using Microsoft.Extensions.Options;
-using Samples.MusicCollection.Api.Labels;
-using Samples.MusicCollection.Api.Config;
 using Samples.MusicCollection.Api.AllMusic.Base;
+using Samples.MusicCollection.Api.Config;
+using Samples.MusicCollection.Api.Labels;
 
 namespace Samples.MusicCollection.Api.AllMusic.BusinessLogic;
 

@@ -1,6 +1,6 @@
 ﻿using Samples.MusicCollection.Api.AllMusic.Responses;
 
-namespace Samples.MusicCollection.Api.AllMusic.Strategies;
+namespace Samples.MusicCollection.Api.AllMusic.Abstractions;
 
 /// <summary>
 /// 

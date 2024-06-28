@@ -8,7 +8,7 @@
 /// <typeparam name="TResponse"></typeparam>
 public interface ICommandMappingService<TModel, TRequest, TResponse>
     where TModel : class
-    where TRequest : class
+    where TRequest : notnull
     where TResponse : class
 {
     #region Method Declarations

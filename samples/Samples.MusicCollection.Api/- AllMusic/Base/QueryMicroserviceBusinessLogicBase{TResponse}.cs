@@ -82,7 +82,8 @@ public abstract class QueryMicroserviceBusinessLogicBase<TResponse> :
     public IAsyncEnumerable<TResponse> Get(IPaginationQuery paginationQuery, CancellationToken cancellationToken)
     {
         bool? paginationQueryValidOrDefault = _paginationFunctions.IsPaginationQueryValidOrNotRequested<TResponse>(paginationQuery);
-        string requestUri = paginationQueryValidOrDefault == true ? BuildPaginatedQueryString(paginationQuery, MicroserviceUri(MicroserviceUris)) : MicroserviceUri(MicroserviceUris);
+        string microserviceUri = MicroserviceUri(MicroserviceUris);
+        string requestUri = paginationQueryValidOrDefault == true ? BuildPaginatedQueryString(paginationQuery, microserviceUri) : microserviceUri;
         return HttpClientService.GetAsyncEnumerable<TResponse>(requestUri, cancellationToken);
     }
 

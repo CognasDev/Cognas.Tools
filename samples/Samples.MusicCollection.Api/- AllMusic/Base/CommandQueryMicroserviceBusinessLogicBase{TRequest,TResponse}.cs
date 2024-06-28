@@ -1,10 +1,8 @@
-﻿using Cognas.ApiTools.BusinessLogic;
-using Cognas.ApiTools.Pagination;
+﻿using Cognas.ApiTools.Pagination;
 using Cognas.ApiTools.Services;
 using Microsoft.Extensions.Options;
 using Samples.MusicCollection.Api.AllMusic.Abstractions;
 using Samples.MusicCollection.Api.Config;
-using System.Text;
 
 namespace Samples.MusicCollection.Api.AllMusic.Base;
 
@@ -12,8 +10,8 @@ namespace Samples.MusicCollection.Api.AllMusic.Base;
 /// 
 /// </summary>
 public abstract class CommandQueryMicroserviceBusinessLogicBase<TRequest, TResponse> :
-    QueryMicroserviceBusinessLogicBase<TResponse>, IDisposable, ICommandQueryMicroserviceBusinessLogic<TRequest,TResponse>
-    where TRequest : class
+    QueryMicroserviceBusinessLogicBase<TResponse>, IDisposable, ICommandQueryMicroserviceBusinessLogic<TRequest, TResponse>
+    where TRequest : notnull
     where TResponse : class
 {
     #region Constructor / Finaliser Declarations
@@ -44,7 +42,7 @@ public abstract class CommandQueryMicroserviceBusinessLogicBase<TRequest, TRespo
     /// <returns></returns>
     public async Task<TResponse?> PostAsync(TRequest request)
     {
-        string requestUri = $"{MicroserviceUri(MicroserviceUris)}";
+        string requestUri = MicroserviceUri(MicroserviceUris);
         TResponse? postedResponse = await HttpClientService.PostAsync<TRequest, TResponse>(requestUri, request).ConfigureAwait(false);
         return postedResponse;
     }
@@ -56,7 +54,7 @@ public abstract class CommandQueryMicroserviceBusinessLogicBase<TRequest, TRespo
     /// <returns></returns>
     public async Task<TResponse?> PutAsync(TRequest request)
     {
-        string requestUri = $"{MicroserviceUri(MicroserviceUris)}";
+        string requestUri = MicroserviceUri(MicroserviceUris);
         TResponse? putResponse = await HttpClientService.PutAsync<TRequest, TResponse>(requestUri, request).ConfigureAwait(false);
         return putResponse;
     }

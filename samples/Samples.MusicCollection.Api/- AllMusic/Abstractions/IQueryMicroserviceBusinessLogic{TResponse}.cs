@@ -5,7 +5,7 @@ namespace Samples.MusicCollection.Api.AllMusic.Abstractions;
 /// <summary>
 /// 
 /// </summary>
-public interface IQueryMicroserviceBusinessLogic<TResponse>
+public interface IQueryMicroserviceBusinessLogic<TResponse> where TResponse : class
 {
     #region Method Declarations
 

@@ -1,11 +1,11 @@
-﻿using Cognas.ApiTools.Pagination;
-
-namespace Samples.MusicCollection.Api.AllMusic.Abstractions;
+﻿namespace Samples.MusicCollection.Api.AllMusic.Abstractions;
 
 /// <summary>
 /// 
 /// </summary>
 public interface ICommandQueryMicroserviceBusinessLogic<TRequest, TResponse> : IQueryMicroserviceBusinessLogic<TResponse>
+    where TRequest : notnull
+    where TResponse : class
 {
     #region Method Declarations
 

@@ -9,6 +9,9 @@ using Samples.MusicCollection.Api.AllMusic.Endpoints;
 using Samples.MusicCollection.Api.AllMusic.TrackRules;
 using Samples.MusicCollection.Api.Artists;
 using Samples.MusicCollection.Api.Config;
+using Samples.MusicCollection.Api.Genres;
+using Samples.MusicCollection.Api.Labels;
+using Samples.MusicCollection.Api.Tracks;
 
 namespace Samples.MusicCollection.Api;
 
@@ -49,8 +52,11 @@ public sealed class Program
         GenericServiceRegistration.Instance.AddServices(webApplicationBuilder.Services, typeof(IMicroserviceBusinessLogic<,>), ServiceLifetime.Singleton);
 
         //API gateway - simulated microservices
-        webApplicationBuilder.Services.AddKeyedSingleton<IMicroserviceEndpoints, AlbumMicroserviceEndpoints>(nameof(Album));
-        webApplicationBuilder.Services.AddKeyedSingleton<IMicroserviceEndpoints, ArtistMicroserviceEndpoints>(nameof(Artist));
+        webApplicationBuilder.Services.AddKeyedSingleton<IMicroserviceEndpoints, AlbumsMicroserviceEndpoints>(nameof(Album));
+        webApplicationBuilder.Services.AddKeyedSingleton<IMicroserviceEndpoints, ArtistsMicroserviceEndpoints>(nameof(Artist));
+        webApplicationBuilder.Services.AddKeyedSingleton<IMicroserviceEndpoints, GenresMicroserviceEndpoints>(nameof(Genre));
+        webApplicationBuilder.Services.AddKeyedSingleton<IMicroserviceEndpoints, LabelsMicroserviceEndpoints>(nameof(Label));
+        webApplicationBuilder.Services.AddKeyedSingleton<IMicroserviceEndpoints, TracksMicroserviceEndpoints>(nameof(Track));
 
         WebApplication webApplication = webApplicationBuilder.Build();
 
@@ -58,9 +64,12 @@ public sealed class Program
         webApplication.InitiateCommandEndpoints();
         webApplication.InitiateQueryEndpoints();
 
-        RouteGroupBuilder apiVersionRouteV3 = webApplication.GetApiVersionRoute(3);
-        MapAlbumMicroserviceEndpoints(webApplication, apiVersionRouteV3);
-        MapArtistMicroserviceEndpoints(webApplication, apiVersionRouteV3);
+        RouteGroupBuilder apiVersionRouteV2 = webApplication.GetApiVersionRoute(2);
+        MapMicroserviceEndpoints<Album>(webApplication, apiVersionRouteV2);
+        MapMicroserviceEndpoints<Artist>(webApplication, apiVersionRouteV2);
+        MapMicroserviceEndpoints<Genre>(webApplication, apiVersionRouteV2);
+        MapMicroserviceEndpoints<Label>(webApplication, apiVersionRouteV2);
+        MapMicroserviceEndpoints<Track>(webApplication, apiVersionRouteV2);
 
         webApplication.AddSwagger();
         webApplication.ConfigureAndRun();
@@ -74,32 +83,17 @@ public sealed class Program
     /// 
     /// </summary>
     /// <param name="webApplication"></param>
-    /// <param name="apiVersionRouteV3"></param>
+    /// <param name="apiVersionRouteV2"></param>
     /// <exception cref="NullReferenceException"></exception>
-    private static void MapAlbumMicroserviceEndpoints(WebApplication webApplication, RouteGroupBuilder apiVersionRouteV3)
+    private static void MapMicroserviceEndpoints<TModel>(WebApplication webApplication, RouteGroupBuilder apiVersionRouteV2)
     {
-        IMicroserviceEndpoints albumEndpoints = webApplication.Services.GetKeyedService<IMicroserviceEndpoints>(nameof(Album)) ?? throw new NullReferenceException(nameof(AlbumMicroserviceEndpoints));
-        albumEndpoints.MapGet(apiVersionRouteV3);
-        albumEndpoints.MapGetById(apiVersionRouteV3);
-        albumEndpoints.MapPost(apiVersionRouteV3);
-        albumEndpoints.MapPut(apiVersionRouteV3);
-        albumEndpoints.MapDelete(apiVersionRouteV3);
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="webApplication"></param>
-    /// <param name="apiVersionRouteV3"></param>
-    /// <exception cref="NullReferenceException"></exception>
-    private static void MapArtistMicroserviceEndpoints(WebApplication webApplication, RouteGroupBuilder apiVersionRouteV3)
-    {
-        IMicroserviceEndpoints artistEndpoints = webApplication.Services.GetKeyedService<IMicroserviceEndpoints>(nameof(Artist)) ?? throw new NullReferenceException(nameof(ArtistMicroserviceEndpoints));
-        artistEndpoints.MapGet(apiVersionRouteV3);
-        artistEndpoints.MapGetById(apiVersionRouteV3);
-        artistEndpoints.MapPost(apiVersionRouteV3);
-        artistEndpoints.MapPut(apiVersionRouteV3);
-        artistEndpoints.MapDelete(apiVersionRouteV3);
+        string key = typeof(TModel).Name;
+        IMicroserviceEndpoints trackEndpoints = webApplication.Services.GetKeyedService<IMicroserviceEndpoints>(key) ?? throw new NullReferenceException(nameof(TracksMicroserviceEndpoints));
+        trackEndpoints.MapGet(apiVersionRouteV2);
+        trackEndpoints.MapGetById(apiVersionRouteV2);
+        trackEndpoints.MapPost(apiVersionRouteV2);
+        trackEndpoints.MapPut(apiVersionRouteV2);
+        trackEndpoints.MapDelete(apiVersionRouteV2);
     }
 
     #endregion

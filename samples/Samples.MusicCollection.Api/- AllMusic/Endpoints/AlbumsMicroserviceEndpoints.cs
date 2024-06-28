@@ -8,18 +8,18 @@ namespace Samples.MusicCollection.Api.AllMusic.Endpoints;
 /// <summary>
 /// 
 /// </summary>
-public sealed class AlbumMicroserviceEndpoints : MicroserviceEndpointsBase<AlbumRequest, AlbumResponse>
+public sealed class AlbumsMicroserviceEndpoints : MicroserviceEndpointsBase<AlbumRequest, AlbumResponse>
 {
     #region Constructor / Finaliser Declarations
 
     /// <summary>
-    /// Default constructor for <see cref="AlbumMicroserviceEndpoints"/>
+    /// Default constructor for <see cref="AlbumsMicroserviceEndpoints"/>
     /// </summary>
     /// <param name="businessLogic"></param>
-    /// <param name="routesMonitor"></param>
-    public AlbumMicroserviceEndpoints(IMicroserviceBusinessLogic<AlbumRequest, AlbumResponse> businessLogic,
-                                      IOptionsMonitor<AllMusicRoutes> routesMonitor)
-        : base (businessLogic, routesMonitor)
+    /// <param name="routes"></param>
+    public AlbumsMicroserviceEndpoints(IMicroserviceBusinessLogic<AlbumRequest, AlbumResponse> businessLogic,
+                                       IOptions<AllMusicRoutes> routes)
+        : base (businessLogic, routes)
     {
     }
 

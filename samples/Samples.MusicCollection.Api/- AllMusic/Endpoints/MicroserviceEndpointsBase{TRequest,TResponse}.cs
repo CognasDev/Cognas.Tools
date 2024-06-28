@@ -12,13 +12,11 @@ namespace Samples.MusicCollection.Api.AllMusic.Endpoints;
 /// </summary>
 /// <typeparam name="TRequest"></typeparam>
 /// <typeparam name="TResponse"></typeparam>
-public abstract class MicroserviceEndpointsBase<TRequest, TResponse> : IDisposable, IMicroserviceEndpoints where TRequest : notnull
+public abstract class MicroserviceEndpointsBase<TRequest, TResponse> : IMicroserviceEndpoints where TRequest : notnull
 {
     #region Field Declarations
 
-    private AllMusicRoutes _routes;
-    private readonly IDisposable? _routesChangedListener;
-    private bool _isDisposed;
+    private readonly IOptions<AllMusicRoutes> _routes;
 
     #endregion
 
@@ -32,7 +30,7 @@ public abstract class MicroserviceEndpointsBase<TRequest, TResponse> : IDisposab
     /// <summary>
     /// 
     /// </summary>
-    public virtual int ApiVersion { get; } = 3;
+    public virtual int ApiVersion { get; } = 2;
 
     /// <summary>
     /// 
@@ -43,21 +41,19 @@ public abstract class MicroserviceEndpointsBase<TRequest, TResponse> : IDisposab
 
     #region Constructor / Finaliser Declarations
 
-
     /// <summary>
     /// Default constructor for <see cref="MicroserviceEndpointsBase{TRequest,TResponse}"/>
     /// </summary>
     /// <param name="businessLogic"></param>
-    /// <param name="routesMonitor"></param>
+    /// <param name="routes"></param>
     protected MicroserviceEndpointsBase(IMicroserviceBusinessLogic<TRequest, TResponse> businessLogic,
-                                        IOptionsMonitor<AllMusicRoutes> routesMonitor)
+                                        IOptions<AllMusicRoutes> routes)
     {
         ArgumentNullException.ThrowIfNull(businessLogic, nameof(businessLogic));
-        ArgumentNullException.ThrowIfNull(routesMonitor, nameof(routesMonitor));
+        ArgumentNullException.ThrowIfNull(routes, nameof(routes));
 
         BusinessLogic = businessLogic;
-        _routesChangedListener = routesMonitor.OnChange(OnRoutesChanged);
-        _routes = routesMonitor.CurrentValue;
+        _routes = routes;
     }
 
     #endregion
@@ -75,11 +71,11 @@ public abstract class MicroserviceEndpointsBase<TRequest, TResponse> : IDisposab
     /// 
     /// </summary>
     /// <param name="endpointRouteBuilder"></param>
-    public void MapGet(IEndpointRouteBuilder endpointRouteBuilder)
+    public virtual RouteHandlerBuilder MapGet(IEndpointRouteBuilder endpointRouteBuilder)
     {
-        endpointRouteBuilder.MapGet
+        return endpointRouteBuilder.MapGet
         (
-            $"/{Route(_routes)}",
+            $"/{Route(_routes.Value)}",
             (
                 CancellationToken cancellationToken,
                 [AsParameters] PaginationQuery paginationQuery
@@ -91,11 +87,11 @@ public abstract class MicroserviceEndpointsBase<TRequest, TResponse> : IDisposab
     /// 
     /// </summary>
     /// <param name="endpointRouteBuilder"></param>
-    public void MapGetById(IEndpointRouteBuilder endpointRouteBuilder)
+    public virtual RouteHandlerBuilder MapGetById(IEndpointRouteBuilder endpointRouteBuilder)
     {
-        endpointRouteBuilder.MapGet
+        return endpointRouteBuilder.MapGet
         (
-            $"/{Route(_routes)}/{{id}}",
+            $"/{Route(_routes.Value)}/{{id}}",
             async ([FromRoute] int id) => await BusinessLogic.GetByIdAsync(id).ConfigureAwait(false)
         )
         .MapGetByIdConfiguration<TResponse>(ApiVersion, Tag);
@@ -105,11 +101,11 @@ public abstract class MicroserviceEndpointsBase<TRequest, TResponse> : IDisposab
     /// 
     /// </summary>
     /// <param name="endpointRouteBuilder"></param>
-    public void MapPost(IEndpointRouteBuilder endpointRouteBuilder)
+    public virtual RouteHandlerBuilder MapPost(IEndpointRouteBuilder endpointRouteBuilder)
     {
-        endpointRouteBuilder.MapPost
+        return endpointRouteBuilder.MapPost
         (
-            $"/{Route(_routes)}",
+            $"/{Route(_routes.Value)}",
             async ([FromBody] TRequest request) => await BusinessLogic.PostAsync(request).ConfigureAwait(false)
         )
         .MapPostConfiguration<TRequest, TResponse>(ApiVersion, Tag);
@@ -119,11 +115,11 @@ public abstract class MicroserviceEndpointsBase<TRequest, TResponse> : IDisposab
     /// 
     /// </summary>
     /// <param name="endpointRouteBuilder"></param>
-    public void MapPut(IEndpointRouteBuilder endpointRouteBuilder)
+    public virtual RouteHandlerBuilder MapPut(IEndpointRouteBuilder endpointRouteBuilder)
     {
-        endpointRouteBuilder.MapPut
+        return endpointRouteBuilder.MapPut
         (
-            $"/{Route(_routes)}/{{id}}",
+            $"/{Route(_routes.Value)}/{{id}}",
             async ([FromRoute] int id, [FromBody] TRequest request) => await BusinessLogic.PutAsync(request).ConfigureAwait(false)
         )
         .MapPutConfiguration<TRequest, TResponse>(ApiVersion, Tag);
@@ -133,46 +129,14 @@ public abstract class MicroserviceEndpointsBase<TRequest, TResponse> : IDisposab
     /// 
     /// </summary>
     /// <param name="endpointRouteBuilder"></param>
-    public void MapDelete(IEndpointRouteBuilder endpointRouteBuilder)
+    public virtual RouteHandlerBuilder MapDelete(IEndpointRouteBuilder endpointRouteBuilder)
     {
-        endpointRouteBuilder.MapDelete
+        return endpointRouteBuilder.MapDelete
         (
-            $"/{Route(_routes)}/{{id}}",
+            $"/{Route(_routes.Value)}/{{id}}",
             async ([FromRoute] int id) => await BusinessLogic.DeleteAsync(id).ConfigureAwait(false)
         )
         .MapDeleteConfiguration(ApiVersion, Tag);
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    #endregion
-
-    #region Private Method Declarations
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="routes"></param>
-    private void OnRoutesChanged(AllMusicRoutes routes) => _routes = routes;
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="disposing"></param>
-    private void Dispose(bool disposing)
-    {
-        if (!_isDisposed && disposing)
-        {
-            _routesChangedListener?.Dispose();
-        }
-        _isDisposed = true;
     }
 
     #endregion

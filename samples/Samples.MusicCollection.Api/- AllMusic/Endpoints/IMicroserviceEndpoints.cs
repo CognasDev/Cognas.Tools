@@ -11,31 +11,31 @@ public interface IMicroserviceEndpoints
     /// 
     /// </summary>
     /// <param name="endpointRouteBuilder"></param>
-    void MapGet(IEndpointRouteBuilder endpointRouteBuilder);
+    RouteHandlerBuilder MapGet(IEndpointRouteBuilder endpointRouteBuilder);
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="endpointRouteBuilder"></param>
-    void MapGetById(IEndpointRouteBuilder endpointRouteBuilder);
+    RouteHandlerBuilder MapGetById(IEndpointRouteBuilder endpointRouteBuilder);
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="endpointRouteBuilder"></param>
-    void MapPost(IEndpointRouteBuilder endpointRouteBuilder);
+    RouteHandlerBuilder MapPost(IEndpointRouteBuilder endpointRouteBuilder);
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="endpointRouteBuilder"></param>
-    void MapPut(IEndpointRouteBuilder endpointRouteBuilder);
+    RouteHandlerBuilder MapPut(IEndpointRouteBuilder endpointRouteBuilder);
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="endpointRouteBuilder"></param>
-    void MapDelete(IEndpointRouteBuilder endpointRouteBuilder);
+    RouteHandlerBuilder MapDelete(IEndpointRouteBuilder endpointRouteBuilder);
 
     #endregion
 }

@@ -1,7 +1,7 @@
 ﻿using Cognas.ApiTools.Pagination;
 using Cognas.ApiTools.Services;
 using Microsoft.Extensions.Options;
-using Samples.MusicCollection.Api.Albums;
+using Samples.MusicCollection.Api.Artists;
 using Samples.MusicCollection.Api.Config;
 
 namespace Samples.MusicCollection.Api.AllMusic.BusinessLogic;
@@ -9,21 +9,21 @@ namespace Samples.MusicCollection.Api.AllMusic.BusinessLogic;
 /// <summary>
 /// 
 /// </summary>
-public sealed class AlbumMicroserviceBusinessLogic : MicroserviceBusinessLogicBase<AlbumRequest, AlbumResponse>
+public sealed class ArtistsMicroserviceBusinessLogic : MicroserviceBusinessLogicBase<ArtistRequest, ArtistResponse>
 {
     #region Constructor / Finaliser Declarations
 
     /// <summary>
-    /// Default constructor for <see cref="AlbumMicroserviceBusinessLogic"/>
+    /// Default constructor for <see cref="ArtistsMicroserviceBusinessLogic"/>
     /// </summary>
     /// <param name="logger"></param>
     /// <param name="httpClientService"></param>
     /// <param name="microserviceUrisMonitor"></param>
     /// <param name="paginationFunctions"></param>
-    public AlbumMicroserviceBusinessLogic(ILogger<AlbumMicroserviceBusinessLogic> logger,
-                                          IHttpClientService httpClientService,
-                                          IOptionsMonitor<MicroserviceUris> microserviceUrisMonitor,
-                                          IPaginationFunctions paginationFunctions)
+    public ArtistsMicroserviceBusinessLogic(ILogger<ArtistsMicroserviceBusinessLogic> logger,
+                                            IHttpClientService httpClientService,
+                                            IOptionsMonitor<MicroserviceUris> microserviceUrisMonitor,
+                                            IPaginationFunctions paginationFunctions)
         : base(logger, httpClientService, microserviceUrisMonitor, paginationFunctions)
     {
     }
@@ -37,7 +37,7 @@ public sealed class AlbumMicroserviceBusinessLogic : MicroserviceBusinessLogicBa
     /// </summary>
     /// <param name="microserviceUris"></param>
     /// <returns></returns>
-    public override string MicroserviceUri(MicroserviceUris microserviceUris) => microserviceUris.Album;
+    public override string MicroserviceUri(MicroserviceUris microserviceUris) => microserviceUris.Artist;
 
     #endregion
 }

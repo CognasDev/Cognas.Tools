@@ -23,10 +23,10 @@ public abstract class CommandQueryMicroserviceBusinessLogicBase<TRequest, TRespo
     /// <param name="httpClientService"></param>
     /// <param name="microserviceUrisMonitor"></param>
     /// <param name="paginationFunctions"></param>
-    public CommandQueryMicroserviceBusinessLogicBase(ILogger logger,
-                                                     IHttpClientService httpClientService,
-                                                     IOptionsMonitor<MicroserviceUris> microserviceUrisMonitor,
-                                                     IPaginationFunctions paginationFunctions)
+    protected CommandQueryMicroserviceBusinessLogicBase(ILogger logger,
+                                                        IHttpClientService httpClientService,
+                                                        IOptionsMonitor<MicroserviceUris> microserviceUrisMonitor,
+                                                        IPaginationFunctions paginationFunctions)
         : base(logger, httpClientService, microserviceUrisMonitor, paginationFunctions)
     {
     }

@@ -1,4 +1,5 @@
-﻿using System.Transactions;
+﻿using Cognas.ApiTools.Shared.Extensions;
+using System.Transactions;
 
 namespace Cognas.ApiTools.Data;
 
@@ -28,10 +29,7 @@ public sealed class DatabaseTransactionService : IDatabaseTransactionService
     public async Task ExecuteTransactionAsync(params Func<Task>[] asyncDatabaseTasks)
     {
         using TransactionScope transactionScope = CreateTransactionScope();
-        foreach (Func<Task> asyncDatabaseTask in asyncDatabaseTasks)
-        {
-            await asyncDatabaseTask().ConfigureAwait(false);
-        }
+        await asyncDatabaseTasks.FastForEachAsync(asyncDatabaseTask => asyncDatabaseTask()).ConfigureAwait(false);
         transactionScope.Complete();
     }
 

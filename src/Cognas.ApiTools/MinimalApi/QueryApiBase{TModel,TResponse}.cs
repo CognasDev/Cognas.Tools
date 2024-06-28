@@ -137,7 +137,7 @@ public abstract class QueryApiBase<TModel, TResponse> : IQueryApi<TModel, TRespo
         .WithTags(PluralModelName)
         .WithOpenApi(configureOperation => BuildGetAllOpenApi(configureOperation))
         .Produces<IEnumerable<TResponse>>(StatusCodes.Status200OK, MediaTypeNames.Application.Json)
-        .Produces(StatusCodes.Status400BadRequest)
+        .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
         .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError, MediaTypeNames.Application.Json);
     }
 

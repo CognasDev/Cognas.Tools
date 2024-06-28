@@ -142,7 +142,7 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
             })
         .Accepts<TRequest>(MediaTypeNames.Application.Json)
         .Produces<TResponse>(StatusCodes.Status200OK, MediaTypeNames.Application.Json)
-        .Produces(StatusCodes.Status400BadRequest)
+        .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
         .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError, MediaTypeNames.Application.Json);
     }
 
@@ -174,7 +174,7 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
             })
         .Accepts<TRequest>(MediaTypeNames.Application.Json)
         .Produces<TResponse>(StatusCodes.Status200OK, MediaTypeNames.Application.Json)
-        .Produces(StatusCodes.Status400BadRequest)
+        .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
         .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError, MediaTypeNames.Application.Json);
     }
 

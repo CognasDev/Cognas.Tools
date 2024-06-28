@@ -1,4 +1,4 @@
-﻿namespace Samples.MusicCollection.Api;
+﻿namespace Samples.MusicCollection.Api.Config;
 
 /// <summary>
 /// 

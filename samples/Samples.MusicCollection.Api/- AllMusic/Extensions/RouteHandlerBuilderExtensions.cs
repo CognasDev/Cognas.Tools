@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Samples.MusicCollection.Api.Albums;
 using System.Net.Mime;
 
 namespace Samples.MusicCollection.Api.AllMusic.Extensions;
@@ -87,8 +86,8 @@ internal static class RouteHandlerBuilderExtensions
             .MapToApiVersion(apiVersion)
             .WithTags(tag)
             .WithOpenApi()
-            .Accepts<AlbumRequest>(MediaTypeNames.Application.Json)
-            .Produces<AlbumResponse>(StatusCodes.Status200OK, MediaTypeNames.Application.Json)
+            .Accepts<TRequest>(MediaTypeNames.Application.Json)
+            .Produces<TResponse>(StatusCodes.Status200OK, MediaTypeNames.Application.Json)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError, MediaTypeNames.Application.Json);
     }

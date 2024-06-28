@@ -81,8 +81,7 @@ public sealed class AllMusicBusinessLogic : IAllMusicBusinessLogic
         IEnumerable<LabelResponse> labels = await _labelsQueryBusinessLogic.Get(emptyPagination, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
         IEnumerable<TrackResponse> tracks = await _tracksQueryBusinessLogic.Get(emptyPagination, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
 
-        AllMusicResponse allMusicResponse = new();
-        ConcurrentBag<ArtistAlbumsResponse> artistResponses = [];
+        ConcurrentBag<ArtistAlbumsResponse> artistAlbumsResponses = [];
         ISortStrategy sortStrategy = new DefaultSortStrategy();
 
         await foreach (ArtistResponse artist in artists.ConfigureAwait(false))
@@ -92,18 +91,19 @@ public sealed class AllMusicBusinessLogic : IAllMusicBusinessLogic
             List<ArtistAlbumResponse> artistAlbums = [];
             albums.FastForEach(album => album.ArtistId == artist.ArtistId, (Action<AlbumResponse>)(album =>
             {
-                ArtistAlbumResponse artistAlbum = GetArtistAlbum(album, genres, labels);
-                IEnumerable<AlbumTrackResponse> albumTracks = GetAlbumTracks(album, genres, keys, tracks);
+                ArtistAlbumResponse artistAlbum = CreateArtistAlbumResponse(album, genres, labels);
+                IEnumerable<AlbumTrackResponse> albumTracks = GetAlbumTrackResponses(album, genres, keys, tracks);
                 artistAlbum.AddTracks(albumTracks, sortStrategy);
                 artistAlbums.Add(artistAlbum);
             }));
 
             ArtistAlbumsResponse artistAlbumsResponse = CreteArtistAlbumsResponse(artist);
             artistAlbumsResponse.AddAlbums(artistAlbums, sortStrategy);
-            artistResponses.Add(artistAlbumsResponse);
+            artistAlbumsResponses.Add(artistAlbumsResponse);
         }
 
-        allMusicResponse.AddArtists(artistResponses, sortStrategy);
+        AllMusicResponse allMusicResponse = new();
+        allMusicResponse.AddArtists(artistAlbumsResponses, sortStrategy);
         return allMusicResponse;
     }
 
@@ -129,18 +129,18 @@ public sealed class AllMusicBusinessLogic : IAllMusicBusinessLogic
     /// <param name="genres"></param>
     /// <param name="labels"></param>
     /// <exception cref="NullReferenceException"></exception>
-    private static ArtistAlbumResponse GetArtistAlbum(AlbumResponse album, IEnumerable<GenreResponse> genres, IEnumerable<LabelResponse> labels)
+    private static ArtistAlbumResponse CreateArtistAlbumResponse(AlbumResponse album, IEnumerable<GenreResponse> genres, IEnumerable<LabelResponse> labels)
     {
         GenreResponse? genre = genres.FastFirstOrDefault(genre => album.GenreId == genre.GenreId);
         LabelResponse label = labels.FastFirstOrDefault(label => album.LabelId == label.LabelId) ?? throw new NullReferenceException($"{nameof(AlbumResponse)}.{nameof(LabelResponse)}");
-        ArtistAlbumResponse albumResponse = new()
+        ArtistAlbumResponse artistAlbumResponse = new()
         {
             Name = album.Name,
             Genre = genre?.Name ?? string.Empty,
             Label = label.Name,
             ReleaseDate = album.ReleaseDate
         };
-        return albumResponse;
+        return artistAlbumResponse;
     }
 
     /// <summary>
@@ -151,15 +151,15 @@ public sealed class AllMusicBusinessLogic : IAllMusicBusinessLogic
     /// <param name="keys"></param>
     /// <param name="tracks"></param>
     /// <returns></returns>
-    private static List<AlbumTrackResponse> GetAlbumTracks(AlbumResponse album, IEnumerable<GenreResponse> genres, IEnumerable<KeyResponse> keys, IEnumerable<TrackResponse> tracks)
+    private static List<AlbumTrackResponse> GetAlbumTrackResponses(AlbumResponse album, IEnumerable<GenreResponse> genres, IEnumerable<KeyResponse> keys, IEnumerable<TrackResponse> tracks)
     {
-        List<AlbumTrackResponse> trackResponses = [];
+        List<AlbumTrackResponse> albumTrackResponses = [];
         tracks.FastForEach(track => track.AlbumId == album.AlbumId, track =>
         {
             AlbumTrackResponse trackResponse = GetAlbumTrack(genres, keys, track);
-            trackResponses.Add(trackResponse);
+            albumTrackResponses.Add(trackResponse);
         });
-        return trackResponses;
+        return albumTrackResponses;
     }
 
     /// <summary>
@@ -173,7 +173,7 @@ public sealed class AllMusicBusinessLogic : IAllMusicBusinessLogic
     {
         GenreResponse genre = genres.FastFirstOrDefault(genre => track.GenreId == genre.GenreId) ?? throw new NullReferenceException(nameof(TrackResponse.GenreId));
         KeyResponse? key = keys.FastFirstOrDefault(key => track.KeyId == key.KeyId);
-        AlbumTrackResponse trackResponse = new()
+        AlbumTrackResponse albumTrackResponse = new()
         {
             TrackNumber = track.TrackNumber,
             Name = track.Name,
@@ -182,7 +182,7 @@ public sealed class AllMusicBusinessLogic : IAllMusicBusinessLogic
             CamelotCode = key?.CamelotCode,
             Key = key?.Name
         };
-        return trackResponse;
+        return albumTrackResponse;
     }
 
     #endregion

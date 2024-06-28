@@ -3,7 +3,7 @@
 /// <summary>
 /// 
 /// </summary>
-public interface IEndpoints
+public interface IMicroserviceEndpoints
 {
     #region Method Declarations
 

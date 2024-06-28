@@ -1,12 +1,12 @@
 ﻿using Cognas.ApiTools.Pagination;
-using Samples.MusicCollection.Api.Albums;
+using Samples.MusicCollection.Api.Artists;
 
 namespace Samples.MusicCollection.Api.AllMusic.BusinessLogic;
 
 /// <summary>
 /// 
 /// </summary>
-public interface IAlbumMicroserviceBusinessLogic
+public interface IMicroserviceBusinessLogic<TRequest, TResponse>
 {
     #region Method Declarations
 
@@ -16,35 +16,35 @@ public interface IAlbumMicroserviceBusinessLogic
     /// <param name="paginationQuery"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    IAsyncEnumerable<AlbumResponse> Get(IPaginationQuery paginationQuery, CancellationToken cancellationToken);
+    IAsyncEnumerable<TResponse> Get(IPaginationQuery paginationQuery, CancellationToken cancellationToken);
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    Task<AlbumResponse?> GetByIdAsync(int id);
+    Task<TResponse?> GetByIdAsync(int id);
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="album"></param>
+    /// <param name="request"></param>
     /// <returns></returns>
-    Task<AlbumResponse?> PostAsync(AlbumRequest album);
+    Task<TResponse?> PostAsync(TRequest request);
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="album"></param>
+    /// <param name="request"></param>
     /// <returns></returns>
-    Task<AlbumResponse?> PutAsync(AlbumRequest album);
+    Task<TResponse?> PutAsync(TRequest request);
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="albumId"></param>
+    /// <param name="id"></param>
     /// <returns></returns>
-    Task DeleteAsync(int albumId);
+    Task DeleteAsync(int id);
 
     #endregion
 }

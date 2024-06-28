@@ -2,13 +2,14 @@
 using Cognas.ApiTools.Services;
 using Microsoft.Extensions.Options;
 using Samples.MusicCollection.Api.Albums;
+using Samples.MusicCollection.Api.Config;
 
 namespace Samples.MusicCollection.Api.AllMusic.BusinessLogic;
 
 /// <summary>
 /// 
 /// </summary>
-public sealed class AlbumMicroserviceBusinessLogic : MicroserviceBusinessLogicBase<AlbumRequest, AlbumResponse>, IAlbumMicroserviceBusinessLogic
+public sealed class AlbumMicroserviceBusinessLogic : MicroserviceBusinessLogicBase<AlbumRequest, AlbumResponse>
 {
     #region Constructor / Finaliser Declarations
 

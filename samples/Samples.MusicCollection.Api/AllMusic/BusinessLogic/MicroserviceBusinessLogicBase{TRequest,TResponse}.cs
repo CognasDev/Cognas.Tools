@@ -2,6 +2,7 @@
 using Cognas.ApiTools.Pagination;
 using Cognas.ApiTools.Services;
 using Microsoft.Extensions.Options;
+using Samples.MusicCollection.Api.Config;
 using System.Text;
 
 namespace Samples.MusicCollection.Api.AllMusic.BusinessLogic;
@@ -9,7 +10,7 @@ namespace Samples.MusicCollection.Api.AllMusic.BusinessLogic;
 /// <summary>
 /// 
 /// </summary>
-public abstract class MicroserviceBusinessLogicBase<TRequest, TResponse> : LoggerBusinessLogicBase, IDisposable
+public abstract class MicroserviceBusinessLogicBase<TRequest, TResponse> : LoggerBusinessLogicBase, IDisposable, IMicroserviceBusinessLogic<TRequest,TResponse>
     where TRequest : class
     where TResponse : class
 {
@@ -17,8 +18,8 @@ public abstract class MicroserviceBusinessLogicBase<TRequest, TResponse> : Logge
 
     private readonly IHttpClientService _httpClientService;
     private readonly IPaginationFunctions _paginationFunctions;
-    private MicroserviceUris _microserviceUris = new();
-    private readonly IDisposable? _microserviceUrisMonitorChangedListener;
+    private MicroserviceUris _microserviceUris;
+    private readonly IDisposable? _microserviceUrisChangedListener;
     private bool _isDisposed;
 
     #endregion
@@ -44,7 +45,7 @@ public abstract class MicroserviceBusinessLogicBase<TRequest, TResponse> : Logge
         _httpClientService = httpClientService;
         _paginationFunctions = paginationFunctions;
 
-        _microserviceUrisMonitorChangedListener = microserviceUrisMonitor.OnChange(OnMicroserviceUrisChanged);
+        _microserviceUrisChangedListener = microserviceUrisMonitor.OnChange(OnMicroserviceUrisChanged);
         _microserviceUris = microserviceUrisMonitor.CurrentValue;
     }
 
@@ -136,7 +137,7 @@ public abstract class MicroserviceBusinessLogicBase<TRequest, TResponse> : Logge
     /// 
     /// </summary>
     /// <param name="microserviceUris"></param>
-    private void OnMicroserviceUrisChanged(MicroserviceUris microserviceUris) => _microserviceUris = (MicroserviceUris)microserviceUris;
+    private void OnMicroserviceUrisChanged(MicroserviceUris microserviceUris) => _microserviceUris = microserviceUris;
 
     /// <summary>
     /// 
@@ -176,7 +177,7 @@ public abstract class MicroserviceBusinessLogicBase<TRequest, TResponse> : Logge
     {
         if (!_isDisposed && disposing)
         {
-            _microserviceUrisMonitorChangedListener?.Dispose();
+            _microserviceUrisChangedListener?.Dispose();
         }
         _isDisposed = true;
     }

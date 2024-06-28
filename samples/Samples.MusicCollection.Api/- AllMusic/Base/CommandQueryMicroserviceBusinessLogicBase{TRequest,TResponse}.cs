@@ -10,7 +10,7 @@ namespace Samples.MusicCollection.Api.AllMusic.Base;
 /// 
 /// </summary>
 public abstract class CommandQueryMicroserviceBusinessLogicBase<TRequest, TResponse> :
-    QueryMicroserviceBusinessLogicBase<TResponse>, IDisposable, ICommandQueryMicroserviceBusinessLogic<TRequest, TResponse>
+    QueryMicroserviceBusinessLogicBase<TResponse>, ICommandQueryMicroserviceBusinessLogic<TRequest, TResponse>
     where TRequest : notnull
     where TResponse : class
 {

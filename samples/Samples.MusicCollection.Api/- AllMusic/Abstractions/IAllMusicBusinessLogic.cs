@@ -20,9 +20,9 @@ public interface IAllMusicBusinessLogic
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="tracks"></param>
+    /// <param name="mixableTrackRequests"></param>
     /// <returns></returns>
-    bool AreMixableTracks(IEnumerable<MixableTrackRequest> tracks);
+    IEnumerable<MixableTrackResponse> AreMixableTracks(IEnumerable<MixableTrackRequest> mixableTrackRequests);
 
     #endregion
 }

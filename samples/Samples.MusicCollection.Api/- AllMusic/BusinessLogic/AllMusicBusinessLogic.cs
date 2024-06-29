@@ -13,6 +13,7 @@ using Samples.MusicCollection.Api.Keys;
 using Samples.MusicCollection.Api.Labels;
 using Samples.MusicCollection.Api.Tracks;
 using System.Collections.Concurrent;
+using System.Runtime.InteropServices;
 
 namespace Samples.MusicCollection.Api.AllMusic.BusinessLogic;
 
@@ -125,17 +126,61 @@ public sealed class AllMusicBusinessLogic : IAllMusicBusinessLogic
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="tracks"></param>
+    /// <param name="mixableTrackRequests"></param>
     /// <returns></returns>
-    public bool AreMixableTracks(IEnumerable<MixableTrackRequest> tracks)
+    public IEnumerable<MixableTrackResponse> AreMixableTracks(IEnumerable<MixableTrackRequest> mixableTrackRequests)
     {
-        bool isMixable = true;
-        _mixableTrackRules.FastForEach(rule =>
+        ReadOnlySpan<MixableTrackRequest> mixableTrackRequestsSpan = CollectionsMarshal.AsSpan(mixableTrackRequests.ToList());
+        int length = mixableTrackRequestsSpan.Length;
+
+        HashSet<MixableTrackResponse> mixableTrackResponses = [];
+
+        for (int trackAIndex = 0; trackAIndex < length; trackAIndex++)
         {
-            isMixable = isMixable && rule.IsMixable(tracks.ElementAt(0), tracks.ElementAt(1));
-        });
-        return isMixable;
+            for (int trackBIndex = trackAIndex + 1; trackBIndex < length; trackBIndex++)
+            {
+                bool isMixable = true;
+                MixableTrackRequest trackA = mixableTrackRequestsSpan[trackAIndex];
+                MixableTrackRequest trackB = mixableTrackRequestsSpan[trackBIndex];
+
+                _mixableTrackRules.FastForEach(rule =>
+                {
+                    isMixable = isMixable && rule.IsMixable(trackA, trackB);
+                    if (!isMixable)
+                    {
+                        MixableTrackResponse notMixableResponse = CreateMixableTrackRequest(trackA, trackB, false);
+                        mixableTrackResponses.Add(notMixableResponse);
+                        return;
+                    }
+                });
+                if (isMixable)
+                {
+                    MixableTrackResponse mixableResponse = CreateMixableTrackRequest(trackA, trackB, true);
+                    mixableTrackResponses.Add(mixableResponse);
+                }
+            }
+        }
+
+        return mixableTrackResponses;
     }
+
+    #endregion
+
+    #region Private Method Declarations
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="trackA"></param>
+    /// <param name="trackB"></param>
+    /// <param name="isMixable"></param>
+    /// <returns></returns>
+    private static MixableTrackResponse CreateMixableTrackRequest(MixableTrackRequest trackA, MixableTrackRequest trackB, bool isMixable) => new()
+    {
+        TrackAId = trackA.TrackId,
+        TrackBId = trackB.TrackId,
+        IsMixable = isMixable
+    };
 
     #endregion
 }

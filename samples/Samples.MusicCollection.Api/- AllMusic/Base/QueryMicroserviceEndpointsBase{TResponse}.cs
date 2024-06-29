@@ -33,7 +33,7 @@ public abstract class QueryMicroserviceEndpointsBase<TResponse> : IQueryMicroser
     /// <summary>
     /// 
     /// </summary>
-    public IOptions<AllMusicRoutes> Routes { get; }
+    public AllMusicRoutes AllMusicRoutes { get; }
 
     #endregion
 
@@ -51,7 +51,7 @@ public abstract class QueryMicroserviceEndpointsBase<TResponse> : IQueryMicroser
         ArgumentNullException.ThrowIfNull(routes, nameof(routes));
 
         QueryBusinessLogic = queryBusinessLogic;
-        Routes = routes;
+        AllMusicRoutes = routes.Value;
     }
 
     #endregion
@@ -61,9 +61,9 @@ public abstract class QueryMicroserviceEndpointsBase<TResponse> : IQueryMicroser
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="routes"></param>
+    /// <param name="allMusicRoutes"></param>
     /// <returns></returns>
-    public abstract string Route(AllMusicRoutes routes);
+    public abstract string GetRoute(AllMusicRoutes allMusicRoutes);
 
     /// <summary>
     /// 
@@ -73,7 +73,7 @@ public abstract class QueryMicroserviceEndpointsBase<TResponse> : IQueryMicroser
     {
         return endpointRouteBuilder.MapGet
         (
-            $"/{Route(Routes.Value)}",
+            $"/{GetRoute(AllMusicRoutes)}",
             (
                 CancellationToken cancellationToken, [AsParameters] PaginationQuery paginationQuery
             ) => QueryBusinessLogic.Get(paginationQuery, cancellationToken)
@@ -88,7 +88,7 @@ public abstract class QueryMicroserviceEndpointsBase<TResponse> : IQueryMicroser
     {
         return endpointRouteBuilder.MapGet
         (
-            $"/{Route(Routes.Value)}/{{id}}",
+            $"/{GetRoute(AllMusicRoutes)}/{{id}}",
             async ([FromRoute] int id) => await QueryBusinessLogic.GetByIdAsync(id).ConfigureAwait(false)
         )
         .MapGetByIdConfiguration<TResponse>(ApiVersion, Tag);

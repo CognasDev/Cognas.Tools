@@ -13,6 +13,13 @@ public sealed record MixableTrackRequest
     /// <summary>
     /// 
     /// </summary>
+    [JsonPropertyName("trackId")]
+    [Required]
+    public required int TrackId { get; set; }
+
+    /// <summary>
+    /// 
+    /// </summary>
     [JsonPropertyName("genreId")]
     [Required]
     public required int GenreId { get; set; }

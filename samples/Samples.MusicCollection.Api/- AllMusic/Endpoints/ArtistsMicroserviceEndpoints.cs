@@ -33,9 +33,9 @@ public sealed class ArtistsMicroserviceEndpoints : CommandQueryMicroserviceEndpo
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="routes"></param>
+    /// <param name="allMusicRoutes"></param>
     /// <returns></returns>
-    public override string Route(AllMusicRoutes routes) => routes.Artists;
+    public override string GetRoute(AllMusicRoutes allMusicRoutes) => allMusicRoutes.Artists;
 
     #endregion
 }

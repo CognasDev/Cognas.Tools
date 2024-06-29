@@ -33,9 +33,9 @@ public sealed class GenresMicroserviceEndpoints : CommandQueryMicroserviceEndpoi
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="routes"></param>
+    /// <param name="allMusicRoutes"></param>
     /// <returns></returns>
-    public override string Route(AllMusicRoutes routes) => routes.Genres;
+    public override string GetRoute(AllMusicRoutes allMusicRoutes) => allMusicRoutes.Genres;
 
     #endregion
 }

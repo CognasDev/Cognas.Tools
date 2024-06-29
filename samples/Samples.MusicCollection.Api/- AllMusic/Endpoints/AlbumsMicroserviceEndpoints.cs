@@ -33,9 +33,9 @@ public sealed class AlbumsMicroserviceEndpoints : CommandQueryMicroserviceEndpoi
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="routes"></param>
+    /// <param name="allMusicRoutes"></param>
     /// <returns></returns>
-    public override string Route(AllMusicRoutes routes) => routes.Albums;
+    public override string GetRoute(AllMusicRoutes allMusicRoutes) => allMusicRoutes.Albums;
 
     #endregion
 }

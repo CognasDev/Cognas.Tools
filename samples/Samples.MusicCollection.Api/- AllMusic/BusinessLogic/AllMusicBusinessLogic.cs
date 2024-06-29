@@ -3,14 +3,17 @@ using Cognas.ApiTools.Shared.Extensions;
 using Samples.MusicCollection.Api.Albums;
 using Samples.MusicCollection.Api.AllMusic.Abstractions;
 using Samples.MusicCollection.Api.AllMusic.Expressions;
+using Samples.MusicCollection.Api.AllMusic.Requests;
 using Samples.MusicCollection.Api.AllMusic.Responses;
 using Samples.MusicCollection.Api.AllMusic.Strategies;
+using Samples.MusicCollection.Api.AllMusic.TrackRules;
 using Samples.MusicCollection.Api.Artists;
 using Samples.MusicCollection.Api.Genres;
 using Samples.MusicCollection.Api.Keys;
 using Samples.MusicCollection.Api.Labels;
 using Samples.MusicCollection.Api.Tracks;
 using System.Collections.Concurrent;
+using System.Runtime.InteropServices;
 
 namespace Samples.MusicCollection.Api.AllMusic.BusinessLogic;
 
@@ -27,6 +30,7 @@ public sealed class AllMusicBusinessLogic : IAllMusicBusinessLogic
     private readonly IQueryMicroserviceBusinessLogic<KeyResponse> _keysQueryBusinessLogic;
     private readonly IQueryMicroserviceBusinessLogic<LabelResponse> _labelsQueryBusinessLogic;
     private readonly IQueryMicroserviceBusinessLogic<TrackResponse> _tracksQueryBusinessLogic;
+    private readonly IEnumerable<IMixableTracksRule> _mixableTrackRules;
 
     #endregion
 
@@ -41,12 +45,14 @@ public sealed class AllMusicBusinessLogic : IAllMusicBusinessLogic
     /// <param name="keysQueryBusinessLogic"></param>
     /// <param name="labelsQueryBusinessLogic"></param>
     /// <param name="tracksQueryBusinessLogic"></param>
+    /// <param name="mixableTrackRules"></param>
     public AllMusicBusinessLogic(IQueryMicroserviceBusinessLogic<AlbumResponse> albumsQueryBusinessLogic,
                                  IQueryMicroserviceBusinessLogic<ArtistResponse> artistsQueryBusinessLogic,
                                  IQueryMicroserviceBusinessLogic<GenreResponse> genresQueryBusinessLogic,
                                  IQueryMicroserviceBusinessLogic<KeyResponse> keysQueryBusinessLogic,
                                  IQueryMicroserviceBusinessLogic<LabelResponse> labelsQueryBusinessLogic,
-                                 IQueryMicroserviceBusinessLogic<TrackResponse> tracksQueryBusinessLogic)
+                                 IQueryMicroserviceBusinessLogic<TrackResponse> tracksQueryBusinessLogic,
+                                 IEnumerable<IMixableTracksRule> mixableTrackRules)
     {
         ArgumentNullException.ThrowIfNull(albumsQueryBusinessLogic, nameof(albumsQueryBusinessLogic));
         ArgumentNullException.ThrowIfNull(artistsQueryBusinessLogic, nameof(artistsQueryBusinessLogic));
@@ -54,6 +60,7 @@ public sealed class AllMusicBusinessLogic : IAllMusicBusinessLogic
         ArgumentNullException.ThrowIfNull(keysQueryBusinessLogic, nameof(keysQueryBusinessLogic));
         ArgumentNullException.ThrowIfNull(labelsQueryBusinessLogic, nameof(labelsQueryBusinessLogic));
         ArgumentNullException.ThrowIfNull(tracksQueryBusinessLogic, nameof(tracksQueryBusinessLogic));
+        ArgumentNullException.ThrowIfNull(mixableTrackRules, nameof(mixableTrackRules));
 
         _albumsQueryBusinessLogic = albumsQueryBusinessLogic;
         _artistsQueryBusinessLogic = artistsQueryBusinessLogic;
@@ -61,6 +68,7 @@ public sealed class AllMusicBusinessLogic : IAllMusicBusinessLogic
         _keysQueryBusinessLogic = keysQueryBusinessLogic;
         _labelsQueryBusinessLogic = labelsQueryBusinessLogic;
         _tracksQueryBusinessLogic = tracksQueryBusinessLogic;
+        _mixableTrackRules = mixableTrackRules;
     }
 
     #endregion
@@ -114,6 +122,65 @@ public sealed class AllMusicBusinessLogic : IAllMusicBusinessLogic
         allMusicResponse.AddArtists(artistAlbumsResponses, sortStrategy);
         return allMusicResponse;
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="mixableTrackRequests"></param>
+    /// <returns></returns>
+    public IEnumerable<MixableTrackResponse> AreMixableTracks(IEnumerable<MixableTrackRequest> mixableTrackRequests)
+    {
+        ReadOnlySpan<MixableTrackRequest> mixableTrackRequestsSpan = CollectionsMarshal.AsSpan(mixableTrackRequests.ToList());
+        int length = mixableTrackRequestsSpan.Length;
+
+        HashSet<MixableTrackResponse> mixableTrackResponses = [];
+
+        for (int trackAIndex = 0; trackAIndex < length; trackAIndex++)
+        {
+            for (int trackBIndex = trackAIndex + 1; trackBIndex < length; trackBIndex++)
+            {
+                bool isMixable = true;
+                MixableTrackRequest trackA = mixableTrackRequestsSpan[trackAIndex];
+                MixableTrackRequest trackB = mixableTrackRequestsSpan[trackBIndex];
+
+                _mixableTrackRules.FastForEach(rule =>
+                {
+                    isMixable = isMixable && rule.IsMixable(trackA, trackB);
+                    if (!isMixable)
+                    {
+                        MixableTrackResponse notMixableResponse = CreateMixableTrackRequest(trackA, trackB, false);
+                        mixableTrackResponses.Add(notMixableResponse);
+                        return;
+                    }
+                });
+                if (isMixable)
+                {
+                    MixableTrackResponse mixableResponse = CreateMixableTrackRequest(trackA, trackB, true);
+                    mixableTrackResponses.Add(mixableResponse);
+                }
+            }
+        }
+
+        return mixableTrackResponses;
+    }
+
+    #endregion
+
+    #region Private Method Declarations
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="trackA"></param>
+    /// <param name="trackB"></param>
+    /// <param name="isMixable"></param>
+    /// <returns></returns>
+    private static MixableTrackResponse CreateMixableTrackRequest(MixableTrackRequest trackA, MixableTrackRequest trackB, bool isMixable) => new()
+    {
+        TrackAId = trackA.TrackId,
+        TrackBId = trackB.TrackId,
+        IsMixable = isMixable
+    };
 
     #endregion
 }

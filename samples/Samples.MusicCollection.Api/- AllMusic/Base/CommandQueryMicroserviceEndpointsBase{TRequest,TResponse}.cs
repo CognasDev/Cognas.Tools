@@ -53,7 +53,7 @@ public abstract class CommandQueryMicroserviceEndpointsBase<TRequest, TResponse>
     {
         return endpointRouteBuilder.MapPost
         (
-            $"/{Route(Routes.Value)}",
+            $"/{GetRoute(AllMusicRoutes)}",
             async ([FromBody] TRequest request) => await CommandBusinessLogic.PostAsync(request).ConfigureAwait(false)
         )
         .MapPostConfiguration<TRequest, TResponse>(ApiVersion, Tag);
@@ -67,7 +67,7 @@ public abstract class CommandQueryMicroserviceEndpointsBase<TRequest, TResponse>
     {
         return endpointRouteBuilder.MapPut
         (
-            $"/{Route(Routes.Value)}/{{id}}",
+            $"/{GetRoute(AllMusicRoutes)}/{{id}}",
             async ([FromRoute] int id, [FromBody] TRequest request) => await CommandBusinessLogic.PutAsync(request).ConfigureAwait(false)
         )
         .MapPutConfiguration<TRequest, TResponse>(ApiVersion, Tag);
@@ -81,7 +81,7 @@ public abstract class CommandQueryMicroserviceEndpointsBase<TRequest, TResponse>
     {
         return endpointRouteBuilder.MapDelete
         (
-            $"/{Route(Routes.Value)}/{{id}}",
+            $"/{GetRoute(AllMusicRoutes)}/{{id}}",
             async ([FromRoute] int id) => await CommandBusinessLogic.DeleteAsync(id).ConfigureAwait(false)
         )
         .MapDeleteConfiguration(ApiVersion, Tag);

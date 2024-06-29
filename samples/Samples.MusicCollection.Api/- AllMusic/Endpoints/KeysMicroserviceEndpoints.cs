@@ -31,9 +31,9 @@ public sealed class KeysMicroserviceEndpoints : QueryMicroserviceEndpointsBase<K
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="routes"></param>
+    /// <param name="allMusicRoutes"></param>
     /// <returns></returns>
-    public override string Route(AllMusicRoutes routes) => routes.Keys;
+    public override string GetRoute(AllMusicRoutes allMusicRoutes) => allMusicRoutes.Keys;
 
     #endregion
 }

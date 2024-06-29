@@ -15,5 +15,11 @@ public interface IAllMusicEndpoints
     /// <param name="endpointRouteBuilder"></param>
     void MapGet(IEndpointRouteBuilder endpointRouteBuilder);
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="endpointRouteBuilder"></param>
+    void MapPostAreMixableTracks(IEndpointRouteBuilder endpointRouteBuilder);
+
     #endregion
 }

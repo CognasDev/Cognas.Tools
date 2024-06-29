@@ -3,18 +3,12 @@ using Cognas.ApiTools.Extensions;
 using Cognas.ApiTools.ServiceRegistration;
 using Cognas.ApiTools.Shared;
 using Cognas.ApiTools.SourceGenerators;
-using Samples.MusicCollection.Api.Albums;
 using Samples.MusicCollection.Api.AllMusic;
 using Samples.MusicCollection.Api.AllMusic.Abstractions;
 using Samples.MusicCollection.Api.AllMusic.BusinessLogic;
 using Samples.MusicCollection.Api.AllMusic.Endpoints;
 using Samples.MusicCollection.Api.AllMusic.TrackRules;
-using Samples.MusicCollection.Api.Artists;
 using Samples.MusicCollection.Api.Config;
-using Samples.MusicCollection.Api.Genres;
-using Samples.MusicCollection.Api.Keys;
-using Samples.MusicCollection.Api.Labels;
-using Samples.MusicCollection.Api.Tracks;
 
 namespace Samples.MusicCollection.Api;
 
@@ -88,6 +82,7 @@ public sealed class Program
 
         IAllMusicEndpoints allMusicEndpoints = webApplication.Services.GetService<IAllMusicEndpoints>() ?? throw new NullReferenceException(nameof(AllMusicEndpoints));
         allMusicEndpoints.MapGet(apiVersionRouteV2);
+        allMusicEndpoints.MapPostAreMixableTracks(apiVersionRouteV2);
 
         webApplication.AddSwagger();
         webApplication.ConfigureAndRun();

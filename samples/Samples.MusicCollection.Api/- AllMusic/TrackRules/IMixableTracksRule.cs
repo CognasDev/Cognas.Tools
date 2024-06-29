@@ -1,4 +1,5 @@
-﻿using Samples.MusicCollection.Api.Tracks;
+﻿using Samples.MusicCollection.Api.AllMusic.Requests;
+using Samples.MusicCollection.Api.Tracks;
 
 namespace Samples.MusicCollection.Api.AllMusic.TrackRules;
 
@@ -14,7 +15,7 @@ public interface IMixableTracksRule
     /// </summary>
     /// <param name="trackA"></param>
     /// <param name="trackB"></param>
-    bool IsMixable(TrackRequest trackA, TrackRequest trackB);
+    bool IsMixable(MixableTrackRequest trackA, MixableTrackRequest trackB);
 
     #endregion
 }

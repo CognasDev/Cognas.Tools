@@ -1,4 +1,4 @@
-﻿using Samples.MusicCollection.Api.Tracks;
+﻿using Samples.MusicCollection.Api.AllMusic.Requests;
 
 namespace Samples.MusicCollection.Api.AllMusic.TrackRules;
 
@@ -26,7 +26,7 @@ public sealed class GenreIsMixabeRule : IMixableTracksRule
     /// <param name="trackA"></param>
     /// <param name="trackB"></param>
     /// <returns></returns>
-    public bool IsMixable(TrackRequest trackA, TrackRequest trackB)
+    public bool IsMixable(MixableTrackRequest trackA, MixableTrackRequest trackB)
     {
         bool isMixable = trackA.GenreId == trackB.GenreId;
         return isMixable;

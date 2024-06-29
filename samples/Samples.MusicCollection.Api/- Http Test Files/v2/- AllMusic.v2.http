@@ -3,3 +3,37 @@
 ### GET all music - 200
 GET {{Samples.MusicCollection.Api_HostAddress}}/api/v2/allmusic
 Accept: application/json
+
+### Are mixable tracks (true)
+POST {{Samples.MusicCollection.Api_HostAddress}}/api/v2/allmusic/areMixableTracks
+Content-Type: application/json
+
+[
+   {
+    "genreId": 1,
+    "keyId": 1,
+    "bpm": 130
+  },
+  {
+    "genreId": 1,
+    "keyId": 2,
+    "bpm": 125
+  }
+]
+
+### Are mixable tracks (false)
+POST {{Samples.MusicCollection.Api_HostAddress}}/api/v2/allmusic/areMixableTracks
+Content-Type: application/json
+
+[
+   {
+    "genreId": 1,
+    "keyId": 1,
+    "bpm": 130
+  },
+  {
+    "genreId": 1,
+    "keyId": 2,
+    "bpm": 999
+  }
+]

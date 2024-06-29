@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Samples.MusicCollection.Api.AllMusic.Abstractions;
+using Samples.MusicCollection.Api.AllMusic.Requests;
 using Samples.MusicCollection.Api.AllMusic.Responses;
 using Samples.MusicCollection.Api.Config;
+using Samples.MusicCollection.Api.Tracks;
 using System.Net.Mime;
 
 namespace Samples.MusicCollection.Api.AllMusic.Endpoints;
@@ -53,6 +55,24 @@ public sealed class AllMusicEndpoints : IAllMusicEndpoints
         .WithTags(MicroserviceTags.AllMusic)
         .WithOpenApi()
         .Produces<AllMusicResponse>(StatusCodes.Status200OK, MediaTypeNames.Application.Json)
+        .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError, MediaTypeNames.Application.Json);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="endpointRouteBuilder"></param>
+    public void MapPostAreMixableTracks(IEndpointRouteBuilder endpointRouteBuilder)
+    {
+        endpointRouteBuilder.MapPost
+        (
+            $"/{_routes.Value.Home}/aremixabletracks",
+            ([FromBody] IEnumerable<MixableTrackRequest> tracks) => _businessLogic.AreMixableTracks(tracks)
+        )
+        .MapToApiVersion(2)
+        .WithTags(MicroserviceTags.AllMusic)
+        .WithOpenApi()
+        .Produces<bool>(StatusCodes.Status200OK, MediaTypeNames.Application.Json)
         .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError, MediaTypeNames.Application.Json);
     }
 

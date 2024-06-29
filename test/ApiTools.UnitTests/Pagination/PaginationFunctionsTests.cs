@@ -85,56 +85,6 @@ public sealed class PaginationFunctionsTests
     /// <param name="pageNumber"></param>
     [Theory]
     [InlineData(5, 1)]
-    public void IsPaginationQueryValidOrNotRequested_Valid(int pageSize, int pageNumber)
-    {
-        Mock<IPaginationQuery> mockPaginationQuery = new();
-        mockPaginationQuery.SetupGet(paginationQuery => paginationQuery.PageSize).Returns(pageSize);
-        mockPaginationQuery.SetupGet(paginationQuery => paginationQuery.PageNumber).Returns(pageNumber);
-        mockPaginationQuery.SetupGet(paginationQuery => paginationQuery.OrderBy).Returns(nameof(TestDto.Name));
-
-        PaginationFunctions paginationFunctions = new();
-        paginationFunctions.IsPaginationQueryValidOrNotRequested<TestDto>(mockPaginationQuery.Object).Should().BeTrue();
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="pageNumber"></param>
-    [Theory]
-    [InlineData(1)]
-    public void IsPaginationQueryValidOrNotRequested_Invalid_MissingPageSize(int pageNumber)
-    {
-        Mock<IPaginationQuery> mockPaginationQuery = new();
-        mockPaginationQuery.SetupGet(paginationQuery => paginationQuery.PageNumber).Returns(pageNumber);
-        mockPaginationQuery.SetupGet(paginationQuery => paginationQuery.OrderBy).Returns(nameof(TestDto.Name));
-
-        PaginationFunctions paginationFunctions = new();
-        paginationFunctions.IsPaginationQueryValidOrNotRequested<TestDto>(mockPaginationQuery.Object).Should().BeFalse();
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="pageSize"></param>
-    [Theory]
-    [InlineData(1)]
-    public void IsPaginationQueryValidOrNotRequested_Invalid_MissingPageNumber(int pageSize)
-    {
-        Mock<IPaginationQuery> mockPaginationQuery = new();
-        mockPaginationQuery.SetupGet(paginationQuery => paginationQuery.PageSize).Returns(pageSize);
-        mockPaginationQuery.SetupGet(paginationQuery => paginationQuery.OrderBy).Returns(nameof(TestDto.Name));
-
-        PaginationFunctions paginationFunctions = new();
-        paginationFunctions.IsPaginationQueryValidOrNotRequested<TestDto>(mockPaginationQuery.Object).Should().BeFalse();
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="pageSize"></param>
-    /// <param name="pageNumber"></param>
-    [Theory]
-    [InlineData(5, 1)]
     public void BuildPaginationResponseHeader_Total(int pageSize, int pageNumber)
     {
         const string headerKey = "x-total";

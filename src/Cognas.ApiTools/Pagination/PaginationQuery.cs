@@ -46,7 +46,7 @@ public sealed record PaginationQuery : IPaginationQuery
     /// 
     /// </summary>
     /// <returns></returns>
-    public static PaginationQuery Empty => new()
+    public static PaginationQuery Empty { get;} = new ()
     {
         PageSize = null,
         PageNumber = null,

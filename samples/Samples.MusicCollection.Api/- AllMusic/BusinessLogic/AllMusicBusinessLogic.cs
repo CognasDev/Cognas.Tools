@@ -2,6 +2,7 @@
 using Cognas.ApiTools.Shared.Extensions;
 using Samples.MusicCollection.Api.Albums;
 using Samples.MusicCollection.Api.AllMusic.Abstractions;
+using Samples.MusicCollection.Api.AllMusic.Expressions;
 using Samples.MusicCollection.Api.AllMusic.Responses;
 using Samples.MusicCollection.Api.AllMusic.Strategies;
 using Samples.MusicCollection.Api.Artists;
@@ -73,116 +74,45 @@ public sealed class AllMusicBusinessLogic : IAllMusicBusinessLogic
     /// <returns></returns>
     public async Task<AllMusicResponse> GetAllMusicAsync(CancellationToken cancellationToken)
     {
-        PaginationQuery emptyPagination = PaginationQuery.Empty;
-        IAsyncEnumerable<ArtistResponse> artists = _artistsQueryBusinessLogic.Get(emptyPagination, cancellationToken);
-        IEnumerable<AlbumResponse> albums = await _albumsQueryBusinessLogic.Get(emptyPagination, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
-        IEnumerable<GenreResponse> genres = await _genresQueryBusinessLogic.Get(emptyPagination, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
-        IEnumerable<KeyResponse> keys = await _keysQueryBusinessLogic.Get(emptyPagination, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
-        IEnumerable<LabelResponse> labels = await _labelsQueryBusinessLogic.Get(emptyPagination, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
-        IEnumerable<TrackResponse> tracks = await _tracksQueryBusinessLogic.Get(emptyPagination, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
+        IEnumerable<AlbumResponse> albums = await _albumsQueryBusinessLogic.Get(PaginationQuery.Empty, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
+        IEnumerable<GenreResponse> genres = await _genresQueryBusinessLogic.Get(PaginationQuery.Empty, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
+        IEnumerable<KeyResponse> keys = await _keysQueryBusinessLogic.Get(PaginationQuery.Empty, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
+        IEnumerable<LabelResponse> labels = await _labelsQueryBusinessLogic.Get(PaginationQuery.Empty, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
+        IEnumerable<TrackResponse> tracks = await _tracksQueryBusinessLogic.Get(PaginationQuery.Empty, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
 
-        AllMusicResponse allMusicResponse = new();
-        ConcurrentBag<ArtistAlbumsResponse> artistResponses = [];
+        ConcurrentBag<ArtistAlbumsResponse> artistAlbumsResponses = [];
         ISortStrategy sortStrategy = new DefaultSortStrategy();
 
-        await foreach (ArtistResponse artist in artists.ConfigureAwait(false))
+        IEnumerable<FlattenedAlbum> flattenedAlbums = CompiledExpressions.FlattenAlbums(albums, labels, genres);
+        IEnumerable<FlattenedTrack> flattenedTracks = CompiledExpressions.FlattenedTracks(tracks, genres, keys);
+
+        await foreach (ArtistResponse artist in _artistsQueryBusinessLogic.Get(PaginationQuery.Empty, cancellationToken).ConfigureAwait(false))
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             List<ArtistAlbumResponse> artistAlbums = [];
-            albums.FastForEach(album => album.ArtistId == artist.ArtistId, (Action<AlbumResponse>)(album =>
+            flattenedAlbums.FastForEach(album => album.ArtistId == artist.ArtistId, album =>
             {
-                ArtistAlbumResponse artistAlbum = GetArtistAlbum(album, genres, labels);
-                IEnumerable<AlbumTrackResponse> albumTracks = GetAlbumTracks(album, genres, keys, tracks);
+                ArtistAlbumResponse artistAlbum = new()
+                {
+                    Name = album.Name,
+                    Genre = album.GenreName,
+                    Label = album.LabelName,
+                    ReleaseDate = album.ReleaseDate
+                };
+                IEnumerable<AlbumTrackResponse> albumTracks = CompiledExpressions.CreateAlbumTrackResponses(album, flattenedTracks);
                 artistAlbum.AddTracks(albumTracks, sortStrategy);
                 artistAlbums.Add(artistAlbum);
-            }));
+            });
 
-            ArtistAlbumsResponse artistAlbumsResponse = CreteArtistAlbumsResponse(artist);
+            ArtistAlbumsResponse artistAlbumsResponse = new() { Name = artist.Name };
             artistAlbumsResponse.AddAlbums(artistAlbums, sortStrategy);
-            artistResponses.Add(artistAlbumsResponse);
+            artistAlbumsResponses.Add(artistAlbumsResponse);
         }
 
-        allMusicResponse.AddArtists(artistResponses, sortStrategy);
+        AllMusicResponse allMusicResponse = new();
+        allMusicResponse.AddArtists(artistAlbumsResponses, sortStrategy);
         return allMusicResponse;
-    }
-
-    #endregion
-
-    #region Private Method Declarations
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="artist"></param>
-    /// <returns></returns>
-    private static ArtistAlbumsResponse CreteArtistAlbumsResponse(ArtistResponse artist)
-    {
-        ArtistAlbumsResponse artistResponse = new() { Name = artist.Name };
-        return artistResponse;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="album"></param>
-    /// <param name="genres"></param>
-    /// <param name="labels"></param>
-    /// <exception cref="NullReferenceException"></exception>
-    private static ArtistAlbumResponse GetArtistAlbum(AlbumResponse album, IEnumerable<GenreResponse> genres, IEnumerable<LabelResponse> labels)
-    {
-        GenreResponse? genre = genres.FastFirstOrDefault(genre => album.GenreId == genre.GenreId);
-        LabelResponse label = labels.FastFirstOrDefault(label => album.LabelId == label.LabelId) ?? throw new NullReferenceException($"{nameof(AlbumResponse)}.{nameof(LabelResponse)}");
-        ArtistAlbumResponse albumResponse = new()
-        {
-            Name = album.Name,
-            Genre = genre?.Name ?? string.Empty,
-            Label = label.Name,
-            ReleaseDate = album.ReleaseDate
-        };
-        return albumResponse;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="album"></param>
-    /// <param name="genres"></param>
-    /// <param name="keys"></param>
-    /// <param name="tracks"></param>
-    /// <returns></returns>
-    private static List<AlbumTrackResponse> GetAlbumTracks(AlbumResponse album, IEnumerable<GenreResponse> genres, IEnumerable<KeyResponse> keys, IEnumerable<TrackResponse> tracks)
-    {
-        List<AlbumTrackResponse> trackResponses = [];
-        tracks.FastForEach(track => track.AlbumId == album.AlbumId, track =>
-        {
-            AlbumTrackResponse trackResponse = GetAlbumTrack(genres, keys, track);
-            trackResponses.Add(trackResponse);
-        });
-        return trackResponses;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="genres"></param>
-    /// <param name="keys"></param>
-    /// <param name="track"></param>
-    /// <exception cref="NullReferenceException"></exception>
-    private static AlbumTrackResponse GetAlbumTrack(IEnumerable<GenreResponse> genres, IEnumerable<KeyResponse> keys, TrackResponse track)
-    {
-        GenreResponse genre = genres.FastFirstOrDefault(genre => track.GenreId == genre.GenreId) ?? throw new NullReferenceException(nameof(TrackResponse.GenreId));
-        KeyResponse? key = keys.FastFirstOrDefault(key => track.KeyId == key.KeyId);
-        AlbumTrackResponse trackResponse = new()
-        {
-            TrackNumber = track.TrackNumber,
-            Name = track.Name,
-            Genre = genre.Name,
-            Bpm = track.Bpm,
-            CamelotCode = key?.CamelotCode,
-            Key = key?.Name
-        };
-        return trackResponse;
     }
 
     #endregion

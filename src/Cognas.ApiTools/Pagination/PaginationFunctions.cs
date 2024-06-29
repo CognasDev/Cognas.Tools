@@ -46,34 +46,34 @@ public sealed class PaginationFunctions : IPaginationFunctions
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TDto"></typeparam>
+    /// <typeparam name="TResonse"></typeparam>
     /// <param name="paginationQuery"></param>
     /// <returns></returns>
     /// <exception cref="PaginationQueryParametersException"></exception>
-    public PropertyDescriptor OrderByProperty<TDto>(IPaginationQuery paginationQuery) where TDto : class
+    public PropertyDescriptor OrderByProperty<TResonse>(IPaginationQuery paginationQuery) where TResonse : class
     {
-        string cacheKey = $"{typeof(TDto).Name}.{paginationQuery.OrderBy}";
-        PropertyDescriptor? orderByProperty = _orderByCache.GetOrAdd(cacheKey, key => TypeDescriptor.GetProperties(typeof(TDto)).Find(paginationQuery.OrderBy!, true))
-                                              ?? throw new PaginationQueryParametersException(paginationQuery.OrderBy!, typeof(TDto));
+        string cacheKey = $"{typeof(TResonse).Name}.{paginationQuery.OrderBy}";
+        PropertyDescriptor? orderByProperty = _orderByCache.GetOrAdd(cacheKey, key => TypeDescriptor.GetProperties(typeof(TResonse)).Find(paginationQuery.OrderBy!, true))
+                                              ?? throw new PaginationQueryParametersException(paginationQuery.OrderBy!, typeof(TResonse));
         return orderByProperty!;
     }
 
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TDto"></typeparam>
+    /// <typeparam name="TResonse"></typeparam>
     /// <param name="paginationQuery"></param>
     /// <returns></returns>
-    public bool? IsPaginationQueryValidOrNotRequested<TDto>(IPaginationQuery paginationQuery) where TDto : class
+    public bool? IsPaginationQueryValidOrNotRequested<TResonse>(PaginationQuery paginationQuery) where TResonse : class
     {
-        if (!paginationQuery.PageNumber.HasValue && !paginationQuery.PageSize.HasValue && string.IsNullOrWhiteSpace(paginationQuery.OrderBy))
+        if (paginationQuery == PaginationQuery.Empty)
         {
             return null;
         }
         bool isValid = paginationQuery.PageNumber.HasValue &&
                        paginationQuery.PageSize.HasValue &&
                        !string.IsNullOrWhiteSpace(paginationQuery.OrderBy) &&
-                       OrderByProperty<TDto>(paginationQuery) != null;
+                       OrderByProperty<TResonse>(paginationQuery) != null;
         return isValid;
     }
 

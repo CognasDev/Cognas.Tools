@@ -15,7 +15,7 @@ public interface IQueryMicroserviceBusinessLogic<TResponse> where TResponse : cl
     /// <param name="paginationQuery"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    IAsyncEnumerable<TResponse> Get(IPaginationQuery paginationQuery, CancellationToken cancellationToken);
+    IAsyncEnumerable<TResponse> Get(PaginationQuery paginationQuery, CancellationToken cancellationToken);
 
     /// <summary>
     /// 

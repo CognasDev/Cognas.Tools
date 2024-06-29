@@ -1,0 +1,5 @@
+@Samples.MusicCollection.Api_HostAddress = https://localhost:7104
+
+### GET all music - 200
+GET {{Samples.MusicCollection.Api_HostAddress}}/api/v2/allmusic
+Accept: application/json

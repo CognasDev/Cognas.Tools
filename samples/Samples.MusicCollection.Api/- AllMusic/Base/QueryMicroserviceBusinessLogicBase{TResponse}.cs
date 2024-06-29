@@ -79,7 +79,7 @@ public abstract class QueryMicroserviceBusinessLogicBase<TResponse> :
     /// <param name="paginationQuery"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public IAsyncEnumerable<TResponse> Get(IPaginationQuery paginationQuery, CancellationToken cancellationToken)
+    public IAsyncEnumerable<TResponse> Get(PaginationQuery paginationQuery, CancellationToken cancellationToken)
     {
         bool? paginationQueryValidOrDefault = _paginationFunctions.IsPaginationQueryValidOrNotRequested<TResponse>(paginationQuery);
         string microserviceUri = MicroserviceUri(MicroserviceUris);

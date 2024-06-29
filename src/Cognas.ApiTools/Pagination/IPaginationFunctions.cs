@@ -27,28 +27,28 @@ public interface IPaginationFunctions
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TDto"></typeparam>
+    /// <typeparam name="TResonse"></typeparam>
     /// <param name="paginationQuery"></param>
     /// <returns></returns>
     /// <exception cref="PaginationQueryParametersException"></exception>
-    PropertyDescriptor OrderByProperty<TDto>(IPaginationQuery paginationQuery) where TDto : class;
+    PropertyDescriptor OrderByProperty<TResonse>(IPaginationQuery paginationQuery) where TResonse : class;
 
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TDto"></typeparam>
+    /// <typeparam name="TResonse"></typeparam>
     /// <param name="paginationQuery"></param>
     /// <returns></returns>
-    bool? IsPaginationQueryValidOrNotRequested<TDto>(IPaginationQuery paginationQuery) where TDto : class;
+    bool? IsPaginationQueryValidOrNotRequested<TResonse>(PaginationQuery paginationQuery) where TResonse : class;
 
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TDto"></typeparam>
+    /// <typeparam name="TResonse"></typeparam>
     /// <param name="paginationQuery"></param>
     /// <param name="responses"></param>
     /// <param name="httpContext"></param>
-    void BuildPaginationResponseHeader<TDto>(IPaginationQuery paginationQuery, IEnumerable<TDto> responses, HttpContext httpContext) where TDto : class;
+    void BuildPaginationResponseHeader<TResonse>(IPaginationQuery paginationQuery, IEnumerable<TResonse> responses, HttpContext httpContext) where TResonse : class;
 
     #endregion
 }

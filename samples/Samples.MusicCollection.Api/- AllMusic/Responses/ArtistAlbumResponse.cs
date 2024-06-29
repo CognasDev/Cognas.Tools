@@ -23,7 +23,7 @@ public sealed record ArtistAlbumResponse
     /// <summary>
     /// 
     /// </summary>
-    public required string Genre { get; set; }
+    public string? Genre { get; set; }
 
     /// <summary>
     /// 

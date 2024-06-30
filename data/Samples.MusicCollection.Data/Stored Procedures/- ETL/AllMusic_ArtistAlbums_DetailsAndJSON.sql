@@ -10,7 +10,7 @@ WITH
 	--Common table expression to get track count per album.
 	SELECT
 		[Albums].[AlbumId]	AS [AlbumId],
-		COUNT (*)			AS [TrackCount]
+		COUNT(*)			AS [TrackCount]
 	FROM
 		[Albums]
 	INNER JOIN
@@ -45,7 +45,6 @@ WITH
 		[Keys] ON [Tracks].[KeyId] = [Tracks].[KeyId]
 	GROUP BY
 		[Albums].[AlbumId],
-		[Keys].[KeyId],
 		[Keys].[Name]
 	ORDER BY
 		COUNT([Tracks].[KeyId]) DESC
@@ -74,8 +73,10 @@ SELECT
 					[Tracks] AS [TracksForJson]
 				LEFT OUTER JOIN
 					[Keys] AS [KeysForJson] ON [KeysForJson].[KeyId] = [TracksForJson].[KeyId] 
-				WHERE [TracksForJson].[AlbumId] = [AlbumsForJson].[AlbumId]
-				ORDER BY [TracksForJson].[TrackNumber]
+				WHERE
+					[TracksForJson].[AlbumId] = [AlbumsForJson].[AlbumId]
+				ORDER BY
+					[TracksForJson].[TrackNumber]
 				FOR JSON PATH
 			) AS [Artist.Album.Tracks]
 		FROM

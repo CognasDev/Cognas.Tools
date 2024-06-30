@@ -10,7 +10,7 @@ SELECT
 	CAST([AfterGlo] AS VARCHAR(250))		AS [AfterGlo],
 	CAST([Dedicated] AS VARCHAR(250))		AS [Dedicated],
 	CAST([EBV] AS VARCHAR(250))				AS [EBV],
-	CAST([EBV] AS VARCHAR(250))				AS [Moving Shadow]
+	CAST([Moving Shadow] AS VARCHAR(250))	AS [Moving Shadow]
 FROM 
 (
 	SELECT

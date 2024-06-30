@@ -68,6 +68,7 @@
     <Folder Include="Stored Procedures\Tracks" />
     <Folder Include="Stored Procedures\Labels" />
     <Folder Include="Stored Procedures\Keys" />
+    <Folder Include="Stored Procedures\- ETL" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\Albums.sql" />
@@ -115,6 +116,8 @@
     <Build Include="Stored Procedures\Keys\Keys_Select.sql" />
     <Build Include="Stored Procedures\Keys\Keys_SelectById.sql" />
     <None Include="Test Data\Keys.sql" />
+    <Build Include="Stored Procedures\- ETL\AllMusic_ArtistAlbums_DetailsAndJSON.sql" />
+    <Build Include="Stored Procedures\- ETL\AllMusic_LabelsStats_Pivot.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Samples.MusicCollection.Data.publish.xml" />

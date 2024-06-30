@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[AllMusic_LabelsStats_Pivot]
+﻿CREATE PROCEDURE [AllMusic_LabelsStats_Pivot]
 
 AS
 
@@ -13,9 +13,14 @@ SELECT
 	CAST([EBV] AS VARCHAR(250))				AS [Moving Shadow]
 FROM 
 (
-	SELECT [dbo].[Labels].[Name], [AlbumId] FROM [dbo].[Albums]
-	INNER JOIN [dbo].[Labels] ON [dbo].[Labels].[LabelId] = [dbo].[Albums].[LabelId]
-) As Temp
+	SELECT
+		[Labels].[Name],
+		[AlbumId]
+	FROM
+		[Albums]
+	INNER JOIN
+		[Labels] ON [Labels].[LabelId] = [Albums].[LabelId]
+) AS [AlbumCountByLabel]
 PIVOT
 (
 	COUNT ([AlbumId])
@@ -26,7 +31,7 @@ PIVOT
 		[EBV],
 		[Moving Shadow]
 	)
-) As [AlbumCountPivot]
+) As [PIVOT_Label_AlbumCount]
 UNION
 --Select last release date for given labels (AfterGlo, Dedicated, EBV and Moving Shadow)
 SELECT
@@ -37,9 +42,14 @@ SELECT
 	CONVERT(CHAR(10),[Moving Shadow],126)
 FROM 
 (
-	SELECT [dbo].[Labels].[Name], [ReleaseDate] FROM [dbo].[Albums]
-	INNER JOIN [dbo].[Labels] ON [dbo].[Labels].[LabelId] = [dbo].[Albums].[LabelId]
-) As Temp
+	SELECT
+		[Labels].[Name],
+		[ReleaseDate]
+	FROM
+		[Albums]
+	INNER JOIN
+		[Labels] ON [Labels].[LabelId] = [Albums].[LabelId]
+) AS [ReleaseDateByLabel]
 PIVOT
 (
 	MAX ([ReleaseDate])
@@ -50,4 +60,4 @@ PIVOT
 		[EBV],
 		[Moving Shadow]
 	)
-) As [ReleaseDatePivot];
+) As [PIVOT_Label_LastRelease]

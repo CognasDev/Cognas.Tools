@@ -208,16 +208,6 @@ public abstract class QueryApiBase<TModel, TResponse> : IQueryApi<TModel, TRespo
     {
         IParameter idParameter = ModelIdService.IdParameter<TModel>(id);
         TModel? model = await QueryBusinessLogic.SelectModelAsync(id, idParameter).ConfigureAwait(false);
-        return TryMapModelToDto(model);
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="model"></param>
-    /// <returns></returns>
-    private Results<Ok<TResponse>, NotFound> TryMapModelToDto(TModel? model)
-    {
         if (model != null)
         {
             TResponse response = QueryMappingService.ModelToResponse(model);

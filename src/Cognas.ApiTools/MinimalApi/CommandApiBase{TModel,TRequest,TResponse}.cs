@@ -261,13 +261,9 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
     /// <returns></returns>
     private async Task<Results<Ok, NotFound>> DeleteAsync(int id)
     {
-        IParameter parameter = ModelIdService.IdParameter<TModel>(id);
-        bool success = await CommandBusinessLogic.DeleteModelAsync(parameter).ConfigureAwait(false);
-        if (success)
-        {
-            return TypedResults.Ok();
-        }
-        return TypedResults.NotFound();
+        IParameter idParameter = ModelIdService.IdParameter<TModel>(id);
+        bool isDeleted = await CommandBusinessLogic.DeleteModelAsync(idParameter).ConfigureAwait(false);
+        return isDeleted ? TypedResults.Ok() : TypedResults.NotFound();
     }
 
     /// <summary>

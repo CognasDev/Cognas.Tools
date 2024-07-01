@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Samples.MusicCollection.App.Config;
 
 namespace Samples.MusicCollection.App;
 
@@ -16,6 +17,9 @@ public static class MauiProgram
     public static MauiApp CreateMauiApp()
     {
         MauiAppBuilder mauiAppBuilder = MauiApp.CreateBuilder();
+        mauiAppBuilder.Services.AddHttpClient();
+        mauiAppBuilder.AddJsonConfiguration();
+        mauiAppBuilder.BindConfigurationSection<MicroserviceUris>();
         mauiAppBuilder.UseMauiApp<App>()
                       .ConfigureFonts(fonts =>
                       {

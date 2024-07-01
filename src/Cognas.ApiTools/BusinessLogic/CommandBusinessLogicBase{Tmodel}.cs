@@ -66,7 +66,7 @@ public abstract class CommandBusinessLogicBase<TModel> : CommandOrQueryBusinessL
         ArgumentNullException.ThrowIfNull(databaseService, nameof(databaseService));
         DatabaseService = databaseService;
 
-        _useMessaging = modelMessagingService != null;
+        _useMessaging = modelMessagingService is not null;
         if (_useMessaging)
         {
             ModelMessagingService = modelMessagingService;
@@ -90,7 +90,7 @@ public abstract class CommandBusinessLogicBase<TModel> : CommandOrQueryBusinessL
     public async Task<TModel?> InsertModelAsync(TModel model)
     {
         TModel? insertedModel = await DatabaseService.InsertModelAsync(InsertStoredProcedure, model).ConfigureAwait(false);
-        if (_useMessaging && insertedModel != null)
+        if (_useMessaging && insertedModel is not null)
         {
             await ModelMessagingService!.OnInsertModelAsync(insertedModel).ConfigureAwait(false);
         }
@@ -104,7 +104,7 @@ public abstract class CommandBusinessLogicBase<TModel> : CommandOrQueryBusinessL
     public async Task<TModel?> UpdateModelAsync(TModel model)
     {
         TModel? updatedModel = await DatabaseService.UpdateModelAsync(UpdateStoredProcedure, model).ConfigureAwait(false);
-        if (_useMessaging && updatedModel != null)
+        if (_useMessaging && updatedModel is not null)
         {
             await ModelMessagingService!.OnUpdateModelAsync(updatedModel).ConfigureAwait(false);
         }

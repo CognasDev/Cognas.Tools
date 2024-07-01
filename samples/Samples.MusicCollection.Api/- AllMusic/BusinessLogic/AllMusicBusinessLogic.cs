@@ -82,17 +82,11 @@ public sealed class AllMusicBusinessLogic : IAllMusicBusinessLogic
     /// <returns></returns>
     public async Task<AllMusicResponse> GetAllMusicAsync(CancellationToken cancellationToken)
     {
-        IEnumerable<AlbumResponse> albums = await _albumsQueryBusinessLogic.Get(PaginationQuery.Empty, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
         IEnumerable<GenreResponse> genres = await _genresQueryBusinessLogic.Get(PaginationQuery.Empty, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
-        IEnumerable<KeyResponse> keys = await _keysQueryBusinessLogic.Get(PaginationQuery.Empty, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
-        IEnumerable<LabelResponse> labels = await _labelsQueryBusinessLogic.Get(PaginationQuery.Empty, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
-        IEnumerable<TrackResponse> tracks = await _tracksQueryBusinessLogic.Get(PaginationQuery.Empty, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
-
+        IEnumerable<FlattenedAlbum> flattenedAlbums = await GetFlattenedAlbumsAsync(genres, cancellationToken).ConfigureAwait(false);
+        IEnumerable<FlattenedTrack> flattenedTracks = await GetFlattenedTracksAsync(genres, cancellationToken).ConfigureAwait(false);
         ConcurrentBag<ArtistAlbumsResponse> artistAlbumsResponses = [];
         ISortStrategy sortStrategy = new DefaultSortStrategy();
-
-        IEnumerable<FlattenedAlbum> flattenedAlbums = CompiledExpressions.FlattenAlbums(albums, labels, genres);
-        IEnumerable<FlattenedTrack> flattenedTracks = CompiledExpressions.FlattenedTracks(tracks, genres, keys);
 
         await foreach (ArtistResponse artist in _artistsQueryBusinessLogic.Get(PaginationQuery.Empty, cancellationToken).ConfigureAwait(false))
         {
@@ -101,13 +95,7 @@ public sealed class AllMusicBusinessLogic : IAllMusicBusinessLogic
             List<ArtistAlbumResponse> artistAlbums = [];
             flattenedAlbums.FastForEach(album => album.ArtistId == artist.ArtistId, album =>
             {
-                ArtistAlbumResponse artistAlbum = new()
-                {
-                    Name = album.Name,
-                    Genre = album.GenreName,
-                    Label = album.LabelName,
-                    ReleaseDate = album.ReleaseDate
-                };
+                ArtistAlbumResponse artistAlbum = CreateArtistAlbumResponse(album);
                 IEnumerable<AlbumTrackResponse> albumTracks = CompiledExpressions.CreateAlbumTrackResponses(album, flattenedTracks);
                 artistAlbum.AddTracks(albumTracks, sortStrategy);
                 artistAlbums.Add(artistAlbum);
@@ -167,6 +155,47 @@ public sealed class AllMusicBusinessLogic : IAllMusicBusinessLogic
     #endregion
 
     #region Private Method Declarations
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="genres"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    private async Task<IEnumerable<FlattenedAlbum>> GetFlattenedAlbumsAsync(IEnumerable<GenreResponse> genres, CancellationToken cancellationToken)
+    {
+        IEnumerable<AlbumResponse> albums = await _albumsQueryBusinessLogic.Get(PaginationQuery.Empty, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
+        IEnumerable<LabelResponse> labels = await _labelsQueryBusinessLogic.Get(PaginationQuery.Empty, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
+        IEnumerable<FlattenedAlbum> flattenedAlbums = CompiledExpressions.FlattenAlbums(albums, labels, genres);
+        return flattenedAlbums;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="genres"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    private async Task<IEnumerable<FlattenedTrack>> GetFlattenedTracksAsync(IEnumerable<GenreResponse> genres, CancellationToken cancellationToken)
+    {
+        IEnumerable<KeyResponse> keys = await _keysQueryBusinessLogic.Get(PaginationQuery.Empty, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
+        IEnumerable<TrackResponse> tracks = await _tracksQueryBusinessLogic.Get(PaginationQuery.Empty, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
+        IEnumerable<FlattenedTrack> flattenedTracks = CompiledExpressions.FlattenedTracks(tracks, genres, keys);
+        return flattenedTracks;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="flattenedAlbum"></param>
+    /// <returns></returns>
+    private static ArtistAlbumResponse CreateArtistAlbumResponse(FlattenedAlbum flattenedAlbum) => new()
+    {
+        Name = flattenedAlbum.Name,
+        Genre = flattenedAlbum.GenreName,
+        Label = flattenedAlbum.LabelName,
+        ReleaseDate = flattenedAlbum.ReleaseDate
+    };
 
     /// <summary>
     /// 

@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Cognas.ApiTools.Extensions;
+using Cognas.ApiTools.Services;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Samples.MusicCollection.Api.AllMusic.Abstractions;
 using Samples.MusicCollection.Api.AllMusic.Extensions;
@@ -54,7 +58,17 @@ public abstract class CommandQueryMicroserviceEndpointsBase<TRequest, TResponse>
         return endpointRouteBuilder.MapPost
         (
             $"/{GetRoute(AllMusicRoutes)}",
-            async ([FromBody] TRequest request) => await CommandBusinessLogic.PostAsync(request).ConfigureAwait(false)
+            async Task<Results<Created<TResponse>, BadRequest>> (HttpContext httpContext, [FromBody] TRequest request) =>
+            {
+                LocationResponse<TResponse> locationResponse = await CommandBusinessLogic.PostAsync(request).ConfigureAwait(false);
+                if (locationResponse.Success)
+                {
+                    string route = GetRoute(AllMusicRoutes);
+                    string locationUri = httpContext.BuildLocationUri(route, locationResponse.Id!.Value);
+                    return TypedResults.Created(locationUri, locationResponse.Response!);
+                }
+                return TypedResults.BadRequest();
+            }
         )
         .MapPostConfiguration<TRequest, TResponse>(ApiVersion, Tag);
     }

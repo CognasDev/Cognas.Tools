@@ -53,7 +53,7 @@ public sealed class GenericServiceRegistration : ServiceRegistrationBase
         GetNonAbstractTypes().FastForEach(type =>
         {
             Type? implementedInterfaceType = type.GetInterface(interfaceName);
-            if (implementedInterfaceType != null)
+            if (implementedInterfaceType is not null)
             {
                 Type[] genericArgumentTypes = implementedInterfaceType.GetGenericArguments();
                 if (genericArgumentTypes.Any())

@@ -39,7 +39,7 @@ public sealed class HealthCheckResultHelper : IHealthCheckResultHelper
     public HealthCheckResult Failed(HealthStatus failureStatus, string description, Exception? exception = null)
     {
         HealthCheckResult healthCheckResult;
-        if (exception != null)
+        if (exception is not null)
         {
             ProblemDetails problemDetails = new()
             {

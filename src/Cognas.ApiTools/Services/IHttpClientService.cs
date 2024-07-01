@@ -32,7 +32,9 @@ public interface IHttpClientService
     /// <param name="requestUri"></param>
     /// <param name="request"></param>
     /// <returns></returns>
-    Task<TResponse?> PostAsync<TRequest, TResponse>(string requestUri, TRequest request);
+    Task<LocationResponse<TResponse>> PostAsync<TRequest, TResponse>(string requestUri, TRequest request)
+        where TRequest : notnull
+        where TResponse : class;
 
     /// <summary>
     /// 

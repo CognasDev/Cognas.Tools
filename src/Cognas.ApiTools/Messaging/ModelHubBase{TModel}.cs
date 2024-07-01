@@ -27,7 +27,7 @@ public abstract class ModelHubBase<TModel> : Hub<IModelHub<TModel>>, IModelHub<T
     /// <returns></returns>
     public async Task OnInsertModelAsync(TModel? model)
     {
-        if (model != null)
+        if (model is not null)
         {
             await Clients.All.OnInsertModelAsync(model).ConfigureAwait(false);
         }
@@ -40,7 +40,7 @@ public abstract class ModelHubBase<TModel> : Hub<IModelHub<TModel>>, IModelHub<T
     /// <returns></returns>
     public async Task OnUpdateModelAsync(TModel? model)
     {
-        if (model != null)
+        if (model is not null)
         {
             await Clients.All.OnUpdateModelAsync(model).ConfigureAwait(false);
         }

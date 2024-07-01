@@ -93,7 +93,7 @@ public abstract class QueryMicroserviceEndpointsBase<TResponse> : IQueryMicroser
             async Task<Results<Ok<TResponse>, NotFound>> ([FromRoute] int id) =>
             {
                 TResponse? response = await QueryBusinessLogic.GetByIdAsync(id).ConfigureAwait(false);
-                return response != null ? TypedResults.Ok(response!) : TypedResults.NotFound();
+                return response is not null ? TypedResults.Ok(response) : TypedResults.NotFound();
             }
         )
         .MapGetByIdConfiguration<TResponse>(ApiVersion, Tag);

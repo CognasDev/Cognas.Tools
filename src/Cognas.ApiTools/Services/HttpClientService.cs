@@ -81,13 +81,17 @@ public sealed class HttpClientService : IHttpClientService
     /// <param name="requestUri"></param>
     /// <param name="request"></param>
     /// <returns></returns>
-    public async Task<TResponse?> PostAsync<TRequest, TResponse>(string requestUri, TRequest request)
+    public async Task<LocationResponse<TResponse>> PostAsync<TRequest, TResponse>(string requestUri, TRequest request)
+        where TRequest : notnull
+        where TResponse : class
     {
         HttpClient httpClient = CreateHttpClient();
-        using HttpResponseMessage response = await httpClient.PostAsJsonAsync(requestUri, request).ConfigureAwait(false);
-        response.EnsureSuccessStatusCode();
-        using Stream responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-        return await JsonSerializer.DeserializeAsync<TResponse>(responseStream, _caseInsensitiveSerializer).ConfigureAwait(false);
+        using HttpResponseMessage responseMessage = await httpClient.PostAsJsonAsync(requestUri, request).ConfigureAwait(false);
+        responseMessage.EnsureSuccessStatusCode();
+        using Stream responseStream = await responseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
+        TResponse? response = await JsonSerializer.DeserializeAsync<TResponse>(responseStream, _caseInsensitiveSerializer).ConfigureAwait(false);
+        LocationResponse<TResponse> locationResponse = new(response, responseMessage.Headers.Location);
+        return locationResponse;
     }
 
     /// <summary>

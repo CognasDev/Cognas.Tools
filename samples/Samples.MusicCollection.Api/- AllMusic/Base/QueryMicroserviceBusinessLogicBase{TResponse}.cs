@@ -1,6 +1,7 @@
 ﻿using Cognas.ApiTools.BusinessLogic;
 using Cognas.ApiTools.Pagination;
 using Cognas.ApiTools.Services;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Options;
 using Samples.MusicCollection.Api.AllMusic.Abstractions;
 using Samples.MusicCollection.Api.Config;
@@ -95,8 +96,8 @@ public abstract class QueryMicroserviceBusinessLogicBase<TResponse> :
     public async Task<TResponse?> GetByIdAsync(int id)
     {
         string requestUri = $"{MicroserviceUri(MicroserviceUris)}/{id}";
-        TResponse? album = await HttpClientService.GetAsync<TResponse>(requestUri).ConfigureAwait(false);
-        return album;
+        TResponse? response = await HttpClientService.GetAsync<TResponse>(requestUri).ConfigureAwait(false);
+        return response;
     }
 
     /// <summary>

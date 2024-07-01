@@ -1,4 +1,6 @@
-﻿namespace Samples.MusicCollection.Api.AllMusic.Abstractions;
+﻿using Cognas.ApiTools.Services;
+
+namespace Samples.MusicCollection.Api.AllMusic.Abstractions;
 
 /// <summary>
 /// 
@@ -14,7 +16,7 @@ public interface ICommandQueryMicroserviceBusinessLogic<TRequest, TResponse> : I
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    Task<TResponse?> PostAsync(TRequest request);
+    Task<LocationResponse<TResponse>> PostAsync(TRequest request);
 
     /// <summary>
     /// 

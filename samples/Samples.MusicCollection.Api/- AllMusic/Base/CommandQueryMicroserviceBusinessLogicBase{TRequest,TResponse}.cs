@@ -40,11 +40,11 @@ public abstract class CommandQueryMicroserviceBusinessLogicBase<TRequest, TRespo
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    public async Task<TResponse?> PostAsync(TRequest request)
+    public async Task<LocationResponse<TResponse>> PostAsync(TRequest request)
     {
         string requestUri = MicroserviceUri(MicroserviceUris);
-        TResponse? postedResponse = await HttpClientService.PostAsync<TRequest, TResponse>(requestUri, request).ConfigureAwait(false);
-        return postedResponse;
+        LocationResponse<TResponse> response = await HttpClientService.PostAsync<TRequest, TResponse>(requestUri, request).ConfigureAwait(false);
+        return response;
     }
 
     /// <summary>

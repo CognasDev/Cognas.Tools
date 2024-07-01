@@ -52,7 +52,7 @@ public sealed class MultipleServiceRegistration : ServiceRegistrationBase
         GetNonAbstractTypes().FastForEach(type =>
         {
             Type? implementedInterfaceType = type.GetInterface(interfaceName);
-            if (implementedInterfaceType != null)
+            if (implementedInterfaceType is not null)
             {
                 switch (serviceLifetime)
                 {

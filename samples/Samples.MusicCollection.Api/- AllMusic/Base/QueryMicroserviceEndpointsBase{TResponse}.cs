@@ -1,4 +1,5 @@
 ﻿using Cognas.ApiTools.Pagination;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Samples.MusicCollection.Api.AllMusic.Abstractions;
@@ -89,7 +90,11 @@ public abstract class QueryMicroserviceEndpointsBase<TResponse> : IQueryMicroser
         return endpointRouteBuilder.MapGet
         (
             $"/{GetRoute(AllMusicRoutes)}/{{id}}",
-            async ([FromRoute] int id) => await QueryBusinessLogic.GetByIdAsync(id).ConfigureAwait(false)
+            async Task<Results<Ok<TResponse>, NotFound>> ([FromRoute] int id) =>
+            {
+                TResponse? response = await QueryBusinessLogic.GetByIdAsync(id).ConfigureAwait(false);
+                return response is not null ? TypedResults.Ok(response) : TypedResults.NotFound();
+            }
         )
         .MapGetByIdConfiguration<TResponse>(ApiVersion, Tag);
     }

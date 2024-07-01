@@ -39,7 +39,7 @@ public abstract class ModelMessagingServiceBase<THub, TIHub, TModel> : IModelMes
     /// <returns></returns>
     public async Task OnInsertModelAsync(TModel? model)
     {
-        if (model != null)
+        if (model is not null)
         {
             await _hubContext.Clients.All.OnInsertModelAsync(model).ConfigureAwait(false);
         }
@@ -52,7 +52,7 @@ public abstract class ModelMessagingServiceBase<THub, TIHub, TModel> : IModelMes
     /// <returns></returns>
     public async Task OnUpdateModelAsync(TModel? model)
     {
-        if (model != null)
+        if (model is not null)
         {
             await _hubContext.Clients.All.OnUpdateModelAsync(model).ConfigureAwait(false);
         }
@@ -65,7 +65,7 @@ public abstract class ModelMessagingServiceBase<THub, TIHub, TModel> : IModelMes
     /// <returns></returns>
     public async Task OnDeleteModelAsync(TModel model)
     {
-        if (model != null)
+        if (model is not null)
         {
             await _hubContext.Clients.All.OnDeleteModelAsync(model).ConfigureAwait(false);
         }

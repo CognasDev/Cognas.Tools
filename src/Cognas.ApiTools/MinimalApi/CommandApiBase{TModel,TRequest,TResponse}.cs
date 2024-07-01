@@ -1,4 +1,5 @@
 ﻿using Cognas.ApiTools.BusinessLogic;
+using Cognas.ApiTools.Extensions;
 using Cognas.ApiTools.Mapping;
 using Cognas.ApiTools.Shared;
 using Cognas.ApiTools.Shared.Services;
@@ -222,12 +223,12 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
     {
         TModel model = CommandMappingService.RequestToModel(request);
         TModel? insertedModel = await CommandBusinessLogic.InsertModelAsync(model).ConfigureAwait(false);
-        if (insertedModel != null)
+        if (insertedModel is not null)
         {
             int id = ModelIdService.GetId(insertedModel);
             TResponse response = QueryMappingService.ModelToResponse(insertedModel);
-            string uri = BuildNewModelUri(httpContext, id);
-            return TypedResults.Created(uri, response);
+            string locationUri = httpContext.BuildLocationUri(LowerPluralModelName, id);
+            return TypedResults.Created(locationUri, response);
         }
         return TypedResults.BadRequest();
     }
@@ -246,7 +247,7 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
             return TypedResults.BadRequest();
         }
         TModel? updatedModel = await CommandBusinessLogic.UpdateModelAsync(model).ConfigureAwait(false);
-        if (updatedModel != null)
+        if (updatedModel is not null)
         {
             TResponse response = QueryMappingService.ModelToResponse(updatedModel);
             return TypedResults.Ok(response);
@@ -261,25 +262,9 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
     /// <returns></returns>
     private async Task<Results<Ok, NotFound>> DeleteAsync(int id)
     {
-        IParameter parameter = ModelIdService.IdParameter<TModel>(id);
-        bool success = await CommandBusinessLogic.DeleteModelAsync(parameter).ConfigureAwait(false);
-        if (success)
-        {
-            return TypedResults.Ok();
-        }
-        return TypedResults.NotFound();
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="httpContext"></param>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    private string BuildNewModelUri(HttpContext httpContext, int id)
-    {
-        string newModelUri = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}/{LowerPluralModelName}/{id}";
-        return newModelUri;
+        IParameter idParameter = ModelIdService.IdParameter<TModel>(id);
+        bool isDeleted = await CommandBusinessLogic.DeleteModelAsync(idParameter).ConfigureAwait(false);
+        return isDeleted ? TypedResults.Ok() : TypedResults.NotFound();
     }
 
     #endregion

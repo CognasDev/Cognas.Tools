@@ -138,7 +138,7 @@ public sealed class ModelIdServiceGenerator : IIncrementalGenerator
                                                                .SelectMany(attributeListSyntax => attributeListSyntax.Attributes)
                                                                .Where(attributeSyntax => attributeSyntax.Name.ToString() == "Id")
                                                                .SingleOrDefault();
-            if (idAttribute != null)
+            if (idAttribute is not null)
             {
                 idPropertyNames.Add(propertyDeclaration.Identifier.Text);
             }

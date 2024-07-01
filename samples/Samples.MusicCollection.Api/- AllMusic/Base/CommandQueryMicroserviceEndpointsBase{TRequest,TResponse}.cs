@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Cognas.ApiTools.Extensions;
+using Cognas.ApiTools.Services;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Samples.MusicCollection.Api.AllMusic.Abstractions;
 using Samples.MusicCollection.Api.AllMusic.Extensions;
@@ -54,7 +58,17 @@ public abstract class CommandQueryMicroserviceEndpointsBase<TRequest, TResponse>
         return endpointRouteBuilder.MapPost
         (
             $"/{GetRoute(AllMusicRoutes)}",
-            async ([FromBody] TRequest request) => await CommandBusinessLogic.PostAsync(request).ConfigureAwait(false)
+            async Task<Results<Created<TResponse>, BadRequest>> (HttpContext httpContext, [FromBody] TRequest request) =>
+            {
+                LocationResponse<TResponse> locationResponse = await CommandBusinessLogic.PostAsync(request).ConfigureAwait(false);
+                if (locationResponse.Success)
+                {
+                    string route = GetRoute(AllMusicRoutes);
+                    string locationUri = httpContext.BuildLocationUri(route, locationResponse.Id!.Value);
+                    return TypedResults.Created(locationUri, locationResponse.Response!);
+                }
+                return TypedResults.BadRequest();
+            }
         )
         .MapPostConfiguration<TRequest, TResponse>(ApiVersion, Tag);
     }
@@ -68,7 +82,11 @@ public abstract class CommandQueryMicroserviceEndpointsBase<TRequest, TResponse>
         return endpointRouteBuilder.MapPut
         (
             $"/{GetRoute(AllMusicRoutes)}/{{id}}",
-            async ([FromRoute] int id, [FromBody] TRequest request) => await CommandBusinessLogic.PutAsync(request).ConfigureAwait(false)
+            async Task<Results<Ok<TResponse>, BadRequest>> ([FromRoute] int id, [FromBody] TRequest request) =>
+            {
+                TResponse? response = await CommandBusinessLogic.PutAsync(request).ConfigureAwait(false);
+                return response is not null ? TypedResults.Ok(response) : TypedResults.BadRequest();
+            }
         )
         .MapPutConfiguration<TRequest, TResponse>(ApiVersion, Tag);
     }
@@ -82,7 +100,11 @@ public abstract class CommandQueryMicroserviceEndpointsBase<TRequest, TResponse>
         return endpointRouteBuilder.MapDelete
         (
             $"/{GetRoute(AllMusicRoutes)}/{{id}}",
-            async ([FromRoute] int id) => await CommandBusinessLogic.DeleteAsync(id).ConfigureAwait(false)
+            async Task<Ok> ([FromRoute] int id) =>
+            {
+                await CommandBusinessLogic.DeleteAsync(id).ConfigureAwait(false);
+                return TypedResults.Ok();
+            }
         )
         .MapDeleteConfiguration(ApiVersion, Tag);
     }

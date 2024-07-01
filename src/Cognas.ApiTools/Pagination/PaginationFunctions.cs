@@ -73,7 +73,7 @@ public sealed class PaginationFunctions : IPaginationFunctions
         bool isValid = paginationQuery.PageNumber.HasValue &&
                        paginationQuery.PageSize.HasValue &&
                        !string.IsNullOrWhiteSpace(paginationQuery.OrderBy) &&
-                       OrderByProperty<TResonse>(paginationQuery) != null;
+                       OrderByProperty<TResonse>(paginationQuery) is not null;
         return isValid;
     }
 

@@ -12,6 +12,7 @@ using Cognas.ApiTools.Pagination;
 using Cognas.ApiTools.ServiceRegistration;
 using Cognas.ApiTools.Services;
 using Cognas.ApiTools.Shared.Extensions;
+using Cognas.ApiTools.Swagger;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -152,6 +153,7 @@ public static class ServiceCollectionExtensions
 
         serviceCollection.AddSwaggerGen(swaggerGenAction =>
         {
+            swaggerGenAction.DocumentFilter<SwaggerSortedDocumentFilter>();
             swaggerGenAction.DescribeAllParametersInCamelCase();
             xmlDocumentPaths.FastForEach(xmlDocumentPath => swaggerGenAction.IncludeXmlComments(xmlDocumentPath));
         });

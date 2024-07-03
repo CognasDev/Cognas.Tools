@@ -1,7 +1,7 @@
 ﻿using Asp.Versioning.ApiExplorer;
 using Asp.Versioning.Builder;
 using Asp.Versioning.Conventions;
-using Cognas.ApiTools.Shared.Extensions;
+using Cognas.Tools.Shared.Extensions;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;

@@ -1,4 +1,4 @@
-﻿using Cognas.ApiTools.Shared.Extensions;
+﻿using Cognas.Tools.Shared.Extensions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;

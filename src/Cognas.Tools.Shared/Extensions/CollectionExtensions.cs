@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace Cognas.ApiTools.Shared.Extensions;
+namespace Cognas.Tools.Shared.Extensions;
 
 /// <summary>
 /// 

@@ -36,7 +36,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "data", "data", "{29544575-4
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Samples.MusicCollection.Data", "data\Samples.MusicCollection.Data\Samples.MusicCollection.Data.sqlproj", "{74FCF198-332C-4D19-9D44-14FBCC75B430}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples.MusicCollection.App", "samples\Samples.MusicCollection.App\Samples.MusicCollection.App.csproj", "{971506CE-89B3-46BB-B55C-87200B1BF12D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Samples.MusicCollection.App", "samples\Samples.MusicCollection.App\Samples.MusicCollection.App.csproj", "{971506CE-89B3-46BB-B55C-87200B1BF12D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cognas.Tools.Shared", "src\Cognas.Tools.Shared\Cognas.Tools.Shared.csproj", "{0A45B6EC-CB8D-4D56-AB68-DBEE2430B107}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cognas.MauiTools.Shared", "src\Cognas.MauiTools.Shared\Cognas.MauiTools.Shared.csproj", "{AC6B81E4-A457-4776-A447-1C1E3EBE6C46}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -88,6 +92,14 @@ Global
 		{971506CE-89B3-46BB-B55C-87200B1BF12D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{971506CE-89B3-46BB-B55C-87200B1BF12D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{971506CE-89B3-46BB-B55C-87200B1BF12D}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{0A45B6EC-CB8D-4D56-AB68-DBEE2430B107}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A45B6EC-CB8D-4D56-AB68-DBEE2430B107}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A45B6EC-CB8D-4D56-AB68-DBEE2430B107}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A45B6EC-CB8D-4D56-AB68-DBEE2430B107}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC6B81E4-A457-4776-A447-1C1E3EBE6C46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC6B81E4-A457-4776-A447-1C1E3EBE6C46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC6B81E4-A457-4776-A447-1C1E3EBE6C46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC6B81E4-A457-4776-A447-1C1E3EBE6C46}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -103,6 +115,8 @@ Global
 		{0AC54B1E-D423-44B7-9DF0-8F7B0DB3AFA6} = {6BE9FB4C-66B8-4235-BDAD-13E6BDFA437D}
 		{74FCF198-332C-4D19-9D44-14FBCC75B430} = {29544575-4E50-449E-810B-140FF99ED0DC}
 		{971506CE-89B3-46BB-B55C-87200B1BF12D} = {6BE9FB4C-66B8-4235-BDAD-13E6BDFA437D}
+		{0A45B6EC-CB8D-4D56-AB68-DBEE2430B107} = {A0947BAA-D8AF-48DD-B09D-A30B6AD8BD4D}
+		{AC6B81E4-A457-4776-A447-1C1E3EBE6C46} = {A0947BAA-D8AF-48DD-B09D-A30B6AD8BD4D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2F626B56-6820-4F60-B107-9F37E5A7ABF7}

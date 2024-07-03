@@ -6,7 +6,7 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
 
-namespace Cognas.ApiTools.Services;
+namespace Cognas.ApiTools.Swagger;
 
 /// <summary>
 /// 

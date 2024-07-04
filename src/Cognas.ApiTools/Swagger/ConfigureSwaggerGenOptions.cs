@@ -1,5 +1,5 @@
 ﻿using Asp.Versioning.ApiExplorer;
-using Cognas.ApiTools.Shared.Extensions;
+using Cognas.Tools.Shared.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;

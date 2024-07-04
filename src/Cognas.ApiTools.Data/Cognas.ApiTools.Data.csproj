@@ -16,6 +16,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Cognas.ApiTools.Shared\Cognas.ApiTools.Shared.csproj" />
+	  <ProjectReference Include="..\Cognas.Tools.Shared\Cognas.Tools.Shared.csproj" />
 	</ItemGroup>
 
 </Project>

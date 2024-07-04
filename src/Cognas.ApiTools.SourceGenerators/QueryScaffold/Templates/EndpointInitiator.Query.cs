@@ -1,6 +1,6 @@
 ﻿using Cognas.ApiTools.Extensions;
 using Cognas.ApiTools.MinimalApi;
-using Cognas.ApiTools.Shared.Extensions;
+using Cognas.Tools.Shared.Extensions;
 using System;
 
 namespace Cognas.ApiTools.Endpoints;

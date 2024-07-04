@@ -1,6 +1,6 @@
 ﻿using Cognas.ApiTools.Data.Query;
 using Cognas.ApiTools.Shared;
-using Cognas.ApiTools.Shared.Extensions;
+using Cognas.Tools.Shared.Extensions;
 using Dapper;
 
 namespace Cognas.ApiTools.Data;

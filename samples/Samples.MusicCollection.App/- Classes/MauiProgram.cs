@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Cognas.MauiTools.Shared.Services;
+using CommunityToolkit.Maui;
+using Microsoft.Extensions.Logging;
+using Samples.MusicCollection.App.Artists;
 using Samples.MusicCollection.App.Config;
 
 namespace Samples.MusicCollection.App;
@@ -21,11 +24,18 @@ public static class MauiProgram
         mauiAppBuilder.AddJsonConfiguration();
         mauiAppBuilder.BindConfigurationSection<MicroserviceUris>();
         mauiAppBuilder.UseMauiApp<App>()
+                      .UseMauiCommunityToolkit()
                       .ConfigureFonts(fonts =>
                       {
                           fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                           fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                       });
+
+        mauiAppBuilder.Services.AddSingleton<ArtistsViewModel>();
+        mauiAppBuilder.Services.AddSingleton<ArtistsView>();
+        mauiAppBuilder.Services.AddSingleton<IArtistsRepository, ArtistsRepository>();
+
+        mauiAppBuilder.Services.AddSingleton<IHttpClientService, HttpClientService>();
 
 #if DEBUG
         mauiAppBuilder.Logging.AddDebug();

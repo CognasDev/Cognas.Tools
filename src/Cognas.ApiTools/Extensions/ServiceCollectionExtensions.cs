@@ -11,8 +11,8 @@ using Cognas.ApiTools.MinimalApi;
 using Cognas.ApiTools.Pagination;
 using Cognas.ApiTools.ServiceRegistration;
 using Cognas.ApiTools.Services;
-using Cognas.ApiTools.Shared.Extensions;
 using Cognas.ApiTools.Swagger;
+using Cognas.Tools.Shared.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 

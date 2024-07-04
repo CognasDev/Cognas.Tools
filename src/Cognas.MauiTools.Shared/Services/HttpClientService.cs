@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 
-namespace Samples.MusicCollection.App.Services;
+namespace Cognas.MauiTools.Shared.Services;
 
 /// <summary>
 /// 

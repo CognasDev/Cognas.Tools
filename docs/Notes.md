@@ -20,3 +20,7 @@
 ## 2024-06-30
 
 - TODO: finish off correct TypedResults for Delete in gateway.
+
+## 2024-07-04
+
+- TODO: sort out local network config (cleartext?) to allow Maui to connect to API

@@ -1,5 +1,5 @@
 ﻿using Cognas.ApiTools.Shared;
-using Cognas.ApiTools.Shared.Extensions;
+using Cognas.Tools.Shared.Extensions;
 using Dapper;
 using System.Data;
 using static Dapper.SqlMapper;

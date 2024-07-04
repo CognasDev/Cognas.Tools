@@ -1,5 +1,5 @@
 ﻿using Cognas.ApiTools.ServiceRegistration.Abstractions;
-using Cognas.ApiTools.Shared.Extensions;
+using Cognas.Tools.Shared.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 

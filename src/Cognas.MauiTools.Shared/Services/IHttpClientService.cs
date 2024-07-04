@@ -1,4 +1,4 @@
-﻿namespace Samples.MusicCollection.App.Services;
+﻿namespace Cognas.MauiTools.Shared.Services;
 
 /// <summary>
 /// 

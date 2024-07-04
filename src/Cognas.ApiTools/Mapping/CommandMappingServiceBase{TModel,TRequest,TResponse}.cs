@@ -1,4 +1,4 @@
-﻿using Cognas.ApiTools.Shared.Extensions;
+﻿using Cognas.Tools.Shared.Extensions;
 
 namespace Cognas.ApiTools.Mapping;
 

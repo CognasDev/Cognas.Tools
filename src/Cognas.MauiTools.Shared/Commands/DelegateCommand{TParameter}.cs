@@ -13,7 +13,7 @@ public sealed class DelegateCommand<TParameter> : DelegateCommandBase where TPar
 
     #endregion
 
-    #region Construction and Finaliser Declarations
+    #region Constructor / Finaliser Declarations
 
     /// <summary>
     /// 

@@ -13,7 +13,7 @@ public abstract class DelegateCommandBase : ICommand
 
     #endregion
 
-    #region Construction and Finaliser Declarations
+    #region Constructor / Finaliser Declarations
 
     /// <summary>
     /// 

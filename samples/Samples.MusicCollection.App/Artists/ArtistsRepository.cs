@@ -1,5 +1,6 @@
-﻿using Samples.MusicCollection.App.Config;
-using Samples.MusicCollection.App.Services;
+﻿using Cognas.MauiTools.Shared.Services;
+using Microsoft.Extensions.Options;
+using Samples.MusicCollection.App.Config;
 using System.Collections.ObjectModel;
 
 namespace Samples.MusicCollection.App.Artists;
@@ -7,7 +8,7 @@ namespace Samples.MusicCollection.App.Artists;
 /// <summary>
 /// 
 /// </summary>
-public sealed class ArtistsRepository
+public sealed class ArtistsRepository : IArtistsRepository
 {
     #region Field Declarations
 
@@ -34,14 +35,12 @@ public sealed class ArtistsRepository
     /// </summary>
     /// <param name="httpClientService"></param>
     /// <param name="microserviceUris"></param>
-    public ArtistsRepository(IHttpClientService httpClientService, MicroserviceUris microserviceUris)
+    public ArtistsRepository(IHttpClientService httpClientService, IOptions<MicroserviceUris> microserviceUris)
     {
         ArgumentNullException.ThrowIfNull(httpClientService, nameof(httpClientService));
         ArgumentNullException.ThrowIfNull(microserviceUris, nameof(microserviceUris));
         _httpClientService = httpClientService;
-        _microserviceUris = microserviceUris;
-
-        BindingBase.EnableCollectionSynchronization(_artists, _artistsLock, null);
+        _microserviceUris = microserviceUris.Value;
     }
 
     #endregion

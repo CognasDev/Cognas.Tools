@@ -12,7 +12,7 @@ public sealed class DelegateCommand : DelegateCommandBase
 
     #endregion
 
-    #region Construction and Finaliser Declarations
+    #region Constructor / Finaliser Declarations
 
     /// <summary>
     /// 

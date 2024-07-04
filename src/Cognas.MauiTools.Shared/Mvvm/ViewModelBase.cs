@@ -14,7 +14,7 @@ public abstract class ViewModelBase : NotifyPropertyChangedBase, IViewModel
 
     #endregion
 
-    #region Construction and Finaliser Declarations
+    #region Constructor / Finaliser Declarations
 
     /// <summary>
     /// 

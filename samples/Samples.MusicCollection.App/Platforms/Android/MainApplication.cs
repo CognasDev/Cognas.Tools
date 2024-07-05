@@ -1,16 +1,22 @@
 ﻿using Android.App;
 using Android.Runtime;
 
-namespace Samples.MusicCollection.App
-{
-    [Application]
-    public class MainApplication : MauiApplication
-    {
-        public MainApplication(IntPtr handle, JniHandleOwnership ownership)
-            : base(handle, ownership)
-        {
-        }
+namespace Samples.MusicCollection.App;
 
-        protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
+/// <summary>
+/// 
+/// </summary>
+#if DEBUG
+[Application(UsesCleartextTraffic = true)]
+#else
+[Application]
+#endif
+public sealed class MainApplication : MauiApplication
+{
+    public MainApplication(IntPtr handle, JniHandleOwnership ownership)
+        : base(handle, ownership)
+    {
     }
+
+    protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
 }

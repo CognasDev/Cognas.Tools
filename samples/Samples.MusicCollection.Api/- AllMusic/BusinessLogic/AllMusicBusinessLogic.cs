@@ -13,6 +13,7 @@ using Samples.MusicCollection.Api.Keys;
 using Samples.MusicCollection.Api.Labels;
 using Samples.MusicCollection.Api.Tracks;
 using System.Collections.Concurrent;
+using System.Collections.Frozen;
 using System.Runtime.InteropServices;
 
 namespace Samples.MusicCollection.Api.AllMusic.BusinessLogic;
@@ -164,8 +165,8 @@ public sealed class AllMusicBusinessLogic : IAllMusicBusinessLogic
     /// <returns></returns>
     private async Task<IEnumerable<FlattenedAlbum>> GetFlattenedAlbumsAsync(IEnumerable<GenreResponse> genres, CancellationToken cancellationToken)
     {
-        IEnumerable<AlbumResponse> albums = await _albumsQueryBusinessLogic.Get(PaginationQuery.Empty, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
-        IEnumerable<LabelResponse> labels = await _labelsQueryBusinessLogic.Get(PaginationQuery.Empty, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
+        IEnumerable<AlbumResponse> albums = await _albumsQueryBusinessLogic.Get(PaginationQuery.Empty, cancellationToken).ToFrozenSetAsync(cancellationToken).ConfigureAwait(false);
+        IEnumerable<LabelResponse> labels = await _labelsQueryBusinessLogic.Get(PaginationQuery.Empty, cancellationToken).ToFrozenSetAsync(cancellationToken).ConfigureAwait(false);
         IEnumerable<FlattenedAlbum> flattenedAlbums = CompiledExpressions.FlattenAlbums(albums, labels, genres);
         return flattenedAlbums;
     }
@@ -178,9 +179,9 @@ public sealed class AllMusicBusinessLogic : IAllMusicBusinessLogic
     /// <returns></returns>
     private async Task<IEnumerable<FlattenedTrack>> GetFlattenedTracksAsync(IEnumerable<GenreResponse> genres, CancellationToken cancellationToken)
     {
-        IEnumerable<KeyResponse> keys = await _keysQueryBusinessLogic.Get(PaginationQuery.Empty, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
-        IEnumerable<TrackResponse> tracks = await _tracksQueryBusinessLogic.Get(PaginationQuery.Empty, cancellationToken).ToListAsync(cancellationToken).ConfigureAwait(false);
-        IEnumerable<FlattenedTrack> flattenedTracks = CompiledExpressions.FlattenedTracks(tracks, genres, keys);
+        IEnumerable<KeyResponse> keys = await _keysQueryBusinessLogic.Get(PaginationQuery.Empty, cancellationToken).ToFrozenSetAsync(cancellationToken).ConfigureAwait(false);
+        IEnumerable<TrackResponse> tracks = await _tracksQueryBusinessLogic.Get(PaginationQuery.Empty, cancellationToken).ToFrozenSetAsync(cancellationToken).ConfigureAwait(false);
+        IEnumerable<FlattenedTrack> flattenedTracks = CompiledExpressions.FlattenedTracks(tracks, genres, keys).ToFrozenSet();
         return flattenedTracks;
     }
 

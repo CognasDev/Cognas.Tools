@@ -13,9 +13,9 @@ public sealed class ArtistsRepository : IArtistsRepository
     #region Field Declarations
 
     private readonly IHttpClientService _httpClientService;
+    private readonly BaseAddresses _baseAddresses;
     private readonly MicroserviceUris _microserviceUris;
     private readonly ObservableCollection<Artist> _artists = [];
-    private static readonly object _artistsLock = new();
 
     #endregion
 
@@ -34,11 +34,15 @@ public sealed class ArtistsRepository : IArtistsRepository
     /// Default constructor for <see cref="ArtistsRepository"/>
     /// </summary>
     /// <param name="httpClientService"></param>
+    /// <param name="baseAddresses"></param>
     /// <param name="microserviceUris"></param>
-    public ArtistsRepository(IHttpClientService httpClientService, IOptions<MicroserviceUris> microserviceUris)
+    public ArtistsRepository(IHttpClientService httpClientService, IOptions<BaseAddresses> baseAddresses, IOptions<MicroserviceUris> microserviceUris)
     {
         ArgumentNullException.ThrowIfNull(httpClientService, nameof(httpClientService));
+        ArgumentNullException.ThrowIfNull(baseAddresses, nameof(baseAddresses));
         ArgumentNullException.ThrowIfNull(microserviceUris, nameof(microserviceUris));
+
+        _baseAddresses = baseAddresses.Value;
         _httpClientService = httpClientService;
         _microserviceUris = microserviceUris.Value;
     }
@@ -53,9 +57,9 @@ public sealed class ArtistsRepository : IArtistsRepository
     /// <returns></returns>
     public async Task InitiateAsync()
     {
-        IAsyncEnumerable<Artist> artists =  _httpClientService.GetAsyncEnumerable<Artist>(_microserviceUris.Artists, CancellationToken.None);
+        IAsyncEnumerable<Artist> artists = _httpClientService.GetAsyncEnumerable<Artist>($"{_baseAddresses.GetBaseAddress()}{_microserviceUris.Artists}", CancellationToken.None);
         _artists.Clear();
-        await foreach (Artist artist in artists.ConfigureAwait(false)) 
+        await foreach (Artist artist in artists.ConfigureAwait(false))
         {
             _artists.Add(artist);
         }

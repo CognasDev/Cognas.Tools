@@ -48,7 +48,7 @@ public static class WebApplicationExtensions
     {
         webApplication.UseAuthorization();
         webApplication.UseExceptionHandler();
-        webApplication.UseHttpsRedirection();
+        //webApplication.UseHttpsRedirection();
         webApplication.MapHealthChecks(healthCheckEndpoint, new()
         {
             ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse

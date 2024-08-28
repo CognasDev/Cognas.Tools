@@ -57,6 +57,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <AndroidResource Remove="Views\**" />
+	  <Compile Remove="Views\**" />
+	  <EmbeddedResource Remove="Views\**" />
+	  <MauiCss Remove="Views\**" />
+	  <MauiXaml Remove="Views\**" />
+	  <None Remove="Views\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <None Remove="- Config\appsettings.json" />
 	</ItemGroup>
 
@@ -75,7 +84,6 @@
 
 	<ItemGroup>
 	  <Folder Include="- All Music\" />
-	  <Folder Include="Views\" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -83,9 +91,18 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Artist\ArtistView.xaml.cs">
+	    <DependentUpon>ArtistView.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Artists\ArtistsView.xaml.cs">
 	    <DependentUpon>ArtistsView.xaml</DependentUpon>
 	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Artist\ArtistView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	</ItemGroup>
 
 </Project>

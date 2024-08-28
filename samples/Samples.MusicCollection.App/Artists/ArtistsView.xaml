@@ -6,7 +6,7 @@
              Title="Music Collection App"
              x:Class="Samples.MusicCollection.App.Artists.ArtistsView"
              x:DataType="artists:ArtistsViewModel">
-    
+
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior
                  EventName="Loaded"
@@ -15,13 +15,16 @@
 
     <Grid RowDefinitions="50, *" RowSpacing="8">
         <Entry Placeholder="Search..." />
-        <CollectionView Grid.Row="1">
+        <CollectionView Grid.Row="1" ItemsSource="{Binding ArtistsRepository.Artists}">
             <CollectionView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="artists:Artist">
                     <SwipeView>
-                        <SwipeItemView>
-                            
-                        </SwipeItemView>
+                        <Label Text="{Binding Name}" />
+                        <SwipeView.LeftItems>
+                            <SwipeItem Text="View"
+                                       Command="{Binding Path=BindingContext.ViewArtistCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                       CommandParameter="{Binding}" />
+                        </SwipeView.LeftItems>
                     </SwipeView>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

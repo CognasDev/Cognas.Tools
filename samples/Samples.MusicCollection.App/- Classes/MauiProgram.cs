@@ -3,6 +3,7 @@ using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using Samples.MusicCollection.App.Artists;
 using Samples.MusicCollection.App.Config;
+using Samples.MusicCollection.App.Services;
 
 namespace Samples.MusicCollection.App;
 
@@ -22,6 +23,7 @@ public static class MauiProgram
         MauiAppBuilder mauiAppBuilder = MauiApp.CreateBuilder();
         mauiAppBuilder.Services.AddHttpClient();
         mauiAppBuilder.AddJsonConfiguration();
+        mauiAppBuilder.BindConfigurationSection<BaseAddresses>();
         mauiAppBuilder.BindConfigurationSection<MicroserviceUris>();
         mauiAppBuilder.UseMauiApp<App>()
                       .UseMauiCommunityToolkit()
@@ -31,17 +33,22 @@ public static class MauiProgram
                           fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                       });
 
+        mauiAppBuilder.Services.AddSingleton<ArtistViewModel>();
+        mauiAppBuilder.Services.AddSingleton<ArtistView>();
         mauiAppBuilder.Services.AddSingleton<ArtistsViewModel>();
         mauiAppBuilder.Services.AddSingleton<ArtistsView>();
         mauiAppBuilder.Services.AddSingleton<IArtistsRepository, ArtistsRepository>();
-
         mauiAppBuilder.Services.AddSingleton<IHttpClientService, HttpClientService>();
+        mauiAppBuilder.Services.AddSingleton<INavigationService, NavigationService>();
 
 #if DEBUG
         mauiAppBuilder.Logging.AddDebug();
 #endif
 
         MauiApp mauiApp = mauiAppBuilder.Build();
+        INavigationService navigationService = mauiApp.Services.GetService<INavigationService>() ?? throw new NullReferenceException(nameof(INavigationService));
+        navigationService.RegisterRoutes();
+
         return mauiApp;
     }
 

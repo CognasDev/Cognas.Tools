@@ -42,7 +42,7 @@ public static class CompiledExpressions
                                                                     KeyName = key == null ? string.Empty : key.Name,
                                                                     Name = track.Name,
                                                                     TrackNumber = track.TrackNumber
-                                                                }).ToList();
+                                                                });
 
     private static readonly Expression<Func<FlattenedAlbum, IEnumerable<FlattenedTrack>, IEnumerable<AlbumTrackResponse>>>
         _createAlbumTrackResponsesExpression = (flattenedAlbum, flattenedTracks) => from flattenedTrack in flattenedTracks

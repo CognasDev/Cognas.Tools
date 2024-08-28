@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Frozen;
+using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -10,6 +11,20 @@ namespace Cognas.Tools.Shared.Extensions;
 public static class CollectionExtensions
 {
     #region Public Method Declarations
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TItem"></typeparam>
+    /// <param name="collection"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public static async Task<FrozenSet<TItem>> ToFrozenSetAsync<TItem>(this IAsyncEnumerable<TItem> collection, CancellationToken cancellationToken = default)
+    {
+        List<TItem> list = await collection.ToListAsync(cancellationToken).ConfigureAwait(false);
+        FrozenSet<TItem> frozenSet = list.ToFrozenSet();
+        return frozenSet;
+    }
 
     /// <summary>
     /// 

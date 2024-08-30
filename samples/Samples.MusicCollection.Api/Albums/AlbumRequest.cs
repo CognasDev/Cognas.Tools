@@ -14,27 +14,27 @@ public sealed record AlbumRequest
     /// 
     /// </summary>
     [JsonPropertyName("albumId")]
-    public int? AlbumId { get; set; }
+    public int? AlbumId { get; init; }
 
     /// <summary>
     /// 
     /// </summary>
     [JsonPropertyName("artistId")]
     [Required]
-    public required int ArtistId { get; set; }
+    public required int ArtistId { get; init; }
 
     /// <summary>
     /// 
     /// </summary>
     [JsonPropertyName("genreId")]
-    public int? GenreId { get; set; }
+    public int? GenreId { get; init; }
 
     /// <summary>
     /// 
     /// </summary>
     [JsonPropertyName("labelId")]
     [Required]
-    public required int LabelId { get; set; }
+    public required int LabelId { get; init; }
 
     /// <summary>
     /// 
@@ -42,14 +42,14 @@ public sealed record AlbumRequest
     [JsonPropertyName("name")]
     [Required]
     [StringLength(250)]
-    public required string Name { get; set; }
+    public required string Name { get; init; }
 
     /// <summary>
     /// 
     /// </summary>
     [JsonPropertyName("releaseDate")]
     [Required]
-    public required DateTime ReleaseDate { get; set; }
+    public required DateTime ReleaseDate { get; init; }
 
     #endregion
 

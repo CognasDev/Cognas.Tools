@@ -1,4 +1,5 @@
 ﻿using Cognas.Tools.Shared.Extensions;
+using System.Collections.Frozen;
 
 namespace Cognas.ApiTools.Mapping;
 
@@ -45,7 +46,7 @@ public abstract class CommandMappingServiceBase<TModel, TRequest, TResponse> : I
             TModel model = RequestToModel(request);
             models.Add(model);
         });
-        return models;
+        return models.ToFrozenSet();
     }
 
     #endregion

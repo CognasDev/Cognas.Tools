@@ -15,27 +15,27 @@ public sealed record TrackResponse
     /// </summary>
     [JsonPropertyName("trackId")]
     [Required]
-    public required int TrackId { get; set; }
+    public required int TrackId { get; init; }
 
     /// <summary>
     /// 
     /// </summary>
     [JsonPropertyName("albumId")]
     [Required]
-    public required int AlbumId { get; set; }
+    public required int AlbumId { get; init; }
 
     /// <summary>
     /// 
     /// </summary>
     [JsonPropertyName("genreId")]
     [Required]
-    public required int GenreId { get; set; }
+    public required int GenreId { get; init; }
 
     /// <summary>
     /// 
     /// </summary>
     [JsonPropertyName("keyId")]
-    public int? KeyId { get; set; }
+    public int? KeyId { get; init; }
 
     /// <summary>
     /// 
@@ -43,7 +43,7 @@ public sealed record TrackResponse
     [JsonPropertyName("trackNumber")]
     [Required]
     [Range(1, int.MaxValue)]
-    public required int TrackNumber { get; set; }
+    public required int TrackNumber { get; init; }
 
     /// <summary>
     /// 
@@ -51,13 +51,13 @@ public sealed record TrackResponse
     [JsonPropertyName("name")]
     [Required]
     [StringLength(250)]
-    public required string Name { get; set; }
+    public required string Name { get; init; }
 
     /// <summary>
     /// 
     /// </summary>
     [JsonPropertyName("bpm")]
-    public double? Bpm { get; set; }
+    public double? Bpm { get; init; }
 
     #endregion
 

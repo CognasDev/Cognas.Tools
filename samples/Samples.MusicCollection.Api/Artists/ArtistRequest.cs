@@ -14,7 +14,7 @@ public sealed record ArtistRequest
     /// 
     /// </summary>
     [JsonPropertyName("artistId")]
-    public int? ArtistId { get; set; }
+    public int? ArtistId { get; init; }
 
     /// <summary>
     /// 
@@ -22,7 +22,7 @@ public sealed record ArtistRequest
     [JsonPropertyName("name")]
     [Required]
     [StringLength(250)]
-    public required string Name { get; set; }
+    public required string Name { get; init; }
 
     #endregion
 

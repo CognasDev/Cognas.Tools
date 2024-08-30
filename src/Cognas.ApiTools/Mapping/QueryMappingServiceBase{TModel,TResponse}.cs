@@ -1,4 +1,5 @@
 ﻿using Cognas.Tools.Shared.Extensions;
+using System.Collections.Frozen;
 
 namespace Cognas.ApiTools.Mapping;
 
@@ -38,13 +39,13 @@ public abstract class QueryMappingServiceBase<TModel, TResponse> : IQueryMapping
     /// <returns></returns>
     public IEnumerable<TResponse> ModelsToResponses(IEnumerable<TModel> models)
     {
-        List<TResponse> dtos = [];
+        List<TResponse> responses = [];
         models.FastForEach(model =>
         {
-            TResponse dto = ModelToResponse(model);
-            dtos.Add(dto);
+            TResponse response = ModelToResponse(model);
+            responses.Add(response);
         });
-        return dtos;
+        return responses.ToFrozenSet();
     }
 
     #endregion

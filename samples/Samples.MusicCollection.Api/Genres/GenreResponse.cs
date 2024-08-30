@@ -15,7 +15,7 @@ public sealed record GenreResponse
     /// </summary>
     [JsonPropertyName("genreId")]
     [Required]
-    public int GenreId { get; set; }
+    public required int GenreId { get; init; }
 
     /// <summary>
     /// 
@@ -23,7 +23,7 @@ public sealed record GenreResponse
     [JsonPropertyName("name")]
     [Required]
     [StringLength(250)]
-    public required string Name { get; set; }
+    public required string Name { get; init; }
 
     #endregion
 

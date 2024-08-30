@@ -73,54 +73,12 @@ public sealed class Program
         webApplication.InitiateQueryEndpoints();
 
         RouteGroupBuilder apiVersionRouteV2 = webApplication.GetApiVersionRoute(2);
-        MapCommandQueryEndpoints(webApplication, apiVersionRouteV2, MicroserviceDependencyKeys.Albums);
-        MapCommandQueryEndpoints(webApplication, apiVersionRouteV2, MicroserviceDependencyKeys.Artists);
-        MapCommandQueryEndpoints(webApplication, apiVersionRouteV2, MicroserviceDependencyKeys.Genres);
-        MapQueryEndpoints(webApplication, apiVersionRouteV2, MicroserviceDependencyKeys.Keys);
-        MapCommandQueryEndpoints(webApplication, apiVersionRouteV2, MicroserviceDependencyKeys.Labels);
-        MapCommandQueryEndpoints(webApplication, apiVersionRouteV2, MicroserviceDependencyKeys.Tracks);
-
         IAllMusicEndpoints allMusicEndpoints = webApplication.Services.GetService<IAllMusicEndpoints>() ?? throw new NullReferenceException(nameof(AllMusicEndpoints));
         allMusicEndpoints.MapGet(apiVersionRouteV2);
         allMusicEndpoints.MapPostAreMixableTracks(apiVersionRouteV2);
 
         webApplication.AddSwagger();
         webApplication.ConfigureAndRun();
-    }
-
-    #endregion
-
-    #region Private Method Declarations
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="webApplication"></param>
-    /// <param name="apiVersionRouteV2"></param>
-    /// <param name="key"></param>
-    /// <exception cref="NullReferenceException"></exception>
-    private static void MapCommandQueryEndpoints(WebApplication webApplication, RouteGroupBuilder apiVersionRouteV2, string key)
-    {
-        ICommandQueryMicroserviceEndpoints endpoints = webApplication.Services.GetKeyedService<ICommandQueryMicroserviceEndpoints>(key) ?? throw new NullReferenceException(nameof(TracksMicroserviceEndpoints));
-        endpoints.MapGet(apiVersionRouteV2);
-        endpoints.MapGetById(apiVersionRouteV2);
-        endpoints.MapPost(apiVersionRouteV2);
-        endpoints.MapPut(apiVersionRouteV2);
-        endpoints.MapDelete(apiVersionRouteV2);
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="webApplication"></param>
-    /// <param name="apiVersionRouteV2"></param>
-    /// <param name="key"></param>
-    /// <exception cref="NullReferenceException"></exception>
-    private static void MapQueryEndpoints(WebApplication webApplication, RouteGroupBuilder apiVersionRouteV2, string key)
-    {
-        IQueryMicroserviceEndpoints endpoints = webApplication.Services.GetKeyedService<IQueryMicroserviceEndpoints>(key) ?? throw new NullReferenceException(nameof(TracksMicroserviceEndpoints));
-        endpoints.MapGet(apiVersionRouteV2);
-        endpoints.MapGetById(apiVersionRouteV2);
     }
 
     #endregion

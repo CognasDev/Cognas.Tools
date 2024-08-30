@@ -19,7 +19,7 @@ public sealed class LabelsMicroserviceEndpoints : CommandQueryMicroserviceEndpoi
     /// <param name="commandBusinessLogic"></param>
     /// <param name="queryBusinessLogic"></param>
     /// <param name="routes"></param>
-    public LabelsMicroserviceEndpoints(ICommandQueryMicroserviceBusinessLogic<LabelRequest, LabelResponse> commandBusinessLogic,
+    public LabelsMicroserviceEndpoints(ICommandMicroserviceBusinessLogic<LabelRequest, LabelResponse> commandBusinessLogic,
                                        IQueryMicroserviceBusinessLogic<LabelResponse> queryBusinessLogic,
                                        IOptions<AllMusicRoutes> routes)
         : base(commandBusinessLogic, queryBusinessLogic, routes)

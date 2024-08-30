@@ -16,7 +16,7 @@ namespace Samples.MusicCollection.Api.AllMusic.Base;
 /// <typeparam name="TRequest"></typeparam>
 /// <typeparam name="TResponse"></typeparam>
 public abstract class CommandQueryMicroserviceEndpointsBase<TRequest, TResponse> :
-    QueryMicroserviceEndpointsBase<TResponse>, ICommandQueryMicroserviceEndpoints
+    QueryMicroserviceEndpointsBase<TResponse>, ICommandMicroserviceEndpoints
     where TRequest : notnull
     where TResponse : class
 {
@@ -25,7 +25,7 @@ public abstract class CommandQueryMicroserviceEndpointsBase<TRequest, TResponse>
     /// <summary>
     /// 
     /// </summary>
-    public ICommandQueryMicroserviceBusinessLogic<TRequest, TResponse> CommandBusinessLogic { get; }
+    public ICommandMicroserviceBusinessLogic<TRequest, TResponse> CommandBusinessLogic { get; }
 
     #endregion
 
@@ -37,7 +37,7 @@ public abstract class CommandQueryMicroserviceEndpointsBase<TRequest, TResponse>
     /// <param name="commandBusinessLogic"></param>
     /// <param name="queryBusinessLogic"></param>
     /// <param name="routes"></param>
-    protected CommandQueryMicroserviceEndpointsBase(ICommandQueryMicroserviceBusinessLogic<TRequest, TResponse> commandBusinessLogic,
+    protected CommandQueryMicroserviceEndpointsBase(ICommandMicroserviceBusinessLogic<TRequest, TResponse> commandBusinessLogic,
                                                     IQueryMicroserviceBusinessLogic<TResponse> queryBusinessLogic,
                                                     IOptions<AllMusicRoutes> routes) : base(queryBusinessLogic, routes)
     {

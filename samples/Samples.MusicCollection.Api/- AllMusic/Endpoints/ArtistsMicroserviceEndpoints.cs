@@ -19,7 +19,7 @@ public sealed class ArtistsMicroserviceEndpoints : CommandQueryMicroserviceEndpo
     /// <param name="commandBusinessLogic"></param>
     /// <param name="queryBusinessLogic"></param>
     /// <param name="routes"></param>
-    public ArtistsMicroserviceEndpoints(ICommandQueryMicroserviceBusinessLogic<ArtistRequest, ArtistResponse> commandBusinessLogic,
+    public ArtistsMicroserviceEndpoints(ICommandMicroserviceBusinessLogic<ArtistRequest, ArtistResponse> commandBusinessLogic,
                                         IQueryMicroserviceBusinessLogic<ArtistResponse> queryBusinessLogic,
                                         IOptions<AllMusicRoutes> routes)
         : base(commandBusinessLogic, queryBusinessLogic, routes)

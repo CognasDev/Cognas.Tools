@@ -3,7 +3,7 @@
 /// <summary>
 /// 
 /// </summary>
-public interface ICommandQueryMicroserviceEndpoints : IQueryMicroserviceEndpoints
+public interface ICommandMicroserviceEndpoints
 {
     #region Method Declarations
 

@@ -1,6 +1,5 @@
 ﻿using Cognas.ApiTools.Data.Query;
 using Cognas.ApiTools.Shared;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Cognas.ApiTools.BusinessLogic;
 
@@ -8,7 +7,7 @@ namespace Cognas.ApiTools.BusinessLogic;
 /// 
 /// </summary>
 /// <typeparam name="TModel"></typeparam>
-public interface IQueryBusinessLogic<TModel> : ICommandOrQueryBusinessLogic where TModel : class
+public interface IQueryBusinessLogic<TModel> : ICacheBusinessLogic, ILoggerBusinessLogic, IModelIdServiceBusinessLogic where TModel : class
 {
     #region Property Declarations
 
@@ -16,26 +15,6 @@ public interface IQueryBusinessLogic<TModel> : ICommandOrQueryBusinessLogic wher
     /// 
     /// </summary>
     IQueryDatabaseService DatabaseService { get; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    IMemoryCache? MemoryCache { get; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    string CacheKey { get; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    int CacheTimeOutMinutes { get; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    bool UseCache { get; }
 
     /// <summary>
     /// 
@@ -64,11 +43,6 @@ public interface IQueryBusinessLogic<TModel> : ICommandOrQueryBusinessLogic wher
     /// <param name="idParameter"></param>
     /// <returns></returns>
     Task<TModel?> SelectModelAsync(int id, IParameter idParameter);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    Task ResetCacheAsync();
 
     #endregion
 }

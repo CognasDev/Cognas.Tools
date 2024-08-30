@@ -46,15 +46,15 @@ public sealed class Program
         webApplicationBuilder.Services.AddSingleton<IModelIdService, ModelIdService>();
 
         MultipleServiceRegistration.Instance.AddServices(webApplicationBuilder.Services, typeof(IMixableTracksRule), ServiceLifetime.Singleton);
-        GenericServiceRegistration.Instance.AddServices(webApplicationBuilder.Services, typeof(ICommandQueryMicroserviceBusinessLogic<,>), ServiceLifetime.Singleton);
+        GenericServiceRegistration.Instance.AddServices(webApplicationBuilder.Services, typeof(ICommandMicroserviceBusinessLogic<,>), ServiceLifetime.Singleton);
         GenericServiceRegistration.Instance.AddServices(webApplicationBuilder.Services, typeof(IQueryMicroserviceBusinessLogic<>), ServiceLifetime.Singleton);
 
         //API gateway - simulated microservices
-        webApplicationBuilder.Services.AddKeyedSingleton<ICommandQueryMicroserviceEndpoints, AlbumsMicroserviceEndpoints>(MicroserviceDependencyKeys.Albums);
-        webApplicationBuilder.Services.AddKeyedSingleton<ICommandQueryMicroserviceEndpoints, ArtistsMicroserviceEndpoints>(MicroserviceDependencyKeys.Artists);
-        webApplicationBuilder.Services.AddKeyedSingleton<ICommandQueryMicroserviceEndpoints, GenresMicroserviceEndpoints>(MicroserviceDependencyKeys.Genres);
-        webApplicationBuilder.Services.AddKeyedSingleton<ICommandQueryMicroserviceEndpoints, LabelsMicroserviceEndpoints>(MicroserviceDependencyKeys.Labels);
-        webApplicationBuilder.Services.AddKeyedSingleton<ICommandQueryMicroserviceEndpoints, TracksMicroserviceEndpoints>(MicroserviceDependencyKeys.Tracks);
+        webApplicationBuilder.Services.AddKeyedSingleton<ICommandMicroserviceEndpoints, AlbumsMicroserviceEndpoints>(MicroserviceDependencyKeys.Albums);
+        webApplicationBuilder.Services.AddKeyedSingleton<ICommandMicroserviceEndpoints, ArtistsMicroserviceEndpoints>(MicroserviceDependencyKeys.Artists);
+        webApplicationBuilder.Services.AddKeyedSingleton<ICommandMicroserviceEndpoints, GenresMicroserviceEndpoints>(MicroserviceDependencyKeys.Genres);
+        webApplicationBuilder.Services.AddKeyedSingleton<ICommandMicroserviceEndpoints, LabelsMicroserviceEndpoints>(MicroserviceDependencyKeys.Labels);
+        webApplicationBuilder.Services.AddKeyedSingleton<ICommandMicroserviceEndpoints, TracksMicroserviceEndpoints>(MicroserviceDependencyKeys.Tracks);
 
         webApplicationBuilder.Services.AddKeyedSingleton<IQueryMicroserviceEndpoints, AlbumsMicroserviceEndpoints>(MicroserviceDependencyKeys.Albums);
         webApplicationBuilder.Services.AddKeyedSingleton<IQueryMicroserviceEndpoints, ArtistsMicroserviceEndpoints>(MicroserviceDependencyKeys.Artists);

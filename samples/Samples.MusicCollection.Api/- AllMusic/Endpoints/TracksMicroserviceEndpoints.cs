@@ -19,7 +19,7 @@ public sealed class TracksMicroserviceEndpoints : CommandQueryMicroserviceEndpoi
     /// <param name="commandBusinessLogic"></param>
     /// <param name="queryBusinessLogic"></param>
     /// <param name="routes"></param>
-    public TracksMicroserviceEndpoints(ICommandQueryMicroserviceBusinessLogic<TrackRequest, TrackResponse> commandBusinessLogic,
+    public TracksMicroserviceEndpoints(ICommandMicroserviceBusinessLogic<TrackRequest, TrackResponse> commandBusinessLogic,
                                        IQueryMicroserviceBusinessLogic<TrackResponse> queryBusinessLogic,
                                        IOptions<AllMusicRoutes> routes)
         : base(commandBusinessLogic, queryBusinessLogic, routes)

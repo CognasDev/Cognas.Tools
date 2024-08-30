@@ -19,7 +19,7 @@ public sealed class AlbumsMicroserviceEndpoints : CommandQueryMicroserviceEndpoi
     /// <param name="commandBusinessLogic"></param>
     /// <param name="queryBusinessLogic"></param>
     /// <param name="routes"></param>
-    public AlbumsMicroserviceEndpoints(ICommandQueryMicroserviceBusinessLogic<AlbumRequest, AlbumResponse> commandBusinessLogic,
+    public AlbumsMicroserviceEndpoints(ICommandMicroserviceBusinessLogic<AlbumRequest, AlbumResponse> commandBusinessLogic,
                                        IQueryMicroserviceBusinessLogic<AlbumResponse> queryBusinessLogic,
                                        IOptions<AllMusicRoutes> routes)
         : base(commandBusinessLogic, queryBusinessLogic, routes)

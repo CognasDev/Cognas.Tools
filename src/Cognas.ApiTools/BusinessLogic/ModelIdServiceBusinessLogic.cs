@@ -6,7 +6,7 @@ namespace Cognas.ApiTools.BusinessLogic;
 /// <summary>
 /// 
 /// </summary>
-public abstract class CommandOrQueryBusinessLogicBase : LoggerBusinessLogicBase, ICommandOrQueryBusinessLogic
+public abstract class ModelIdServiceBusinessLogic : LoggerBusinessLogicBase, IModelIdServiceBusinessLogic
 {
     #region Property Declarations
 
@@ -20,11 +20,11 @@ public abstract class CommandOrQueryBusinessLogicBase : LoggerBusinessLogicBase,
     #region Constructor / Finaliser Declarations
 
     /// <summary>
-    /// Default constructor for <see cref="CommandOrQueryBusinessLogicBase"/>
+    /// Default constructor for <see cref="ModelIdServiceBusinessLogic"/>
     /// </summary>
     /// <param name="logger"></param>
     /// <param name="modelIdService"></param>
-    protected CommandOrQueryBusinessLogicBase(ILogger logger, IModelIdService modelIdService) : base(logger)
+    protected ModelIdServiceBusinessLogic(ILogger logger, IModelIdService modelIdService) : base(logger)
     {
         ArgumentNullException.ThrowIfNull(modelIdService, nameof(modelIdService));
         ModelIdService = modelIdService;

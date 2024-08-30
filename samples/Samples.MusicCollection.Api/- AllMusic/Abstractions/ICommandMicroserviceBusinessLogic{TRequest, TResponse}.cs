@@ -5,7 +5,7 @@ namespace Samples.MusicCollection.Api.AllMusic.Abstractions;
 /// <summary>
 /// 
 /// </summary>
-public interface ICommandQueryMicroserviceBusinessLogic<TRequest, TResponse> : IQueryMicroserviceBusinessLogic<TResponse>
+public interface ICommandMicroserviceBusinessLogic<TRequest, TResponse>
     where TRequest : notnull
     where TResponse : class
 {

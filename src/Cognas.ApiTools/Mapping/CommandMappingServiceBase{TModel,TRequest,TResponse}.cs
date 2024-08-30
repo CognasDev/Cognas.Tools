@@ -14,6 +14,15 @@ public abstract class CommandMappingServiceBase<TModel, TRequest, TResponse> : I
     where TRequest : notnull
     where TResponse : class
 {
+    #region Field Declarations
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected const int NotInsertedId = -1;
+
+    #endregion
+
     #region Constructor / Finaliser Declarations
 
     /// <summary>

@@ -5,7 +5,7 @@ namespace Cognas.ApiTools.BusinessLogic;
 /// <summary>
 /// 
 /// </summary>
-public interface ICommandOrQueryBusinessLogic : ILoggerBusinessLogic
+public interface IModelIdServiceBusinessLogic
 {
     #region Property Declarations
 

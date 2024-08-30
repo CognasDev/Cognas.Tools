@@ -29,7 +29,7 @@ public sealed class LabelCommandMappingService : CommandMappingServiceBase<Label
     {
         Label model = new()
         {
-            LabelId = request.LabelId ?? 0,
+            LabelId = request.LabelId ?? NotInsertedId,
             Name = request.Name
         };
         return model;

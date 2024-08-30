@@ -19,7 +19,7 @@ public sealed class GenresMicroserviceEndpoints : CommandQueryMicroserviceEndpoi
     /// <param name="commandBusinessLogic"></param>
     /// <param name="queryBusinessLogic"></param>
     /// <param name="routes"></param>
-    public GenresMicroserviceEndpoints(ICommandQueryMicroserviceBusinessLogic<GenreRequest, GenreResponse> commandBusinessLogic,
+    public GenresMicroserviceEndpoints(ICommandMicroserviceBusinessLogic<GenreRequest, GenreResponse> commandBusinessLogic,
                                        IQueryMicroserviceBusinessLogic<GenreResponse> queryBusinessLogic,
                                        IOptions<AllMusicRoutes> routes)
         : base(commandBusinessLogic, queryBusinessLogic, routes)

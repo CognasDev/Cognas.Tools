@@ -9,7 +9,7 @@ namespace Cognas.ApiTools.Logging;
 /// <summary>
 /// 
 /// </summary>
-public static class ApplicationInsightsLogging
+public static class ApplicationInsightsExtensions
 {
     /// <summary>
     /// 

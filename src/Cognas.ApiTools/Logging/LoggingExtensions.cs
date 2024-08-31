@@ -25,7 +25,7 @@ public static class LoggingExtensions
     public static void ConfigureLogging(this WebApplicationBuilder webApplicationBuilder, LoggingType loggingType,
                                         string? fileLoggingPath = "log-.log",
                                         string? openTelemetryEndPoint = null,
-                                        string? openTelemetryApiKeyHeader = null,
+                                        string? openTelemetryApiKeyHeader = "X-Seq-ApiKey",
                                         string? openTelemetryApiKeyValue = null,
                                         string? openTelemetryServiceName = null)
     {

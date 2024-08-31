@@ -5,7 +5,7 @@ namespace Cognas.ApiTools.Logging;
 /// <summary>
 /// 
 /// </summary>
-public static class FileLogging
+public static class FileLoggingExtensions
 {
     #region Static Method Declarations
 

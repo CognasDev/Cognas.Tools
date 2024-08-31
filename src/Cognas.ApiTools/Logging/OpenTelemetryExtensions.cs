@@ -5,7 +5,7 @@ namespace Cognas.ApiTools.Logging;
 /// <summary>
 /// 
 /// </summary>
-public static class OpenTelemetryLogging
+public static class OpenTelemetryExtensions
 {
     #region Static Method Declarations
 

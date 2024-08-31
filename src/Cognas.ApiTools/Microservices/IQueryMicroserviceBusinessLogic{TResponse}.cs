@@ -1,6 +1,6 @@
 ﻿using Cognas.ApiTools.Pagination;
 
-namespace Samples.MusicCollection.Api.AllMusic.Abstractions;
+namespace Cognas.ApiTools.Microservices;
 
 /// <summary>
 /// 

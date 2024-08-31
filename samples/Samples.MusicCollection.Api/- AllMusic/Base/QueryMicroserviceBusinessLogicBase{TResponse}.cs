@@ -1,9 +1,8 @@
 ﻿using Cognas.ApiTools.BusinessLogic;
+using Cognas.ApiTools.Microservices;
 using Cognas.ApiTools.Pagination;
 using Cognas.ApiTools.Services;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Options;
-using Samples.MusicCollection.Api.AllMusic.Abstractions;
 using Samples.MusicCollection.Api.Config;
 using System.Text;
 

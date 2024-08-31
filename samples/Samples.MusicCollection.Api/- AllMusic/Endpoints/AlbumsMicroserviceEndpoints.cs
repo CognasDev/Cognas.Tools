@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Cognas.ApiTools.Microservices;
+using Microsoft.Extensions.Options;
 using Samples.MusicCollection.Api.Albums;
-using Samples.MusicCollection.Api.AllMusic.Abstractions;
 using Samples.MusicCollection.Api.AllMusic.Base;
 using Samples.MusicCollection.Api.Config;
 

@@ -1,6 +1,6 @@
 ﻿using Cognas.ApiTools.Services;
 
-namespace Samples.MusicCollection.Api.AllMusic.Abstractions;
+namespace Cognas.ApiTools.Microservices;
 
 /// <summary>
 /// 

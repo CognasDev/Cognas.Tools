@@ -1,4 +1,5 @@
-﻿using Cognas.ApiTools.Pagination;
+﻿using Cognas.ApiTools.Microservices;
+using Cognas.ApiTools.Pagination;
 using Cognas.ApiTools.Services;
 using Microsoft.Extensions.Options;
 using Samples.MusicCollection.Api.AllMusic.Abstractions;

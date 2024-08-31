@@ -1,5 +1,6 @@
 using Cognas.ApiTools.Endpoints;
 using Cognas.ApiTools.Extensions;
+using Cognas.ApiTools.Microservices;
 using Cognas.ApiTools.ServiceRegistration;
 using Cognas.ApiTools.Shared;
 using Cognas.ApiTools.SourceGenerators;

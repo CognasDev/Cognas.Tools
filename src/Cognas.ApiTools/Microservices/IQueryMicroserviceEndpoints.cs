@@ -1,4 +1,7 @@
-﻿namespace Samples.MusicCollection.Api.AllMusic.Abstractions;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Routing;
+
+namespace Cognas.ApiTools.Microservices;
 
 /// <summary>
 /// 

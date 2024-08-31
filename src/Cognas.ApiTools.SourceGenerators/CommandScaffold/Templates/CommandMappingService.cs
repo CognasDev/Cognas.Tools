@@ -32,10 +32,10 @@ public sealed partial class {3}CommandMappingService : CommandMappingServiceBase
     {{
         Model model = new()
         {{
-            {4}
+{4}
         }};
         return model;
-    }
+    }}
 
     #endregion
 }}

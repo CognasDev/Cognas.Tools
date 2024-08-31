@@ -64,6 +64,38 @@ internal static class ExtensionMethods
         return argumentValue is null ? throw new NullReferenceException($"{nameof(AttributeData.ConstructorArguments)} at {index} is null.") : (TValue)argumentValue;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="record"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    /// <exception cref="KeyNotFoundException"></exception>
+    public static string GetIdPropertyName(this RecordDeclarationSyntax record)
+    {
+        IEnumerable<PropertyDeclarationSyntax> properties = record.Members.Select(memberDeclarationSyntax => memberDeclarationSyntax).OfType<PropertyDeclarationSyntax>();
+        ReadOnlySpan<PropertyDeclarationSyntax> span = [.. properties];
+        List<string> idPropertyNames = new(span.Length);
+
+        foreach (PropertyDeclarationSyntax? propertyDeclaration in span)
+        {
+            AttributeSyntax? idAttribute = propertyDeclaration!.AttributeLists
+                                                               .SelectMany(attributeListSyntax => attributeListSyntax.Attributes)
+                                                               .Where(attributeSyntax => attributeSyntax.Name.ToString() == "Id")
+                                                               .SingleOrDefault();
+            if (idAttribute is not null)
+            {
+                idPropertyNames.Add(propertyDeclaration.Identifier.Text);
+            }
+        }
+        return idPropertyNames.Count switch
+        {
+            1 => idPropertyNames[0],
+            > 1 => throw new InvalidOperationException($"Multipled Id attributes found on model '{record.Identifier}'."),
+            _ => throw new KeyNotFoundException($"Id attribute not found on model '{record.Identifier}'.")
+        };
+    }
+
     #endregion
 
     #region Private Method Declarations

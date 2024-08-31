@@ -27,5 +27,10 @@ internal static class SourceFileNames
     /// </summary>
     public const string CommandEndpointInitiator = "EndpointInitiator.Command.g.cs";
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public const string CommandMappingService = "CommandMappingService.g.cs";
+
     #endregion
 }

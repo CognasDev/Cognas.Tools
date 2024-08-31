@@ -5,11 +5,9 @@
 /// </summary>
 /// <typeparam name="TModel"></typeparam>
 /// <typeparam name="TRequest"></typeparam>
-/// <typeparam name="TResponse"></typeparam>
-public interface ICommandMappingService<TModel, TRequest, TResponse>
+public interface ICommandMappingService<TModel, TRequest>
     where TModel : class
     where TRequest : notnull
-    where TResponse : class
 {
     #region Method Declarations
 

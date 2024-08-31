@@ -6,7 +6,7 @@ namespace Samples.MusicCollection.Api.Artists;
 /// 
 /// </summary>
 [IncludeInModelIdService]
-[CommandScaffold(typeof(ArtistRequest), typeof(ArtistResponse), 1, false)]
+[CommandScaffold(typeof(ArtistRequest), typeof(ArtistResponse), 1, false, true)]
 [QueryScaffold(typeof(ArtistResponse), 1)]
 public sealed record Artist
 {

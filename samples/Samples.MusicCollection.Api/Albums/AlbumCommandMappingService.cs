@@ -5,7 +5,7 @@ namespace Samples.MusicCollection.Api.Albums;
 /// <summary>
 /// 
 /// </summary>
-public sealed class AlbumCommandMappingService : CommandMappingServiceBase<Album, AlbumRequest, AlbumResponse>
+public sealed class AlbumCommandMappingService : CommandMappingServiceBase<Album, AlbumRequest>
 {
     #region Constructor / Finaliser Declarations
 

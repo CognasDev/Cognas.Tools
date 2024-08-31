@@ -5,7 +5,7 @@ namespace Samples.MusicCollection.Api.Artists;
 /// <summary>
 /// 
 /// </summary>
-public sealed class ArtistCommandMappingService : CommandMappingServiceBase<Artist, ArtistRequest, ArtistResponse>
+public sealed class ArtistCommandMappingService : CommandMappingServiceBase<Artist, ArtistRequest>
 {
     #region Constructor / Finaliser Declarations
 

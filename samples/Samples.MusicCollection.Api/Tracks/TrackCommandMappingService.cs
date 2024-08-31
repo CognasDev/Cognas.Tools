@@ -5,7 +5,7 @@ namespace Samples.MusicCollection.Api.Tracks;
 /// <summary>
 /// 
 /// </summary>
-public sealed class TrackCommandMappingService : CommandMappingServiceBase<Track, TrackRequest, TrackResponse>
+public sealed class TrackCommandMappingService : CommandMappingServiceBase<Track, TrackRequest>
 {
     #region Constructor / Finaliser Declarations
 

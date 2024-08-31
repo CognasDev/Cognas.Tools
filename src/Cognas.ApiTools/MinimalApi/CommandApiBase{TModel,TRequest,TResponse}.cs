@@ -50,7 +50,7 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
     /// <summary>
     /// 
     /// </summary>
-    protected ICommandMappingService<TModel, TRequest, TResponse> CommandMappingService { get; }
+    protected ICommandMappingService<TModel, TRequest> CommandMappingService { get; }
 
     /// <summary>
     /// 
@@ -80,7 +80,7 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
     /// <param name="modelIdService"></param>
     /// <param name="commandBusinessLogic"></param>
     protected CommandApiBase(ILogger logger,
-                             ICommandMappingService<TModel, TRequest, TResponse> commandMappingService,
+                             ICommandMappingService<TModel, TRequest> commandMappingService,
                              IQueryMappingService<TModel, TResponse> queryMappingService,
                              IModelIdService modelIdService,
                              ICommandBusinessLogic<TModel> commandBusinessLogic)
@@ -233,7 +233,7 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
                 string locationUri = httpContext.BuildLocationUri(LowerPluralModelName, id);
                 return TypedResults.Created(locationUri, response);
             },
-            _ => TypedResults.BadRequest()
+            exception => TypedResults.BadRequest()
         );
         return apiResult;
     }
@@ -259,7 +259,7 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
                 TResponse response = QueryMappingService.ModelToResponse(updatedModel);
                 return TypedResults.Ok(response);
             },
-            _ => TypedResults.BadRequest()
+            exception => TypedResults.BadRequest()
         );
         return apiResult;
     }
@@ -276,7 +276,7 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
         Results<Ok, NotFound> apiResult = deleteResult.Match<Results<Ok, NotFound>>
         (
             success => TypedResults.Ok(),
-            _ => TypedResults.NotFound()
+            exception => TypedResults.NotFound()
         );
         return apiResult;
     }

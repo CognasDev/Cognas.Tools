@@ -1,10 +1,10 @@
 ﻿using Cognas.ApiTools.Extensions;
 using Cognas.ApiTools.Microservices;
+using Cognas.ApiTools.MinimalApi;
 using Cognas.ApiTools.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Samples.MusicCollection.Api.AllMusic.Extensions;
 using Samples.MusicCollection.Api.Config;
 
 namespace Samples.MusicCollection.Api.AllMusic.Base;

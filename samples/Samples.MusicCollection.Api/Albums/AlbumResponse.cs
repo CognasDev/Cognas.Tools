@@ -28,6 +28,7 @@ public sealed record AlbumResponse
     /// 
     /// </summary>
     [JsonPropertyName("genreId")]
+    [Required]
     public int? GenreId { get; init; }
 
     /// <summary>
@@ -41,7 +42,6 @@ public sealed record AlbumResponse
     /// 
     /// </summary>
     [JsonPropertyName("name")]
-    [Required]
     [StringLength(250)]
     public required string Name { get; init; }
 

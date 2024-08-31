@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 
-namespace Samples.MusicCollection.Api.AllMusic.Extensions;
+namespace Cognas.ApiTools.MinimalApi;
 
 /// <summary>
 /// 
 /// </summary>
-internal static class RouteHandlerBuilderExtensions
+public static class RouteHandlerBuilderExtensions
 {
     #region Static Method Declarations
 

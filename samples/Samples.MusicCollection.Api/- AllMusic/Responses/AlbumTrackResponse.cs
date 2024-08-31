@@ -1,4 +1,7 @@
-﻿namespace Samples.MusicCollection.Api.AllMusic.Responses;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+
+namespace Samples.MusicCollection.Api.AllMusic.Responses;
 
 /// <summary>
 /// 
@@ -10,32 +13,48 @@ public sealed record AlbumTrackResponse
     /// <summary>
     /// 
     /// </summary>
-    public required int TrackNumber { get; set; }
+    [JsonPropertyName("trackNumber")]
+    [Required]
+    public required int TrackNumber { get; init; }
 
     /// <summary>
     /// 
     /// </summary>
-    public required string Name { get; set; }
+    [JsonPropertyName("name")]
+    [Required]
+    [StringLength(250)]
+    public required string Name { get; init; }
 
     /// <summary>
     /// 
     /// </summary>
-    public required string Genre { get; set; }
+    [JsonPropertyName("genre")]
+    [Required]
+    [StringLength(250)]
+    public required string Genre { get; init; }
 
     /// <summary>
     /// 
     /// </summary>
-    public required double? Bpm { get; set; }
+    [JsonPropertyName("bpm")]
+    [Required]
+    public required double? Bpm { get; init; }
 
     /// <summary>
     /// 
     /// </summary>
-    public string? CamelotCode { get; set; }
+    [JsonPropertyName("camelotCode")]
+    [Required]
+    [StringLength(3)]
+    public string? CamelotCode { get; init; }
 
     /// <summary>
     /// 
     /// </summary>
-    public string? Key { get; set; }
+    [JsonPropertyName("key")]
+    [Required]
+    [StringLength(250)]
+    public string? Key { get; init; }
 
     #endregion
 

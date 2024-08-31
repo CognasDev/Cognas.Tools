@@ -1,4 +1,6 @@
 ﻿using Samples.MusicCollection.Api.AllMusic.Abstractions;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Samples.MusicCollection.Api.AllMusic.Responses;
 
@@ -18,6 +20,8 @@ public sealed record AllMusicResponse
     /// <summary>
     /// 
     /// </summary>
+    [JsonPropertyName("artists")]
+    [Required]
     public IEnumerable<ArtistAlbumsResponse> Artists => _artistResponses ?? [];
 
     #endregion

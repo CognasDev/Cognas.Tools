@@ -10,37 +10,37 @@ public sealed record FlattenedTrack
     /// <summary>
     /// 
     /// </summary>
-    public required int AlbumId { get; set; }
+    public required int AlbumId { get; init; }
 
     /// <summary>
     /// 
     /// </summary>
-    public required string GenreName { get; set; }
+    public required string GenreName { get; init; }
 
     /// <summary>
     /// 
     /// </summary>
-    public string? KeyName { get; set; }
+    public string? KeyName { get; init; }
 
     /// <summary>
     /// 
     /// </summary>
-    public string? CamelotCode { get; set; }
+    public string? CamelotCode { get; init; }
 
     /// <summary>
     /// 
     /// </summary>
-    public required int TrackNumber { get; set; }
+    public required int TrackNumber { get; init; }
 
     /// <summary>
     /// 
     /// </summary>
-    public required string Name { get; set; }
+    public required string Name { get; init; }
 
     /// <summary>
     /// 
     /// </summary>
-    public double? Bpm { get; set; }
+    public double? Bpm { get; init; }
 
     #endregion
 

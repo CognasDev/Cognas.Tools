@@ -10,32 +10,32 @@ public sealed record FlattenedAlbum
     /// <summary>
     /// 
     /// </summary>
-    public required int AlbumId { get; set; }
+    public required int AlbumId { get; init; }
 
     /// <summary>
     /// 
     /// </summary>
-    public required int ArtistId { get; set; }
+    public required int ArtistId { get; init; }
 
     /// <summary>
     /// 
     /// </summary>
-    public string? GenreName { get; set; }
+    public string? GenreName { get; init; }
 
     /// <summary>
     /// 
     /// </summary>
-    public required string LabelName { get; set; }
+    public required string LabelName { get; init; }
 
     /// <summary>
     /// 
     /// </summary>
-    public required string Name { get; set; }
+    public required string Name { get; init; }
 
     /// <summary>
     /// 
     /// </summary>
-    public required DateTime ReleaseDate { get; set; }
+    public required DateTime ReleaseDate { get; init; }
 
     #endregion
 

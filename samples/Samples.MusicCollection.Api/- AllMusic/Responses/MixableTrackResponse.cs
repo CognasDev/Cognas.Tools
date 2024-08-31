@@ -1,5 +1,4 @@
-﻿using Samples.MusicCollection.Api.AllMusic.Requests;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace Samples.MusicCollection.Api.AllMusic.Responses;
@@ -16,20 +15,21 @@ public sealed record MixableTrackResponse
     /// </summary>
     [JsonPropertyName("trackAId")]
     [Required]
-    public required int TrackAId { get; set; }
+    public required int TrackAId { get; init; }
 
     /// <summary>
     /// 
     /// </summary>
     [JsonPropertyName("trackBId")]
     [Required]
-    public required int TrackBId { get; set; }
+    public required int TrackBId { get; init; }
 
     /// <summary>
     /// 
     /// </summary>
     [JsonPropertyName("isMixable")]
-    public required bool IsMixable { get; set; }
+    [Required]
+    public required bool IsMixable { get; init; }
 
     #endregion
 

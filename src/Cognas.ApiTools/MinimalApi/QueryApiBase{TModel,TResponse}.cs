@@ -3,6 +3,7 @@ using Cognas.ApiTools.Mapping;
 using Cognas.ApiTools.Pagination;
 using Cognas.ApiTools.Shared;
 using Cognas.ApiTools.Shared.Services;
+using LanguageExt;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -207,13 +208,17 @@ public abstract class QueryApiBase<TModel, TResponse> : IQueryApi<TModel, TRespo
     private async Task<Results<Ok<TResponse>, NotFound>> GetAsync(int id)
     {
         IParameter idParameter = ModelIdService.IdParameter<TModel>(id);
-        TModel? model = await QueryBusinessLogic.SelectModelAsync(id, idParameter).ConfigureAwait(false);
-        if (model is not null)
-        {
-            TResponse response = QueryMappingService.ModelToResponse(model);
-            return TypedResults.Ok(response);
-        }
-        return TypedResults.NotFound();
+        Option<TModel> option = await QueryBusinessLogic.SelectModelAsync(id, idParameter).ConfigureAwait(false);
+        Results<Ok<TResponse>, NotFound> apiResult = option.Match<Results<Ok<TResponse>, NotFound>>
+        (
+            model =>
+            {
+                TResponse response = QueryMappingService.ModelToResponse(model);
+                return TypedResults.Ok(response);
+            },
+            () => TypedResults.NotFound()
+        );
+        return apiResult;
     }
 
     /// <summary>
@@ -241,7 +246,7 @@ public abstract class QueryApiBase<TModel, TResponse> : IQueryApi<TModel, TRespo
         int takeQuantity = PaginationFunctions.TakeQuantity(paginationQuery);
         int skipNumber = PaginationFunctions.SkipNumber(paginationQuery);
 
-        if (paginationQuery.OrderByAscending ?? true == true)
+        if (paginationQuery.OrderByAscending ?? true)
         {
             responses = responses.OrderBy(model => orderByProperty.GetValue(model)).Skip(skipNumber).Take(takeQuantity);
         }

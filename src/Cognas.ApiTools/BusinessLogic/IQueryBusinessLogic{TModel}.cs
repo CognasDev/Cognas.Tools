@@ -1,5 +1,6 @@
 ﻿using Cognas.ApiTools.Data.Query;
 using Cognas.ApiTools.Shared;
+using LanguageExt;
 
 namespace Cognas.ApiTools.BusinessLogic;
 
@@ -42,7 +43,7 @@ public interface IQueryBusinessLogic<TModel> : ICacheBusinessLogic, ILoggerBusin
     /// <param name="id"></param>
     /// <param name="idParameter"></param>
     /// <returns></returns>
-    Task<TModel?> SelectModelAsync(int id, IParameter idParameter);
+    Task<Option<TModel>> SelectModelAsync(int id, IParameter idParameter);
 
     #endregion
 }

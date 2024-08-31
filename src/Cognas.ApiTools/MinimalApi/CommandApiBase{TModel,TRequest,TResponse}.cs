@@ -3,6 +3,7 @@ using Cognas.ApiTools.Extensions;
 using Cognas.ApiTools.Mapping;
 using Cognas.ApiTools.Shared;
 using Cognas.ApiTools.Shared.Services;
+using LanguageExt.Common;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -222,15 +223,19 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
     private async Task<Results<Created<TResponse>, BadRequest>> PostAsync(HttpContext httpContext, TRequest request)
     {
         TModel model = CommandMappingService.RequestToModel(request);
-        TModel? insertedModel = await CommandBusinessLogic.InsertModelAsync(model).ConfigureAwait(false);
-        if (insertedModel is not null)
-        {
-            int id = ModelIdService.GetId(insertedModel);
-            TResponse response = QueryMappingService.ModelToResponse(insertedModel);
-            string locationUri = httpContext.BuildLocationUri(LowerPluralModelName, id);
-            return TypedResults.Created(locationUri, response);
-        }
-        return TypedResults.BadRequest();
+        Result<TModel> insertResult = await CommandBusinessLogic.InsertModelAsync(model).ConfigureAwait(false);
+        Results<Created<TResponse>, BadRequest> apiResult = insertResult.Match<Results<Created<TResponse>, BadRequest>>
+        (
+            insertedModel =>
+            {
+                int id = ModelIdService!.GetId(insertedModel);
+                TResponse response = QueryMappingService.ModelToResponse(insertedModel);
+                string locationUri = httpContext.BuildLocationUri(LowerPluralModelName, id);
+                return TypedResults.Created(locationUri, response);
+            },
+            _ => TypedResults.BadRequest()
+        );
+        return apiResult;
     }
 
     /// <summary>
@@ -246,13 +251,17 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
         {
             return TypedResults.BadRequest();
         }
-        TModel? updatedModel = await CommandBusinessLogic.UpdateModelAsync(model).ConfigureAwait(false);
-        if (updatedModel is not null)
-        {
-            TResponse response = QueryMappingService.ModelToResponse(updatedModel);
-            return TypedResults.Ok(response);
-        }
-        return TypedResults.BadRequest();
+        Result<TModel> updateResult = await CommandBusinessLogic.UpdateModelAsync(model).ConfigureAwait(false);
+        Results<Ok<TResponse>, BadRequest> apiResult = updateResult.Match<Results<Ok<TResponse>, BadRequest>>
+        (
+            updatedModel =>
+            {
+                TResponse response = QueryMappingService.ModelToResponse(updatedModel);
+                return TypedResults.Ok(response);
+            },
+            _ => TypedResults.BadRequest()
+        );
+        return apiResult;
     }
 
     /// <summary>
@@ -263,8 +272,13 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
     private async Task<Results<Ok, NotFound>> DeleteAsync(int id)
     {
         IParameter idParameter = ModelIdService.IdParameter<TModel>(id);
-        bool isDeleted = await CommandBusinessLogic.DeleteModelAsync(idParameter).ConfigureAwait(false);
-        return isDeleted ? TypedResults.Ok() : TypedResults.NotFound();
+        Result<bool> deleteResult = await CommandBusinessLogic.DeleteModelAsync(idParameter).ConfigureAwait(false);
+        Results<Ok, NotFound> apiResult = deleteResult.Match<Results<Ok, NotFound>>
+        (
+            success => TypedResults.Ok(),
+            _ => TypedResults.NotFound()
+        );
+        return apiResult;
     }
 
     #endregion

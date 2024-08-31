@@ -1,17 +1,15 @@
 #### Overview
-
 A collection of projects designed to assist with web-api / RESTful development using minimal Api's, making use of:
 - Dapper
-- Logging (Serilog, ApplicationInsights, OpenTelemetry)
+- Logging (ApplicationInsights, OpenTelemetry, Serilog)
 - Maui
-- Minimal API (RESTful, Dependency Injection etc.)
+- Minimal API (RESTful, dependency injection etc.)
 - Roslyn Source Generation
 - SignalR
 - T-SQL (database design, stored procedures, CTE, JSON, pivoting)
-- Unit-tests (X-Unit, Moq, Autofixture)
+- Unit-testing (X-Unit, Autofixture, Fluent, Moq)
 
 ## Guide - Cognas.ApiTools.SourceGenerators
-
 Contains various incremental generators used to automatically create various classes at compile time.
 To use, a reference to this project should be added and updated with the following properties:
 
@@ -32,5 +30,4 @@ The generated classes can be viewed after successfuly compilation in:
 (used to get / set Id properties of a model to avoid reflection).
 
 ## Contact
-
 To get in touch with any suggestions or feedback etc., please freel free to mail at hello@cognas.co.uk

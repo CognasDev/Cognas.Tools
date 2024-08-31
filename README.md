@@ -7,7 +7,7 @@ A collection of projects designed to assist with web-api / RESTful development u
 - Minimal API (RESTful, Dependency Injection etc.)
 - Roslyn Source Generation
 - SignalR
-- T-SQL
+- T-SQL (database design, stored procedures, CTE, JSON, pivoting)
 - Unit-tests (X-Unit, Moq, Autofixture)
 
 ## Guide - Cognas.ApiTools.SourceGenerators

@@ -13,7 +13,7 @@
 
 - Unit testing
 - look at adding autogeneraton to Pagination, providing additional validation on orderBy to restrict to model property names
-- look at nullable ID to avoid CommandMappingServiceBase.RequestToModel ?? 0 on ID
+- look at nullable ID to avoid CommandMappingServiceBase.RequestToModel ?? NotInsertedId on ID
 - look at moving GenericServiceRegistration and MultipleServiceRegistration to extensions
 - TODO: update Ensure response success for delete when 404 is expected (microservice translates to 500)
 
@@ -24,3 +24,7 @@
 ## 2024-07-04
 
 - TODO: sort out local network config (cleartext?) to allow Maui to connect to API
+
+## 2024-08-30
+
+- TODO: add languageext Option<T> and Result<T> to CommandBusinessLogicBase<TModel> and QueryBusinessLogicBase<TModel>

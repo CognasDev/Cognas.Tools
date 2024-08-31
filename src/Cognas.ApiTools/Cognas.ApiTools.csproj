@@ -20,6 +20,7 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="8.0.8" />
 		<PackageReference Include="Serilog.AspNetCore" Version="8.0.2" />
 		<PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="4.0.0" />
+		<PackageReference Include="Serilog.Sinks.OpenTelemetry" Version="4.0.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.3" />
 	</ItemGroup>
 

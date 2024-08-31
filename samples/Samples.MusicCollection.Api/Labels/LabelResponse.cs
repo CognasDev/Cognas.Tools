@@ -15,7 +15,7 @@ public sealed record LabelResponse
     /// </summary>
     [JsonPropertyName("labelId")]
     [Required]
-    public int LabelId { get; set; }
+    public required int LabelId { get; init; }
 
     /// <summary>
     /// 
@@ -23,7 +23,7 @@ public sealed record LabelResponse
     [JsonPropertyName("name")]
     [Required]
     [StringLength(250)]
-    public required string Name { get; set; }
+    public required string Name { get; init; }
 
     #endregion
 

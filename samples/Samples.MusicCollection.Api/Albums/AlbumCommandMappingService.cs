@@ -29,7 +29,7 @@ public sealed class AlbumCommandMappingService : CommandMappingServiceBase<Album
     {
         Album model = new()
         {
-            AlbumId = request.AlbumId ?? 0,
+            AlbumId = request.AlbumId ?? NotInsertedId,
             ArtistId = request.ArtistId,
             GenreId = request.GenreId,
             LabelId = request.LabelId,

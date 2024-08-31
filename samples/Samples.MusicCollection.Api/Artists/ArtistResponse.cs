@@ -15,7 +15,7 @@ public sealed record ArtistResponse
     /// </summary>
     [JsonPropertyName("artistId")]
     [Required]
-    public int ArtistId { get; set; }
+    public required int ArtistId { get; init; }
 
     /// <summary>
     /// 
@@ -23,7 +23,7 @@ public sealed record ArtistResponse
     [JsonPropertyName("name")]
     [Required]
     [StringLength(250)]
-    public required string Name { get; set; }
+    public required string Name { get; init; }
 
     #endregion
 

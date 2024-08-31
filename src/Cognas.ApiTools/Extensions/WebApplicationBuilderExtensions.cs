@@ -22,20 +22,5 @@ public static class WebApplicationBuilderExtensions
     public static void BindConfigurationSection<TBind>(this WebApplicationBuilder webApplicationBuilder) where TBind : class
         => webApplicationBuilder.Services.Configure<TBind>(webApplicationBuilder.Configuration.GetSection(typeof(TBind).Name));
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="webApplicationBuilder"></param>
-    /// <exception cref="NullReferenceException"></exception>
-    public static void ConfigureApplicationInsightsLogging(this WebApplicationBuilder webApplicationBuilder)
-    {
-        string connectionString = webApplicationBuilder.Configuration.GetValue<string>("ApplicationInsights:ConnectionString") ?? throw new NullReferenceException("ApplicationInsights");
-        TelemetryConfiguration telemetryConfiguration = new() { ConnectionString = connectionString };
-        webApplicationBuilder.Logging.ClearProviders();
-        webApplicationBuilder.Logging.AddAzureWebAppDiagnostics();
-        webApplicationBuilder.Host.UseSerilog((hostBuilderContext, loggerConfiguration) => loggerConfiguration.ReadFrom.Configuration(hostBuilderContext.Configuration)
-                                                                                                                       .WriteTo.ApplicationInsights(telemetryConfiguration, TelemetryConverter.Traces));
-    }
-
     #endregion
 }

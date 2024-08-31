@@ -29,7 +29,7 @@ public sealed class ArtistCommandMappingService : CommandMappingServiceBase<Arti
     {
         Artist model = new()
         {
-            ArtistId = request.ArtistId ?? 0,
+            ArtistId = request.ArtistId ?? NotInsertedId,
             Name = request.Name
         };
         return model;

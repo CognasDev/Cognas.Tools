@@ -29,7 +29,7 @@ public sealed class TrackCommandMappingService : CommandMappingServiceBase<Track
     {
         Track model = new()
         {
-            TrackId = request.TrackId ?? 0,
+            TrackId = request.TrackId ?? NotInsertedId,
             AlbumId = request.AlbumId,
             GenreId = request.GenreId,
             KeyId = request.KeyId,

@@ -8,7 +8,7 @@ namespace Cognas.ApiTools.BusinessLogic;
 /// 
 /// </summary>
 /// <typeparam name="TModel"></typeparam>
-public interface ICommandBusinessLogic<TModel> : ICommandOrQueryBusinessLogic where TModel : class
+public interface ICommandBusinessLogic<TModel> : ILoggerBusinessLogic, IModelIdServiceBusinessLogic where TModel : class
 {
     #region Property Declarations
 

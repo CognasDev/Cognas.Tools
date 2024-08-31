@@ -15,7 +15,7 @@ public sealed record KeyResponse
     /// </summary>
     [JsonPropertyName("keyId")]
     [Required]
-    public int KeyId { get; set; }
+    public required int KeyId { get; init; }
 
     /// <summary>
     /// 
@@ -23,7 +23,7 @@ public sealed record KeyResponse
     [JsonPropertyName("camelotCode")]
     [Required]
     [StringLength(3)]
-    public required string CamelotCode { get; set; }
+    public required string CamelotCode { get; init; }
 
     /// <summary>
     /// 
@@ -31,7 +31,7 @@ public sealed record KeyResponse
     [JsonPropertyName("name")]
     [Required]
     [StringLength(250)]
-    public required string Name { get; set; }
+    public required string Name { get; init; }
 
     #endregion
 

@@ -11,7 +11,7 @@ namespace Cognas.ApiTools.BusinessLogic;
 /// 
 /// </summary>
 /// <typeparam name="TModel"></typeparam>
-public abstract class QueryBusinessLogicBase<TModel> : CommandOrQueryBusinessLogicBase, IQueryBusinessLogic<TModel> where TModel : class
+public abstract class QueryBusinessLogicBase<TModel> : ModelIdServiceBusinessLogic, IQueryBusinessLogic<TModel> where TModel : class
 {
     #region Property Declarations
 

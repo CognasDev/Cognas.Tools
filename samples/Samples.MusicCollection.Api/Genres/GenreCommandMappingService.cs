@@ -29,7 +29,7 @@ public sealed class GenreCommandMappingService : CommandMappingServiceBase<Genre
     {
         Genre model = new()
         {
-            GenreId = request.GenreId ?? 0,
+            GenreId = request.GenreId ?? NotInsertedId,
             Name = request.Name
         };
         return model;

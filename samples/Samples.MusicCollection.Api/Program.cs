@@ -1,5 +1,6 @@
 using Cognas.ApiTools.Endpoints;
 using Cognas.ApiTools.Extensions;
+using Cognas.ApiTools.Logging;
 using Cognas.ApiTools.Microservices;
 using Cognas.ApiTools.ServiceRegistration;
 using Cognas.ApiTools.Shared;
@@ -28,8 +29,7 @@ public sealed class Program
     {
         WebApplicationBuilder webApplicationBuilder = WebApplication.CreateBuilder(args);
 
-        webApplicationBuilder.Logging.ConfigureLocalLogging();
-        webApplicationBuilder.Services.AddApplicationInsightsTelemetry();
+        webApplicationBuilder.ConfigureLogging(LoggingType.File);
         webApplicationBuilder.Services.AddData();
         webApplicationBuilder.Services.AddDefaultHealthChecks();
         webApplicationBuilder.Services.AddDefaultServices();

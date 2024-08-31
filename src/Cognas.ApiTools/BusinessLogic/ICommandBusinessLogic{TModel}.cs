@@ -1,6 +1,7 @@
 ﻿using Cognas.ApiTools.Data.Command;
 using Cognas.ApiTools.Messaging;
 using Cognas.ApiTools.Shared;
+using LanguageExt.Common;
 
 namespace Cognas.ApiTools.BusinessLogic;
 
@@ -46,21 +47,21 @@ public interface ICommandBusinessLogic<TModel> : ILoggerBusinessLogic, IModelIdS
     /// </summary>
     /// <param name="model"></param>
     /// <returns></returns>
-    Task<TModel?> InsertModelAsync(TModel model);
+    Task<Result<TModel>> InsertModelAsync(TModel model);
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="model"></param>
     /// <returns></returns>
-    Task<TModel?> UpdateModelAsync(TModel model);
+    Task<Result<TModel>> UpdateModelAsync(TModel model);
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="parameters"></param>
     /// <returns></returns>
-    Task<bool> DeleteModelAsync(params IParameter[] parameters);
+    Task<Result<bool>> DeleteModelAsync(params IParameter[] parameters);
 
     #endregion
 }

@@ -2,6 +2,7 @@
 using Cognas.ApiTools.Shared;
 using Cognas.ApiTools.Shared.Services;
 using Cognas.Tools.Shared.Extensions;
+using LanguageExt;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
@@ -109,7 +110,7 @@ public abstract class QueryBusinessLogicBase<TModel> : ModelIdServiceBusinessLog
     /// <param name="idParameter"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public async Task<TModel?> SelectModelAsync(int id, IParameter idParameter)
+    public async Task<Option<TModel>> SelectModelAsync(int id, IParameter idParameter)
     {
         TModel? selectedModel;
         if (UseCache)

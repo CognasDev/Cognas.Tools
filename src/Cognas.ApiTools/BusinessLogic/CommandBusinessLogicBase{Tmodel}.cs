@@ -1,7 +1,9 @@
 ﻿using Cognas.ApiTools.Data.Command;
+using Cognas.ApiTools.Data.Exceptions;
 using Cognas.ApiTools.Messaging;
 using Cognas.ApiTools.Shared;
 using Cognas.ApiTools.Shared.Services;
+using LanguageExt.Common;
 using Microsoft.Extensions.Logging;
 
 namespace Cognas.ApiTools.BusinessLogic;
@@ -87,28 +89,36 @@ public abstract class CommandBusinessLogicBase<TModel> : ModelIdServiceBusinessL
     /// </summary>
     /// <param name="model"></param>
     /// <returns></returns>
-    public async Task<TModel?> InsertModelAsync(TModel model)
+    public async Task<Result<TModel>> InsertModelAsync(TModel model)
     {
         TModel? insertedModel = await DatabaseService.InsertModelAsync(InsertStoredProcedure, model).ConfigureAwait(false);
-        if (_useMessaging && insertedModel is not null)
+        if (insertedModel is not null)
         {
-            await ModelMessagingService!.OnInsertModelAsync(insertedModel).ConfigureAwait(false);
+            if (_useMessaging)
+            {
+                await ModelMessagingService!.OnInsertModelAsync(insertedModel).ConfigureAwait(false);
+            }
+            return insertedModel;
         }
-        return insertedModel;
+        return new Result<TModel>(new InsertModelException<TModel>(model));
     }
 
     /// <summary>
     /// 
     /// </summary>
     /// <returns></returns>
-    public async Task<TModel?> UpdateModelAsync(TModel model)
+    public async Task<Result<TModel>> UpdateModelAsync(TModel model)
     {
         TModel? updatedModel = await DatabaseService.UpdateModelAsync(UpdateStoredProcedure, model).ConfigureAwait(false);
-        if (_useMessaging && updatedModel is not null)
+        if (updatedModel is not null)
         {
-            await ModelMessagingService!.OnUpdateModelAsync(updatedModel).ConfigureAwait(false);
+            if (_useMessaging)
+            {
+                await ModelMessagingService!.OnUpdateModelAsync(updatedModel).ConfigureAwait(false);
+            }
+            return updatedModel;
         }
-        return updatedModel;
+        return new Result<TModel>(new UpdateModelException<TModel>(model));
     }
 
     /// <summary>
@@ -116,11 +126,10 @@ public abstract class CommandBusinessLogicBase<TModel> : ModelIdServiceBusinessL
     /// </summary>
     /// <param name="parameters"></param>
     /// <returns></returns>
-    public async Task<bool> DeleteModelAsync(params IParameter[] parameters)
+    public async Task<Result<bool>> DeleteModelAsync(params IParameter[] parameters)
     {
         int deleteCount = await DatabaseService.DeleteModelAsync(DeleteStoredProcedure, parameters).ConfigureAwait(false);
-        bool success = deleteCount == 1;
-        return success;
+        return deleteCount == 1 ? true : new Result<bool>(new DeleteModelException<TModel>());
     }
 
     #endregion

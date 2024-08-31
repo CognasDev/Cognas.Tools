@@ -1,6 +1,4 @@
-﻿using Samples.MusicCollection.Api.AllMusic.MixableTracks;
-
-namespace Samples.MusicCollection.Api.AllMusic.Tracks.Rules;
+﻿namespace Samples.MusicCollection.Api.AllMusic.MixableTracks.Rules;
 
 /// <summary>
 /// 

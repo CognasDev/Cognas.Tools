@@ -25,6 +25,6 @@
 
 - TODO: sort out local network config (cleartext?) to allow Maui to connect to API
 
-## 2024-08-30
+## 2024-09-01
 
-- TODO: add languageext Option<T> and Result<T> to CommandBusinessLogicBase<TModel> and QueryBusinessLogicBase<TModel>
+- Improve data connection as currently hard-coded to (localdb) in appsettings.json

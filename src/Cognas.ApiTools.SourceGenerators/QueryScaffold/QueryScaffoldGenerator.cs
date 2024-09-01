@@ -1,4 +1,5 @@
-﻿using Cognas.ApiTools.SourceGenerators.QueryScaffold.Names;
+﻿using Cognas.ApiTools.SourceGenerators.CommandScaffold;
+using Cognas.ApiTools.SourceGenerators.QueryScaffold.Names;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
@@ -15,6 +16,12 @@ namespace Cognas.ApiTools.SourceGenerators.QueryScaffold;
 [Generator]
 public sealed class QueryScaffoldGenerator : IIncrementalGenerator
 {
+    #region Field Declarations
+
+    private readonly ApiVersionRepsitory _apiVersionRepsitory = new();
+
+    #endregion
+
     #region Constructor / Finaliser Declarations
 
     /// <summary>
@@ -73,15 +80,21 @@ public sealed class QueryScaffoldGenerator : IIncrementalGenerator
     /// <returns></returns>
     private static List<QueryScaffoldDetail> GetDetails(GeneratorAttributeSyntaxContext generatorSyntaxContext)
     {
-        RecordDeclarationSyntax modelDeclaration = (RecordDeclarationSyntax)generatorSyntaxContext.TargetNode;
+        RecordDeclarationSyntax modelDeclaration = generatorSyntaxContext.GetModelDeclaration();
+        string modelNamespace = modelDeclaration.GetNamespace();
+        string modelName = modelDeclaration.GetName();
+        string idPropertyName = modelDeclaration.GetIdPropertyName();
+
+        IList<string> propertyNames = modelDeclaration.GetModelProperties();
+        propertyNames.Remove(idPropertyName);
+
         List<QueryScaffoldDetail> details = [];
         foreach (AttributeData queryScaffoldAttribute in generatorSyntaxContext.Attributes)
         {
             string responseType = queryScaffoldAttribute.GetConstructorArgumentValue<string>(0);
             int apiVersion = queryScaffoldAttribute.GetConstructorArgumentValue<int>(1);
-            string modelNamespace = modelDeclaration.GetNamespace();
-            string modelName = modelDeclaration.GetName();
-            QueryScaffoldDetail detail = new(modelNamespace, modelName, responseType, apiVersion);
+            bool useDefaultMapper = queryScaffoldAttribute.GetConstructorArgumentValue<bool>(2);
+            QueryScaffoldDetail detail = new(modelNamespace, modelName, responseType, apiVersion, useDefaultMapper, idPropertyName, propertyNames);
             details.Add(detail);
         }
         return details;
@@ -101,13 +114,17 @@ public sealed class QueryScaffoldGenerator : IIncrementalGenerator
                                                              select detail;
         ReadOnlySpan<QueryScaffoldDetail> detailsSpan = [.. detailsCollection];
         StringBuilder queryEndpointInitiatorBuilder = new();
-        GenerateInitiateQueryEndpoints.ClearApiVersions();
+        _apiVersionRepsitory.Clear();
         foreach (QueryScaffoldDetail detail in detailsSpan)
         {
             string fullModelName = $"{detail.ModelNamespace}.{detail.ModelName}";
             GenerateApi(context, fullModelName, queryApiTemplate, detail);
             GenerateBusinessLogic(context, fullModelName, queryBusinessLogicTemplate, detail);
-            GenerateInitiateQueryEndpoints.Generate(queryEndpointInitiatorBuilder, detail);
+            queryEndpointInitiatorBuilder.GenerateInitiateQueryEndpoints(detail, _apiVersionRepsitory);
+            if (detail.UseDefaultMapper)
+            {
+                QueryMappingServiceGenerator.Generate(context, fullModelName, detail);
+            }
         }
         GenerateQueryEndpointInitiator(context, queryEndpointInitiatorBuilder);
     }

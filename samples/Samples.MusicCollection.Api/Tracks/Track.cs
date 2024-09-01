@@ -7,7 +7,7 @@ namespace Samples.MusicCollection.Api.Tracks;
 /// </summary>
 [IncludeInModelIdService]
 [CommandScaffold(typeof(TrackRequest), typeof(TrackResponse), 1, false, true)]
-[QueryScaffold(typeof(TrackResponse), 1)]
+[QueryScaffold(typeof(TrackResponse), 1, true)]
 public sealed record Track
 {
     #region Property Declarations

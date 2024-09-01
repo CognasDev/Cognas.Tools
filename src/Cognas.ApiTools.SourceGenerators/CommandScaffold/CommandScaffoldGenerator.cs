@@ -15,6 +15,12 @@ namespace Cognas.ApiTools.SourceGenerators.CommandScaffold;
 [Generator]
 public sealed class CommandScaffoldGenerator : IIncrementalGenerator
 {
+    #region Field Declarations
+
+    private readonly ApiVersionRepsitory _apiVersionRepsitory = new();
+
+    #endregion
+
     #region Constructor / Finaliser Declarations
 
     /// <summary>
@@ -73,15 +79,12 @@ public sealed class CommandScaffoldGenerator : IIncrementalGenerator
     /// <returns></returns>
     private static List<CommandScaffoldDetail> GetDetails(GeneratorAttributeSyntaxContext generatorSyntaxContext)
     {
-        RecordDeclarationSyntax modelDeclaration = (RecordDeclarationSyntax)generatorSyntaxContext.TargetNode;
+        RecordDeclarationSyntax modelDeclaration = generatorSyntaxContext.GetModelDeclaration();
         string modelNamespace = modelDeclaration.GetNamespace();
         string modelName = modelDeclaration.GetName();
         string idPropertyName = modelDeclaration.GetIdPropertyName();
 
-        List<string> propertyNames = modelDeclaration.Members.Select(memberDeclarationSyntax => memberDeclarationSyntax)
-                                                             .OfType<PropertyDeclarationSyntax>()
-                                                             .Select(propertyDeclarationSyntax => propertyDeclarationSyntax.Identifier.Text).ToList();
-
+        IList<string> propertyNames = modelDeclaration.GetModelProperties();
         propertyNames.Remove(idPropertyName);
 
         List<CommandScaffoldDetail> details = [];
@@ -111,16 +114,16 @@ public sealed class CommandScaffoldGenerator : IIncrementalGenerator
                                                                select detail;
         ReadOnlySpan<CommandScaffoldDetail> detailsSpan = [.. detailsCollection];
         StringBuilder commandEndpointInitiatorBuilder = new();
-        GenerateInitiateCommandEndpoints.ClearApiVersions();
+        _apiVersionRepsitory.Clear();
         foreach (CommandScaffoldDetail detail in detailsSpan)
         {
             string fullModelName = $"{detail.ModelNamespace}.{detail.ModelName}";
             GenerateApi(context, fullModelName, commandApiTemplate, detail);
             GenerateBusinessLogic(context, fullModelName, detail);
-            GenerateInitiateCommandEndpoints.Generate(commandEndpointInitiatorBuilder, detail);
+            commandEndpointInitiatorBuilder.GenerateInitiateCommandEndpoints(detail, _apiVersionRepsitory);
             if (detail.UseDefaultMapper)
             {
-                GenerateCommandMappingService(context, fullModelName, detail);  
+                CommandMappingServiceGenerator.Generate(context, fullModelName, detail);  
             }
         }
         GenerateCommandEndpointInitiator(context, commandEndpointInitiatorBuilder);
@@ -167,53 +170,6 @@ public sealed class CommandScaffoldGenerator : IIncrementalGenerator
         string versionFilename = string.Format(SourceFileNames.CommandBusinessLogic, detail.ApiVersion);
         string filename = $"{detail.ModelName}.{versionFilename}";
         context.AddSource(filename, commandBusinesssLogicSource);
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="context"></param>
-    /// <param name="fullModelName"></param>
-    /// <param name="detail"></param>
-    private static void GenerateCommandMappingService(SourceProductionContext context, string fullModelName, CommandScaffoldDetail detail)
-    {
-        string template = TemplateCache.GetTemplate(TemplateNames.CommandMappingService);
-        string propertyMaps = BuildPropertyMaps(detail);
-        string commandMappingServiceSource = string.Format(template,
-                                                           fullModelName,
-                                                           detail.RequestName,
-                                                           detail.ModelNamespace,
-                                                           detail.ModelName,
-                                                           propertyMaps);
-        string filename = $"{detail.ModelName}.{SourceFileNames.CommandMappingService}";
-        context.AddSource(filename, commandMappingServiceSource);
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="detail"></param>
-    /// <returns></returns>
-    private static string BuildPropertyMaps(CommandScaffoldDetail detail)
-    {
-        StringBuilder propertyMapsBuilder = new();
-        propertyMapsBuilder.Append("\t\t\t");
-        propertyMapsBuilder.Append(detail.IdPropertyName);
-        propertyMapsBuilder.Append(" = request.");
-        propertyMapsBuilder.Append(detail.IdPropertyName);
-        propertyMapsBuilder.AppendLine(" ?? NotInsertedId,");
-
-        foreach (string propertyName in detail.PropertyNames)
-        {
-            propertyMapsBuilder.Append("\t\t\t");
-            propertyMapsBuilder.Append(propertyName);
-            propertyMapsBuilder.Append(" = request.");
-            propertyMapsBuilder.Append(propertyName);
-            propertyMapsBuilder.AppendLine(",");
-        }
-
-        string propertyMaps = propertyMapsBuilder.ToString();
-        return propertyMaps;
     }
 
     /// <summary>

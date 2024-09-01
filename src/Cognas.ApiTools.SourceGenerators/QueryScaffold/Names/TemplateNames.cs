@@ -27,5 +27,10 @@ internal static class TemplateNames
     /// </summary>
     public const string QueryEndpointInitiator = "EndpointInitiator.Query.cs";
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public const string QueryMappingService = "QueryMappingService.cs";
+
     #endregion
 }

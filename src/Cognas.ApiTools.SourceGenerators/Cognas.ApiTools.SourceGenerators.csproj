@@ -22,6 +22,7 @@
 		<Compile Remove="ModelIdService\Templates\IdAttribute.cs" />
 		<Compile Remove="ModelIdService\Templates\IncludeInModelIdServiceAttribute.cs" />
 		<Compile Remove="ModelIdService\Templates\ModelIdService.cs" />
+		<Compile Remove="QueryScaffold\Templates\QueryMappingService.cs" />
 		<Compile Remove="QueryScaffold\Templates\QueryScaffoldAttribute.cs" />
 	</ItemGroup>
 
@@ -32,6 +33,7 @@
 		<EmbeddedResource Include="CommandScaffold\Templates\CommandMappingService.cs" />
 		<EmbeddedResource Include="CommandScaffold\Templates\CommandScaffoldAttribute.cs" />
 		<EmbeddedResource Include="CommandScaffold\Templates\EndpointInitiator.Command.cs" />
+		<EmbeddedResource Include="QueryScaffold\Templates\QueryMappingService.cs" />
 		<EmbeddedResource Include="QueryScaffold\Templates\QueryApi.cs" />
 		<EmbeddedResource Include="QueryScaffold\Templates\EndpointInitiator.Query.cs" />
 		<EmbeddedResource Include="QueryScaffold\Templates\QueryBusinessLogic.cs" />

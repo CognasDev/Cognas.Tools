@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Cognas.ApiTools.SourceGenerators;
 
@@ -94,6 +95,43 @@ internal static class ExtensionMethods
             > 1 => throw new InvalidOperationException($"Multipled Id attributes found on model '{record.Identifier}'."),
             _ => throw new KeyNotFoundException($"Id attribute not found on model '{record.Identifier}'.")
         };
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="stringBuilder"></param>
+    /// <param name="apiVersion"></param>
+    public static void AppendApiVersionRoute(this StringBuilder stringBuilder, int apiVersion)
+    {
+        stringBuilder.Append("\t\tRouteGroupBuilder apiVersionRouteV");
+        stringBuilder.Append(apiVersion);
+        stringBuilder.Append(" = webApplication.GetApiVersionRoute(");
+        stringBuilder.Append(apiVersion);
+        stringBuilder.AppendLine(");");
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="modelDeclaration"></param>
+    public static IList<string> GetModelProperties(this RecordDeclarationSyntax modelDeclaration)
+    {
+        List<string> propertyNames = modelDeclaration.Members.Select(memberDeclarationSyntax => memberDeclarationSyntax)
+                                                             .OfType<PropertyDeclarationSyntax>()
+                                                             .Select(propertyDeclarationSyntax => propertyDeclarationSyntax.Identifier.Text).ToList();
+        return propertyNames;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="generatorSyntaxContext"></param>
+    /// <returns></returns>
+    public static RecordDeclarationSyntax GetModelDeclaration(this GeneratorAttributeSyntaxContext generatorSyntaxContext)
+    {
+        RecordDeclarationSyntax modelDeclaration = (RecordDeclarationSyntax)generatorSyntaxContext.TargetNode;
+        return modelDeclaration;
     }
 
     #endregion

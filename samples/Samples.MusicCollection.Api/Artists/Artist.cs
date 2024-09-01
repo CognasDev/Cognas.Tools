@@ -7,7 +7,7 @@ namespace Samples.MusicCollection.Api.Artists;
 /// </summary>
 [IncludeInModelIdService]
 [CommandScaffold(typeof(ArtistRequest), typeof(ArtistResponse), 1, false, true)]
-[QueryScaffold(typeof(ArtistResponse), 1)]
+[QueryScaffold(typeof(ArtistResponse), 1, true)]
 public sealed record Artist
 {
     #region Property Declarations

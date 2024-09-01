@@ -104,10 +104,10 @@ public sealed class ModelIdServiceGenerator : IIncrementalGenerator
         ReadOnlySpan<ModelIdServiceEntryDetail> detailsSpan = [.. details.OrderBy(detail => detail.ModelName)];
         foreach (ModelIdServiceEntryDetail detail in detailsSpan)
         {
-            GenerateGetId.Generate(getIdsBuilder, detail);
-            GenerateSetIdValue.Generate(setIdsBuilder, detail);
-            GenerateIdParameter.Generate(idExpressionBuilder, detail);
-            GenerateGetModelIdName.Generate(getModelIdNameBuilder, detail);
+            getIdsBuilder.GenerateGetId(detail);
+            setIdsBuilder.GenerateSetIdValue(detail);
+            idExpressionBuilder.GenerateIdParameter(detail);
+            getModelIdNameBuilder.GenerateGetModelIdName(detail);
         }
 
         string getIds = getIdsBuilder.ToString();

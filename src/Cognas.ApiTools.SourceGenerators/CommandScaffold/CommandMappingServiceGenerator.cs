@@ -43,7 +43,7 @@ internal static class CommandMappingServiceGenerator
     private static string BuildPropertyMaps(CommandScaffoldDetail detail)
     {
         StringBuilder propertyMapsBuilder = new();
-        propertyMapsBuilder.Append("\t\t\t");
+        propertyMapsBuilder.AppendTab(3);
         propertyMapsBuilder.Append(detail.IdPropertyName);
         propertyMapsBuilder.Append(" = request.");
         propertyMapsBuilder.Append(detail.IdPropertyName);
@@ -51,7 +51,7 @@ internal static class CommandMappingServiceGenerator
 
         foreach (string propertyName in detail.PropertyNames)
         {
-            propertyMapsBuilder.Append("\t\t\t");
+            propertyMapsBuilder.AppendTab(3);
             propertyMapsBuilder.Append(propertyName);
             propertyMapsBuilder.Append(" = request.");
             propertyMapsBuilder.Append(propertyName);

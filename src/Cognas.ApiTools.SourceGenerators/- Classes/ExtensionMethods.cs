@@ -104,7 +104,8 @@ internal static class ExtensionMethods
     /// <param name="apiVersion"></param>
     public static void AppendApiVersionRoute(this StringBuilder stringBuilder, int apiVersion)
     {
-        stringBuilder.Append("\t\tRouteGroupBuilder apiVersionRouteV");
+        stringBuilder.AppendTab(2);
+        stringBuilder.Append("RouteGroupBuilder apiVersionRouteV");
         stringBuilder.Append(apiVersion);
         stringBuilder.Append(" = webApplication.GetApiVersionRoute(");
         stringBuilder.Append(apiVersion);
@@ -132,6 +133,19 @@ internal static class ExtensionMethods
     {
         RecordDeclarationSyntax modelDeclaration = (RecordDeclarationSyntax)generatorSyntaxContext.TargetNode;
         return modelDeclaration;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="stringBuilder"></param>
+    /// <param name="tabCount"></param>
+    public static void AppendTab(this StringBuilder stringBuilder, int tabCount)
+    {
+        for (int tabs = 0; tabs < tabCount; tabs++)
+        {
+            stringBuilder.Append("\t");
+        }
     }
 
     #endregion

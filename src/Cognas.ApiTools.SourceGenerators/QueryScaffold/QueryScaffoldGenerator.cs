@@ -1,5 +1,4 @@
-﻿using Cognas.ApiTools.SourceGenerators.CommandScaffold;
-using Cognas.ApiTools.SourceGenerators.QueryScaffold.Names;
+﻿using Cognas.ApiTools.SourceGenerators.QueryScaffold.Names;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
@@ -14,15 +13,8 @@ namespace Cognas.ApiTools.SourceGenerators.QueryScaffold;
 /// 
 /// </summary>
 [Generator]
-public sealed class QueryScaffoldGenerator : IIncrementalGenerator
+public sealed class QueryScaffoldGenerator : GeneratorBase<QueryScaffoldDetail>
 {
-    #region Field Declarations
-
-    private readonly ApiVersionRepsitory _apiVersionRepsitory = new();
-    private readonly DefaultMapperGenerationState _defaultMapperGenerationState = new();
-
-    #endregion
-
     #region Constructor / Finaliser Declarations
 
     /// <summary>
@@ -46,7 +38,7 @@ public sealed class QueryScaffoldGenerator : IIncrementalGenerator
     /// 
     /// </summary>
     /// <param name="context"></param>
-    public void Initialize(IncrementalGeneratorInitializationContext context)
+    public override void Initialize(IncrementalGeneratorInitializationContext context)
     {
         context.RegisterPostInitializationOutput
         (
@@ -72,6 +64,92 @@ public sealed class QueryScaffoldGenerator : IIncrementalGenerator
 
     #endregion
 
+    #region Protected Method Declarations
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="details"></param>
+    protected override void GenerateSource(SourceProductionContext context, ImmutableArray<List<QueryScaffoldDetail>> details)
+    {
+        string queryApiTemplate = TemplateCache.GetTemplate(TemplateNames.QueryApi);
+        string queryBusinessLogicTemplate = TemplateCache.GetTemplate(TemplateNames.QueryBusinessLogic);
+        IEnumerable<QueryScaffoldDetail> detailsCollection = from detailsList in details
+                                                             from detail in detailsList.OrderBy(detail => detail.ModelName)
+                                                             select detail;
+        ReadOnlySpan<QueryScaffoldDetail> detailsSpan = [.. detailsCollection];
+        StringBuilder queryEndpointInitiatorBuilder = new();
+        ApiVersionRepsitory.Clear();
+        foreach (QueryScaffoldDetail detail in detailsSpan)
+        {
+            string fullModelName = $"{detail.ModelNamespace}.{detail.ModelName}";
+            GenerateApi(context, fullModelName, queryApiTemplate, detail);
+            GenerateBusinessLogic(context, fullModelName, queryBusinessLogicTemplate, detail);
+            queryEndpointInitiatorBuilder.GenerateInitiateQueryEndpoints(detail, ApiVersionRepsitory);
+            if (detail.UseDefaultMapper && !DefaultMapperGenerationState.IsGenerated(fullModelName))
+            {
+                QueryMappingServiceGenerator.Generate(context, fullModelName, detail);
+                DefaultMapperGenerationState.SetGenerated(fullModelName);
+            }
+        }
+        GenerateEndpointInitiator(context, queryEndpointInitiatorBuilder);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="fullModelName"></param>
+    /// <param name="template"></param>
+    /// <param name="detail"></param>
+    protected override void GenerateApi(SourceProductionContext context, string fullModelName, string template, QueryScaffoldDetail detail)
+    {
+        string queryApiSource = string.Format(template,
+                                              fullModelName,
+                                              detail.ResponseName,
+                                              detail.ModelNamespace,
+                                              detail.ApiVersion,
+                                              detail.ModelName);
+        string versionFilename = string.Format(SourceFileNames.QueryApi, detail.ApiVersion);
+        string filename = $"{detail.ModelName}.{versionFilename}";
+        context.AddSource(filename, queryApiSource);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="fullModelName"></param>
+    /// <param name="template"></param>
+    /// <param name="detail"></param>
+    protected override void GenerateBusinessLogic(SourceProductionContext context, string fullModelName, string template, QueryScaffoldDetail detail)
+    {
+        string queryBusinesssLogicSource = string.Format(template,
+                                                         fullModelName,
+                                                         detail.ModelNamespace,
+                                                         detail.ApiVersion,
+                                                         detail.ModelName);
+        string versionFilename = string.Format(SourceFileNames.QueryBusinessLogic, detail.ApiVersion);
+        string filename = $"{detail.ModelName}.{versionFilename}";
+        context.AddSource(filename, queryBusinesssLogicSource);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="endpointInitiatorBuilder"></param>
+    protected override void GenerateEndpointInitiator(SourceProductionContext context, StringBuilder endpointInitiatorBuilder)
+    {
+        string queryEndpointInitiatorTemplate = TemplateCache.GetTemplate(TemplateNames.QueryEndpointInitiator);
+        string endpoints = endpointInitiatorBuilder.ToString();
+        string queryEndpointInitiatorSource = string.Format(queryEndpointInitiatorTemplate, endpoints);
+        context.AddSource(SourceFileNames.QueryEndpointInitiator, queryEndpointInitiatorSource);
+    }
+
+    #endregion
+
     #region Private Method Declarations
 
     /// <summary>
@@ -92,10 +170,7 @@ public sealed class QueryScaffoldGenerator : IIncrementalGenerator
         List<QueryScaffoldDetail> details = [];
         foreach (AttributeData queryScaffoldAttribute in generatorSyntaxContext.Attributes)
         {
-            string responseType = queryScaffoldAttribute.GetConstructorArgumentValue<string>(0);
-            int apiVersion = queryScaffoldAttribute.GetConstructorArgumentValue<int>(1);
-            bool useDefaultMapper = queryScaffoldAttribute.GetConstructorArgumentValue<bool>(2);
-            QueryScaffoldDetail detail = new(modelNamespace, modelName, responseType, apiVersion, useDefaultMapper, idPropertyName, propertyNames);
+            QueryScaffoldDetail detail = CreateDetail(modelNamespace, modelName, idPropertyName, propertyNames, queryScaffoldAttribute);
             details.Add(detail);
         }
         return details;
@@ -104,82 +179,19 @@ public sealed class QueryScaffoldGenerator : IIncrementalGenerator
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="context"></param>
-    /// <param name="details"></param>
-    private void GenerateSource(SourceProductionContext context, ImmutableArray<List<QueryScaffoldDetail>> details)
+    /// <param name="modelNamespace"></param>
+    /// <param name="modelName"></param>
+    /// <param name="idPropertyName"></param>
+    /// <param name="propertyNames"></param>
+    /// <param name="queryScaffoldAttribute"></param>
+    /// <returns></returns>
+    private static QueryScaffoldDetail CreateDetail(string modelNamespace, string modelName, string idPropertyName, IList<string> propertyNames, AttributeData queryScaffoldAttribute)
     {
-        string queryApiTemplate = TemplateCache.GetTemplate(TemplateNames.QueryApi);
-        string queryBusinessLogicTemplate = TemplateCache.GetTemplate(TemplateNames.QueryBusinessLogic);
-        IEnumerable<QueryScaffoldDetail> detailsCollection = from detailsList in details
-                                                             from detail in detailsList.OrderBy(detail => detail.ModelName)
-                                                             select detail;
-        ReadOnlySpan<QueryScaffoldDetail> detailsSpan = [.. detailsCollection];
-        StringBuilder queryEndpointInitiatorBuilder = new();
-        _apiVersionRepsitory.Clear();
-        foreach (QueryScaffoldDetail detail in detailsSpan)
-        {
-            string fullModelName = $"{detail.ModelNamespace}.{detail.ModelName}";
-            GenerateApi(context, fullModelName, queryApiTemplate, detail);
-            GenerateBusinessLogic(context, fullModelName, queryBusinessLogicTemplate, detail);
-            queryEndpointInitiatorBuilder.GenerateInitiateQueryEndpoints(detail, _apiVersionRepsitory);
-            if (detail.UseDefaultMapper && !_defaultMapperGenerationState.IsGenerated(fullModelName))
-            {
-                QueryMappingServiceGenerator.Generate(context, fullModelName, detail);
-                _defaultMapperGenerationState.SetGenerated(fullModelName);
-            }
-        }
-        GenerateQueryEndpointInitiator(context, queryEndpointInitiatorBuilder);
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="context"></param>
-    /// <param name="fullModelName"></param>
-    /// <param name="template"></param>
-    /// <param name="detail"></param>
-    private static void GenerateApi(SourceProductionContext context, string fullModelName, string template, QueryScaffoldDetail detail)
-    {
-        string queryApiSource = string.Format(template,
-                                              fullModelName,
-                                              detail.ResponseName,
-                                              detail.ModelNamespace,
-                                              detail.ApiVersion,
-                                              detail.ModelName);
-        string versionFilename = string.Format(SourceFileNames.QueryApi, detail.ApiVersion);
-        string filename = $"{detail.ModelName}.{versionFilename}";
-        context.AddSource(filename, queryApiSource);
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="context"></param>
-    /// <param name="fullModelName"></param>
-    /// <param name="template"></param>
-    /// <param name="detail"></param>
-    private static void GenerateBusinessLogic(SourceProductionContext context, string fullModelName, string template, QueryScaffoldDetail detail)
-    {
-        string queryBusinesssLogicSource = string.Format(template,
-                                                         fullModelName,
-                                                         detail.ModelNamespace,
-                                                         detail.ApiVersion,
-                                                         detail.ModelName);
-        string versionFilename = string.Format(SourceFileNames.QueryBusinessLogic, detail.ApiVersion);
-        string filename = $"{detail.ModelName}.{versionFilename}";
-        context.AddSource(filename, queryBusinesssLogicSource);
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="context"></param>
-    /// <param name="queryEndpointInitiatorBuilder"></param>
-    private static void GenerateQueryEndpointInitiator(SourceProductionContext context, StringBuilder queryEndpointInitiatorBuilder)
-    {
-        string queryEndpointInitiatorTemplate = TemplateCache.GetTemplate(TemplateNames.QueryEndpointInitiator);
-        string queryEndpointInitiatorSource = string.Format(queryEndpointInitiatorTemplate, queryEndpointInitiatorBuilder.ToString());
-        context.AddSource(SourceFileNames.QueryEndpointInitiator, queryEndpointInitiatorSource);
+        string responseType = queryScaffoldAttribute.GetConstructorArgumentValue<string>(0);
+        int apiVersion = queryScaffoldAttribute.GetConstructorArgumentValue<int>(1);
+        bool useDefaultMapper = queryScaffoldAttribute.GetConstructorArgumentValue<bool>(2);
+        QueryScaffoldDetail detail = new(modelNamespace, modelName, responseType, apiVersion, useDefaultMapper, idPropertyName, propertyNames);
+        return detail;
     }
 
     #endregion

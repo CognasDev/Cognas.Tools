@@ -5,7 +5,7 @@ namespace Cognas.ApiTools.SourceGenerators.CommandScaffold;
 /// <summary>
 /// 
 /// </summary>
-internal readonly record struct CommandScaffoldDetail
+public readonly record struct CommandScaffoldDetail
 {
     #region Field Declarations
 

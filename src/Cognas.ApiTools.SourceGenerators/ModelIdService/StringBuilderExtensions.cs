@@ -16,7 +16,7 @@ internal static class StringBuilderExtensions
     /// <param name="detail"></param>
     public static void GenerateGetId(this StringBuilder stringBuilder, ModelIdServiceEntryDetail detail)
     {
-        stringBuilder.Append("\t\t\t");
+        stringBuilder.AppendTab(3);
         stringBuilder.Append(detail.ModelNamespace);
         stringBuilder.Append('.');
         stringBuilder.Append(detail.ModelName);
@@ -36,7 +36,8 @@ internal static class StringBuilderExtensions
     /// <param name="detail"></param>
     public static void GenerateGetModelIdName(this StringBuilder stringBuilder, ModelIdServiceEntryDetail detail)
     {
-        stringBuilder.Append("\t\t\tcase Type ");
+        stringBuilder.AppendTab(3);
+        stringBuilder.Append("case Type ");
         stringBuilder.Append(detail.CamelCaseModelName);
         stringBuilder.Append("Type when ");
         stringBuilder.Append(detail.CamelCaseModelName);
@@ -45,7 +46,8 @@ internal static class StringBuilderExtensions
         stringBuilder.Append('.');
         stringBuilder.Append(detail.ModelName);
         stringBuilder.AppendLine("):");
-        stringBuilder.Append("\t\t\t\treturn nameof(");
+        stringBuilder.AppendTab(4);
+        stringBuilder.Append("return nameof(");
         stringBuilder.Append(detail.ModelNamespace);
         stringBuilder.Append('.');
         stringBuilder.Append(detail.ModelName);
@@ -61,7 +63,7 @@ internal static class StringBuilderExtensions
     /// <param name="detail"></param>
     public static void GenerateIdParameter(this StringBuilder stringBuilder, ModelIdServiceEntryDetail detail)
     {
-        stringBuilder.Append("\t\t\t");
+        stringBuilder.AppendTab(3);
         stringBuilder.Append("case Type ");
         stringBuilder.Append(detail.CamelCaseModelName);
         stringBuilder.Append("Type when ");
@@ -71,7 +73,7 @@ internal static class StringBuilderExtensions
         stringBuilder.Append('.');
         stringBuilder.Append(detail.ModelName);
         stringBuilder.AppendLine("):");
-        stringBuilder.Append("\t\t\t\t");
+        stringBuilder.AppendTab(4);
         stringBuilder.Append("return new Parameter(nameof(");
         stringBuilder.Append(detail.ModelNamespace);
         stringBuilder.Append('.');
@@ -88,7 +90,8 @@ internal static class StringBuilderExtensions
     /// <param name="detail"></param>
     public static void GenerateSetIdValue(this StringBuilder stringBuilder, ModelIdServiceEntryDetail detail)
     {
-        stringBuilder.Append("\t\t\tcase Type ");
+        stringBuilder.AppendTab(3);
+        stringBuilder.Append("case Type ");
         stringBuilder.Append(detail.CamelCaseModelName);
         stringBuilder.Append("Type when ");
         stringBuilder.Append(detail.CamelCaseModelName);
@@ -97,19 +100,20 @@ internal static class StringBuilderExtensions
         stringBuilder.Append('.');
         stringBuilder.Append(detail.ModelName);
         stringBuilder.AppendLine("):");
-        stringBuilder.Append("\t\t\t\tvar ");
+        stringBuilder.AppendTab(4);
+        stringBuilder.Append("var ");
         stringBuilder.Append(detail.CamelCaseModelName);
         stringBuilder.Append(" = (model as ");
         stringBuilder.Append(detail.ModelNamespace);
         stringBuilder.Append('.');
         stringBuilder.Append(detail.ModelName);
         stringBuilder.AppendLine(")!;");
-        stringBuilder.Append("\t\t\t\t");
+        stringBuilder.AppendTab(4);
         stringBuilder.Append(detail.CamelCaseModelName);
         stringBuilder.Append('.');
         stringBuilder.Append(detail.IdPropertyName);
         stringBuilder.AppendLine(" = id;");
-        stringBuilder.Append("\t\t\t\t");
+        stringBuilder.AppendTab(4);
         stringBuilder.AppendLine("break;");
     }
 

@@ -69,7 +69,7 @@ public static class ServiceCollectionExtensions
 
         GenericServiceRegistration.Instance.AddServices(serviceCollection, typeof(ICommandApi<,,>), ServiceLifetime.Singleton);
         GenericServiceRegistration.Instance.AddServices(serviceCollection, typeof(ICommandBusinessLogic<>), ServiceLifetime.Singleton);
-        GenericServiceRegistration.Instance.AddServices(serviceCollection, typeof(ICommandMappingService<,,>), ServiceLifetime.Singleton);
+        GenericServiceRegistration.Instance.AddServices(serviceCollection, typeof(ICommandMappingService<,>), ServiceLifetime.Singleton);
 
         GenericServiceRegistration.Instance.AddServices(serviceCollection, typeof(IQueryApi<,>), ServiceLifetime.Singleton);
         GenericServiceRegistration.Instance.AddServices(serviceCollection, typeof(IQueryBusinessLogic<>), ServiceLifetime.Singleton);

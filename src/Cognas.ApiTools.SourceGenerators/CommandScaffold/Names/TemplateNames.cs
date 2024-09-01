@@ -32,5 +32,10 @@ internal static class TemplateNames
     /// </summary>
     public const string CommandEndpointInitiator = "EndpointInitiator.Command.cs";
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public const string CommandMappingService = "CommandMappingService.cs";
+
     #endregion
 }

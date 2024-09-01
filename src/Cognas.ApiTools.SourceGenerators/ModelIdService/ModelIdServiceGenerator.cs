@@ -83,7 +83,7 @@ public sealed class ModelIdServiceGenerator : IIncrementalGenerator
     {
         string modelNamespace = modelDeclaration.GetNamespace();
         string modelName = modelDeclaration.GetName();
-        string idPropertyName = GetIdPropertyNames(modelDeclaration);
+        string idPropertyName = modelDeclaration.GetIdPropertyName();
         ModelIdServiceEntryDetail detail = new(modelNamespace, modelName, idPropertyName);
         return detail;
     }
@@ -104,10 +104,10 @@ public sealed class ModelIdServiceGenerator : IIncrementalGenerator
         ReadOnlySpan<ModelIdServiceEntryDetail> detailsSpan = [.. details.OrderBy(detail => detail.ModelName)];
         foreach (ModelIdServiceEntryDetail detail in detailsSpan)
         {
-            GenerateGetId.Generate(getIdsBuilder, detail);
-            GenerateSetIdValue.Generate(setIdsBuilder, detail);
-            GenerateIdParameter.Generate(idExpressionBuilder, detail);
-            GenerateGetModelIdName.Generate(getModelIdNameBuilder, detail);
+            getIdsBuilder.GenerateGetId(detail);
+            setIdsBuilder.GenerateSetIdValue(detail);
+            idExpressionBuilder.GenerateIdParameter(detail);
+            getModelIdNameBuilder.GenerateGetModelIdName(detail);
         }
 
         string getIds = getIdsBuilder.ToString();
@@ -117,38 +117,6 @@ public sealed class ModelIdServiceGenerator : IIncrementalGenerator
 
         string modelIdServiceSource = string.Format(template, getIds, setIds, idExpression, getModelIdName);
         context.AddSource(GeneratedFileNames.ModelIdService, modelIdServiceSource);
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="record"></param>
-    /// <returns></returns>
-    /// <exception cref="InvalidOperationException"></exception>
-    /// <exception cref="KeyNotFoundException"></exception>
-    private static string GetIdPropertyNames(RecordDeclarationSyntax record)
-    {
-        IEnumerable<PropertyDeclarationSyntax> properties = record.Members.Select(memberDeclarationSyntax => memberDeclarationSyntax).OfType<PropertyDeclarationSyntax>();
-        ReadOnlySpan<PropertyDeclarationSyntax> span = [.. properties];
-        List<string> idPropertyNames = new(span.Length);
-
-        foreach (PropertyDeclarationSyntax? propertyDeclaration in span)
-        {
-            AttributeSyntax? idAttribute = propertyDeclaration!.AttributeLists
-                                                               .SelectMany(attributeListSyntax => attributeListSyntax.Attributes)
-                                                               .Where(attributeSyntax => attributeSyntax.Name.ToString() == "Id")
-                                                               .SingleOrDefault();
-            if (idAttribute is not null)
-            {
-                idPropertyNames.Add(propertyDeclaration.Identifier.Text);
-            }
-        }
-        return idPropertyNames.Count switch
-        {
-            1 => idPropertyNames[0],
-            > 1 => throw new InvalidOperationException($"Multipled Id attributes found on model '{record.Identifier}'."),
-            _ => throw new KeyNotFoundException($"Id attribute not found on model '{record.Identifier}'.")
-        };
     }
 
     #endregion

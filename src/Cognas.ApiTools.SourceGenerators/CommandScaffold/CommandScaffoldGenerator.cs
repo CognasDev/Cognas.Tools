@@ -15,6 +15,12 @@ namespace Cognas.ApiTools.SourceGenerators.CommandScaffold;
 [Generator]
 public sealed class CommandScaffoldGenerator : IIncrementalGenerator
 {
+    #region Field Declarations
+
+    private readonly ApiVersionRepsitory _apiVersionRepsitory = new();
+
+    #endregion
+
     #region Constructor / Finaliser Declarations
 
     /// <summary>
@@ -73,7 +79,14 @@ public sealed class CommandScaffoldGenerator : IIncrementalGenerator
     /// <returns></returns>
     private static List<CommandScaffoldDetail> GetDetails(GeneratorAttributeSyntaxContext generatorSyntaxContext)
     {
-        RecordDeclarationSyntax modelDeclaration = (RecordDeclarationSyntax)generatorSyntaxContext.TargetNode;
+        RecordDeclarationSyntax modelDeclaration = generatorSyntaxContext.GetModelDeclaration();
+        string modelNamespace = modelDeclaration.GetNamespace();
+        string modelName = modelDeclaration.GetName();
+        string idPropertyName = modelDeclaration.GetIdPropertyName();
+
+        IList<string> propertyNames = modelDeclaration.GetModelProperties();
+        propertyNames.Remove(idPropertyName);
+
         List<CommandScaffoldDetail> details = [];
         foreach (AttributeData commandScaffoldAttribute in generatorSyntaxContext.Attributes)
         {
@@ -81,9 +94,8 @@ public sealed class CommandScaffoldGenerator : IIncrementalGenerator
             string responseType = commandScaffoldAttribute.GetConstructorArgumentValue<string>(1);
             int apiVersion = commandScaffoldAttribute.GetConstructorArgumentValue<int>(2);
             bool useMessaging = commandScaffoldAttribute.GetConstructorArgumentValue<bool>(3);
-            string modelNamespace = modelDeclaration.GetNamespace();
-            string modelName = modelDeclaration.GetName();
-            CommandScaffoldDetail detail = new(modelNamespace, modelName, requestType, responseType, apiVersion, useMessaging);
+            bool useDefaultMapper = commandScaffoldAttribute.GetConstructorArgumentValue<bool>(4);
+            CommandScaffoldDetail detail = new(modelNamespace, modelName, requestType, responseType, apiVersion, useMessaging, useDefaultMapper, idPropertyName, propertyNames);
             details.Add(detail);
         }
         return details;
@@ -102,13 +114,17 @@ public sealed class CommandScaffoldGenerator : IIncrementalGenerator
                                                                select detail;
         ReadOnlySpan<CommandScaffoldDetail> detailsSpan = [.. detailsCollection];
         StringBuilder commandEndpointInitiatorBuilder = new();
-        GenerateInitiateCommandEndpoints.ClearApiVersions();
+        _apiVersionRepsitory.Clear();
         foreach (CommandScaffoldDetail detail in detailsSpan)
         {
             string fullModelName = $"{detail.ModelNamespace}.{detail.ModelName}";
             GenerateApi(context, fullModelName, commandApiTemplate, detail);
             GenerateBusinessLogic(context, fullModelName, detail);
-            GenerateInitiateCommandEndpoints.Generate(commandEndpointInitiatorBuilder, detail);
+            commandEndpointInitiatorBuilder.GenerateInitiateCommandEndpoints(detail, _apiVersionRepsitory);
+            if (detail.UseDefaultMapper)
+            {
+                CommandMappingServiceGenerator.Generate(context, fullModelName, detail);  
+            }
         }
         GenerateCommandEndpointInitiator(context, commandEndpointInitiatorBuilder);
     }

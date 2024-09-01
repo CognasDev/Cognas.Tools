@@ -11,8 +11,8 @@ using Samples.MusicCollection.Api.AllMusic.Artists;
 using Samples.MusicCollection.Api.AllMusic.Genres;
 using Samples.MusicCollection.Api.AllMusic.Keys;
 using Samples.MusicCollection.Api.AllMusic.Labels;
+using Samples.MusicCollection.Api.AllMusic.MixableTracks.Rules;
 using Samples.MusicCollection.Api.AllMusic.Tracks;
-using Samples.MusicCollection.Api.AllMusic.Tracks.Rules;
 using Samples.MusicCollection.Api.Config;
 
 namespace Samples.MusicCollection.Api;

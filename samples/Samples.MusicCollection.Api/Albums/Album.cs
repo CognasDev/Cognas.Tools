@@ -6,8 +6,8 @@ namespace Samples.MusicCollection.Api.Albums;
 /// 
 /// </summary>
 [IncludeInModelIdService]
-[CommandScaffold(typeof(AlbumRequest), typeof(AlbumResponse), 1, false)]
-[QueryScaffold(typeof(AlbumResponse), 1)]
+[CommandScaffold(typeof(AlbumRequest), typeof(AlbumResponse), 1, false, true)]
+[QueryScaffold(typeof(AlbumResponse), 1, true)]
 public sealed record Album
 {
     #region Property Declarations

@@ -1,4 +1,6 @@
-﻿namespace Cognas.ApiTools.SourceGenerators.CommandScaffold;
+﻿using System.Collections.Generic;
+
+namespace Cognas.ApiTools.SourceGenerators.CommandScaffold;
 
 /// <summary>
 /// 
@@ -37,6 +39,21 @@ internal readonly record struct CommandScaffoldDetail
     /// </summary>
     public readonly bool UseMessaging;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public readonly bool UseDefaultMapper;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public readonly string IdPropertyName;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public readonly IEnumerable<string> PropertyNames;
+
     #endregion
 
     #region Constructor / Finaliser Declarations
@@ -50,12 +67,18 @@ internal readonly record struct CommandScaffoldDetail
     /// <param name="responseName"></param>
     /// <param name="apiVersion"></param>
     /// <param name="useMessaging"></param>
+    /// <param name="useDefaultMapper"></param>
+    /// <param name="idPropertyName"></param>
+    /// <param name="propertyNames"></param>
     public CommandScaffoldDetail(string modelNamespace,
                                  string modelName,
                                  string requestName,
                                  string responseName,
                                  int apiVersion,
-                                 bool useMessaging)
+                                 bool useMessaging,
+                                 bool useDefaultMapper,
+                                 string idPropertyName,
+                                 IEnumerable<string> propertyNames)
     {
         ModelNamespace = modelNamespace;
         ModelName = modelName;
@@ -63,6 +86,9 @@ internal readonly record struct CommandScaffoldDetail
         ResponseName = responseName;
         ApiVersion = apiVersion;
         UseMessaging = useMessaging;
+        UseDefaultMapper = useDefaultMapper;
+        IdPropertyName = idPropertyName;
+        PropertyNames = propertyNames;
     }
 
     #endregion

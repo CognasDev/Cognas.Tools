@@ -27,5 +27,10 @@ internal static class SourceFileNames
     /// </summary>
     public const string QueryEndpointInitiator = "EndpointInitiator.Query.g.cs";
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public const string QueryMappingService = "QueryMappingService.g.cs";
+
     #endregion
 }

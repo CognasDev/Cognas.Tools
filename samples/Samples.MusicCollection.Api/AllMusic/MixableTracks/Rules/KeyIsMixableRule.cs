@@ -1,18 +1,16 @@
-﻿using Samples.MusicCollection.Api.AllMusic.MixableTracks;
-
-namespace Samples.MusicCollection.Api.AllMusic.Tracks.Rules;
+﻿namespace Samples.MusicCollection.Api.AllMusic.MixableTracks.Rules;
 
 /// <summary>
 /// 
 /// </summary>
-public sealed class GenreIsMixabeRule : IMixableTracksRule
+public sealed class KeyIsMixableRule : IMixableTracksRule
 {
     #region Constructor / Finaliser Declarations
 
     /// <summary>
-    /// Default constructor for <see cref="GenreIsMixabeRule"/>
+    /// Default constructor for <see cref="KeyIsMixableRule"/>
     /// </summary>
-    public GenreIsMixabeRule()
+    public KeyIsMixableRule()
     {
     }
 
@@ -28,7 +26,12 @@ public sealed class GenreIsMixabeRule : IMixableTracksRule
     /// <returns></returns>
     public bool IsMixable(MixableTrackRequest trackA, MixableTrackRequest trackB)
     {
-        bool isMixable = trackA.GenreId == trackB.GenreId;
+        if (!trackA.KeyId.HasValue && !trackB.KeyId.HasValue)
+        {
+            return false;
+        }
+        int keyDifference = Math.Abs(trackA.KeyId!.Value - trackB.KeyId!.Value);
+        bool isMixable = keyDifference < 2 || keyDifference > 22;
         return isMixable;
     }
 

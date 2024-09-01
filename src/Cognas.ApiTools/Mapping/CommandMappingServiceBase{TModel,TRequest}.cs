@@ -8,11 +8,9 @@ namespace Cognas.ApiTools.Mapping;
 /// </summary>
 /// <typeparam name="TModel"></typeparam>
 /// <typeparam name="TRequest"></typeparam>
-/// <typeparam name="TResponse"></typeparam>
-public abstract class CommandMappingServiceBase<TModel, TRequest, TResponse> : ICommandMappingService<TModel, TRequest, TResponse>
+public abstract class CommandMappingServiceBase<TModel, TRequest> : ICommandMappingService<TModel, TRequest>
     where TModel : class
     where TRequest : notnull
-    where TResponse : class
 {
     #region Field Declarations
 
@@ -26,7 +24,7 @@ public abstract class CommandMappingServiceBase<TModel, TRequest, TResponse> : I
     #region Constructor / Finaliser Declarations
 
     /// <summary>
-    /// Default constructor for <see cref="CommandMappingServiceBase{TModel,TRequest,TResponse}"/>
+    /// Default constructor for <see cref="CommandMappingServiceBase{TModel,TRequest}"/>
     /// </summary>
     protected CommandMappingServiceBase()
     {

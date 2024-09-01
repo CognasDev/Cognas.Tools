@@ -36,7 +36,7 @@ public sealed partial class {5}CommandApi : CommandApiBase<Model, Request, Respo
     public {5}CommandApi
     (
         ILogger<{5}CommandApi> logger,
-        ICommandMappingService<Model, Request, Response> commandMappingService,
+        ICommandMappingService<Model, Request> commandMappingService,
         IQueryMappingService<Model, Response> queryMappingService,
         IModelIdService modelIdService,
         ICommandBusinessLogic<Model> commandBusinessLogic

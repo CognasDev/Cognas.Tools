@@ -20,6 +20,11 @@ public sealed class QueryScaffoldAttribute : Attribute
     /// </summary>
     public int ApiVersion { get; }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public bool UseDefaultMapper { get; }
+
     #endregion
 
     #region Constructor / Finaliser Declarations
@@ -29,8 +34,9 @@ public sealed class QueryScaffoldAttribute : Attribute
     /// </summary>
     /// <param name="responseType"></param>
     /// <param name="apiVersion"></param>
+    /// <param name="useDefaultMapper"></param>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public QueryScaffoldAttribute(Type responseType, int apiVersion)
+    public QueryScaffoldAttribute(Type responseType, int apiVersion, bool useDefaultMapper)
     {
         if (apiVersion < 1)
         {
@@ -38,6 +44,7 @@ public sealed class QueryScaffoldAttribute : Attribute
         }
         ResponseType = responseType;
         ApiVersion = apiVersion;
+        UseDefaultMapper = useDefaultMapper;
     }
 
     #endregion

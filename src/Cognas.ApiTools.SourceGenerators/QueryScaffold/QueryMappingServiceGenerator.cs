@@ -3,7 +3,7 @@ using Cognas.ApiTools.SourceGenerators.QueryScaffold.Names;
 using Microsoft.CodeAnalysis;
 using System.Text;
 
-namespace Cognas.ApiTools.SourceGenerators.CommandScaffold;
+namespace Cognas.ApiTools.SourceGenerators.QueryScaffold;
 
 /// <summary>
 /// 
@@ -44,7 +44,7 @@ internal static class QueryMappingServiceGenerator
     private static string BuildPropertyMaps(QueryScaffoldDetail detail)
     {
         StringBuilder propertyMapsBuilder = new();
-        propertyMapsBuilder.Append("\t\t\t");
+        propertyMapsBuilder.AppendTab(3);
         propertyMapsBuilder.Append(detail.IdPropertyName);
         propertyMapsBuilder.Append(" = model.");
         propertyMapsBuilder.Append(detail.IdPropertyName);
@@ -52,7 +52,7 @@ internal static class QueryMappingServiceGenerator
 
         foreach (string propertyName in detail.PropertyNames)
         {
-            propertyMapsBuilder.Append("\t\t\t");
+            propertyMapsBuilder.AppendTab(3);
             propertyMapsBuilder.Append(propertyName);
             propertyMapsBuilder.Append(" = model.");
             propertyMapsBuilder.Append(propertyName);

@@ -13,15 +13,8 @@ namespace Cognas.ApiTools.SourceGenerators.CommandScaffold;
 /// 
 /// </summary>
 [Generator]
-public sealed class CommandScaffoldGenerator : IIncrementalGenerator
+public sealed class CommandScaffoldGenerator : GeneratorBase<CommandScaffoldDetail>
 {
-    #region Field Declarations
-
-    private readonly ApiVersionRepsitory _apiVersionRepsitory = new();
-    private readonly DefaultMapperGenerationState _defaultMapperGenerationState = new();
-
-    #endregion
-
     #region Constructor / Finaliser Declarations
 
     /// <summary>
@@ -45,7 +38,7 @@ public sealed class CommandScaffoldGenerator : IIncrementalGenerator
     /// 
     /// </summary>
     /// <param name="context"></param>
-    public void Initialize(IncrementalGeneratorInitializationContext context)
+    public override void Initialize(IncrementalGeneratorInitializationContext context)
     {
         context.RegisterPostInitializationOutput
         (
@@ -71,6 +64,96 @@ public sealed class CommandScaffoldGenerator : IIncrementalGenerator
 
     #endregion
 
+    #region Protected Method Declarations
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="details"></param>
+    protected override void GenerateSource(SourceProductionContext context, ImmutableArray<List<CommandScaffoldDetail>> details)
+    {
+        string commandApiTemplate = TemplateCache.GetTemplate(TemplateNames.CommandApi);
+        IEnumerable<CommandScaffoldDetail> detailsCollection = from detailsList in details
+                                                               from detail in detailsList.OrderBy(detail => detail.ModelName)
+                                                               select detail;
+        ReadOnlySpan<CommandScaffoldDetail> detailsSpan = [.. detailsCollection];
+        StringBuilder commandEndpointInitiatorBuilder = new();
+        ApiVersionRepsitory.Clear();
+        foreach (CommandScaffoldDetail detail in detailsSpan)
+        {
+            string businessLogicTemplate = detail.UseMessaging ?
+                                                  TemplateCache.GetTemplate(TemplateNames.CommandBusinessLogicMessaging) :
+                                                  TemplateCache.GetTemplate(TemplateNames.CommandBusinessLogicNoMessaging);
+
+            string fullModelName = $"{detail.ModelNamespace}.{detail.ModelName}";
+            GenerateApi(context, fullModelName, commandApiTemplate, detail);
+            GenerateBusinessLogic(context, fullModelName, businessLogicTemplate, detail);
+            commandEndpointInitiatorBuilder.GenerateInitiateCommandEndpoints(detail, ApiVersionRepsitory);
+            if (detail.UseDefaultMapper && !DefaultMapperGenerationState.IsGenerated(fullModelName))
+            {
+                CommandMappingServiceGenerator.Generate(context, fullModelName, detail);
+                DefaultMapperGenerationState.SetGenerated(fullModelName);
+            }
+        }
+        GenerateEndpointInitiator(context, commandEndpointInitiatorBuilder);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="fullModelName"></param>
+    /// <param name="template"></param>
+    /// <param name="detail"></param>
+    protected override void GenerateApi(SourceProductionContext context, string fullModelName, string template, CommandScaffoldDetail detail)
+    {
+        string commandApiSource = string.Format(template,
+                                                fullModelName,
+                                                detail.RequestName,
+                                                detail.ResponseName,
+                                                detail.ModelNamespace,
+                                                detail.ApiVersion,
+                                                detail.ModelName);
+        string versionFilename = string.Format(SourceFileNames.CommandApi, detail.ApiVersion);
+        string filename = $"{detail.ModelName}.{versionFilename}";
+        context.AddSource(filename, commandApiSource);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="fullModelName"></param>
+    /// <param name="template"></param>
+    /// <param name="detail"></param>
+    protected override void GenerateBusinessLogic(SourceProductionContext context, string fullModelName, string template, CommandScaffoldDetail detail)
+    {
+        string commandBusinesssLogicSource = string.Format(template,
+                                                           fullModelName,
+                                                           detail.ModelNamespace,
+                                                           detail.ApiVersion,
+                                                           detail.ModelName);
+        string versionFilename = string.Format(SourceFileNames.CommandBusinessLogic, detail.ApiVersion);
+        string filename = $"{detail.ModelName}.{versionFilename}";
+        context.AddSource(filename, commandBusinesssLogicSource);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="endpointInitiatorBuilder"></param>
+    protected override void GenerateEndpointInitiator(SourceProductionContext context, StringBuilder endpointInitiatorBuilder)
+    {
+        string commandEndpointInitiatorTemplate = TemplateCache.GetTemplate(TemplateNames.CommandEndpointInitiator);
+        string endpoints = endpointInitiatorBuilder.ToString();
+        string commandEndpointInitiatorSource = string.Format(commandEndpointInitiatorTemplate, endpoints);
+        context.AddSource(SourceFileNames.CommandEndpointInitiator, commandEndpointInitiatorSource);
+    }
+
+    #endregion
+
     #region Private Method Declarations
 
     /// <summary>
@@ -91,12 +174,7 @@ public sealed class CommandScaffoldGenerator : IIncrementalGenerator
         List<CommandScaffoldDetail> details = [];
         foreach (AttributeData commandScaffoldAttribute in generatorSyntaxContext.Attributes)
         {
-            string requestType = commandScaffoldAttribute.GetConstructorArgumentValue<string>(0);
-            string responseType = commandScaffoldAttribute.GetConstructorArgumentValue<string>(1);
-            int apiVersion = commandScaffoldAttribute.GetConstructorArgumentValue<int>(2);
-            bool useDefaultMapper = commandScaffoldAttribute.GetConstructorArgumentValue<bool>(3);
-            bool useMessaging = commandScaffoldAttribute.GetConstructorArgumentValue<bool>(4);
-            CommandScaffoldDetail detail = new(modelNamespace, modelName, requestType, responseType, apiVersion, useMessaging, useDefaultMapper, idPropertyName, propertyNames);
+            CommandScaffoldDetail detail = CreateDetail(modelNamespace, modelName, idPropertyName, propertyNames, commandScaffoldAttribute);
             details.Add(detail);
         }
         return details;
@@ -105,85 +183,21 @@ public sealed class CommandScaffoldGenerator : IIncrementalGenerator
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="context"></param>
-    /// <param name="details"></param>
-    private void GenerateSource(SourceProductionContext context, ImmutableArray<List<CommandScaffoldDetail>> details)
+    /// <param name="modelNamespace"></param>
+    /// <param name="modelName"></param>
+    /// <param name="idPropertyName"></param>
+    /// <param name="propertyNames"></param>
+    /// <param name="commandScaffoldAttribute"></param>
+    /// <returns></returns>
+    private static CommandScaffoldDetail CreateDetail(string modelNamespace, string modelName, string idPropertyName, IList<string> propertyNames, AttributeData commandScaffoldAttribute)
     {
-        string commandApiTemplate = TemplateCache.GetTemplate(TemplateNames.CommandApi);
-        IEnumerable<CommandScaffoldDetail> detailsCollection = from detailsList in details
-                                                               from detail in detailsList.OrderBy(detail => detail.ModelName)
-                                                               select detail;
-        ReadOnlySpan<CommandScaffoldDetail> detailsSpan = [.. detailsCollection];
-        StringBuilder commandEndpointInitiatorBuilder = new();
-        _apiVersionRepsitory.Clear();
-        foreach (CommandScaffoldDetail detail in detailsSpan)
-        {
-            string fullModelName = $"{detail.ModelNamespace}.{detail.ModelName}";
-            GenerateApi(context, fullModelName, commandApiTemplate, detail);
-            GenerateBusinessLogic(context, fullModelName, detail);
-            commandEndpointInitiatorBuilder.GenerateInitiateCommandEndpoints(detail, _apiVersionRepsitory);
-            if (detail.UseDefaultMapper && !_defaultMapperGenerationState.IsGenerated(fullModelName))
-            {
-                CommandMappingServiceGenerator.Generate(context, fullModelName, detail);
-                _defaultMapperGenerationState.SetGenerated(fullModelName);
-            }
-        }
-        GenerateCommandEndpointInitiator(context, commandEndpointInitiatorBuilder);
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="context"></param>
-    /// <param name="fullModelName"></param>
-    /// <param name="template"></param>
-    /// <param name="detail"></param>
-    private static void GenerateApi(SourceProductionContext context, string fullModelName, string template, CommandScaffoldDetail detail)
-    {
-        string commandApiSource = string.Format(template,
-                                                fullModelName,
-                                                detail.RequestName,
-                                                detail.ResponseName,
-                                                detail.ModelNamespace,
-                                                detail.ApiVersion,
-                                                detail.ModelName);
-        string versionFilename = string.Format(SourceFileNames.CommandApi, detail.ApiVersion);
-        string filename = $"{detail.ModelName}.{versionFilename}";
-        context.AddSource(filename, commandApiSource);
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="context"></param>
-    /// <param name="fullModelName"></param>
-    /// <param name="detail"></param>
-    private static void GenerateBusinessLogic(SourceProductionContext context, string fullModelName, CommandScaffoldDetail detail)
-    {
-        string template = detail.UseMessaging ?
-                          TemplateCache.GetTemplate(TemplateNames.CommandBusinessLogicMessaging) :
-                          TemplateCache.GetTemplate(TemplateNames.CommandBusinessLogicNoMessaging);
-
-        string commandBusinesssLogicSource = string.Format(template,
-                                                           fullModelName,
-                                                           detail.ModelNamespace,
-                                                           detail.ApiVersion,
-                                                           detail.ModelName);
-        string versionFilename = string.Format(SourceFileNames.CommandBusinessLogic, detail.ApiVersion);
-        string filename = $"{detail.ModelName}.{versionFilename}";
-        context.AddSource(filename, commandBusinesssLogicSource);
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="context"></param>
-    /// <param name="commandEndpointInitiatorBuilder"></param>
-    private static void GenerateCommandEndpointInitiator(SourceProductionContext context, StringBuilder commandEndpointInitiatorBuilder)
-    {
-        string commandEndpointInitiatorTemplate = TemplateCache.GetTemplate(TemplateNames.CommandEndpointInitiator);
-        string commandEndpointInitiatorSource = string.Format(commandEndpointInitiatorTemplate, commandEndpointInitiatorBuilder.ToString());
-        context.AddSource(SourceFileNames.CommandEndpointInitiator, commandEndpointInitiatorSource);
+        string requestType = commandScaffoldAttribute.GetConstructorArgumentValue<string>(0);
+        string responseType = commandScaffoldAttribute.GetConstructorArgumentValue<string>(1);
+        int apiVersion = commandScaffoldAttribute.GetConstructorArgumentValue<int>(2);
+        bool useDefaultMapper = commandScaffoldAttribute.GetConstructorArgumentValue<bool>(3);
+        bool useMessaging = commandScaffoldAttribute.GetConstructorArgumentValue<bool>(4);
+        CommandScaffoldDetail detail = new(modelNamespace, modelName, requestType, responseType, apiVersion, useMessaging, useDefaultMapper, idPropertyName, propertyNames);
+        return detail;
     }
 
     #endregion

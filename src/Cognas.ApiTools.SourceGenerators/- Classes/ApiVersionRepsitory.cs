@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 
-namespace Cognas.ApiTools.SourceGenerators.CommandScaffold;
+namespace Cognas.ApiTools.SourceGenerators;
 
 /// <summary>
 /// 
 /// </summary>
-internal sealed class ApiVersionRepsitory
+public sealed class ApiVersionRepsitory
 {
     #region Field Declarations
 

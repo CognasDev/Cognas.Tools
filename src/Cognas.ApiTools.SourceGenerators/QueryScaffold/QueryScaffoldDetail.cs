@@ -5,7 +5,7 @@ namespace Cognas.ApiTools.SourceGenerators.QueryScaffold;
 /// <summary>
 /// 
 /// </summary>
-internal readonly record struct QueryScaffoldDetail
+public readonly record struct QueryScaffoldDetail
 {
     #region Field Declarations
 

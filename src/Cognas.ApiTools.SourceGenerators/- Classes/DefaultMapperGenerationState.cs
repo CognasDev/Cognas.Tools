@@ -7,7 +7,7 @@ namespace Cognas.ApiTools.SourceGenerators;
 /// <summary>
 ///
 /// </summary>
-internal sealed class DefaultMapperGenerationState
+public sealed class DefaultMapperGenerationState
 {
     #region Field Declarations
 

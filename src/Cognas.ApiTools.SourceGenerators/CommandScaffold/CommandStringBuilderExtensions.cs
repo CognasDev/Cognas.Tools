@@ -1,13 +1,11 @@
-﻿using Cognas.ApiTools.SourceGenerators.CommandScaffold;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 
-namespace Cognas.ApiTools.SourceGenerators.QueryScaffold;
+namespace Cognas.ApiTools.SourceGenerators.CommandScaffold;
 
 /// <summary>
 /// 
 /// </summary>
-internal static class StringBuilderExtensions
+internal static class CommandStringBuilderExtensions
 {
     #region Static Method Declarations
 
@@ -17,16 +15,19 @@ internal static class StringBuilderExtensions
     /// <param name="stringBuilder"></param>
     /// <param name="detail"></param>
     /// <param name="apiVersionRepsitory"></param>
-    public static void GenerateInitiateQueryEndpoints(this StringBuilder stringBuilder, QueryScaffoldDetail detail, ApiVersionRepsitory apiVersionRepsitory)
+    public static void GenerateInitiateCommandEndpoints(this StringBuilder stringBuilder, CommandScaffoldDetail detail, ApiVersionRepsitory apiVersionRepsitory)
     {
         if (apiVersionRepsitory.TryAdd(detail.ApiVersion))
         {
             stringBuilder.AppendApiVersionRoute(detail.ApiVersion);
         }
-        stringBuilder.Append("\t\twebApplication.InitiateApi<");
+        stringBuilder.AppendTab(2);
+        stringBuilder.Append("webApplication.InitiateApi<");
         stringBuilder.Append(detail.ModelNamespace);
         stringBuilder.Append('.');
         stringBuilder.Append(detail.ModelName);
+        stringBuilder.Append(", ");
+        stringBuilder.Append(detail.RequestName);
         stringBuilder.Append(", ");
         stringBuilder.Append(detail.ResponseName);
         stringBuilder.Append(">(");

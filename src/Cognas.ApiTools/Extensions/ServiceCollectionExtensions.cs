@@ -13,7 +13,6 @@ using Cognas.ApiTools.ServiceRegistration;
 using Cognas.ApiTools.Services;
 using Cognas.ApiTools.Swagger;
 using Cognas.Tools.Shared.Extensions;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 

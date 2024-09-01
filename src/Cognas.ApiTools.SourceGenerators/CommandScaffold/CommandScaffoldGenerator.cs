@@ -18,6 +18,7 @@ public sealed class CommandScaffoldGenerator : IIncrementalGenerator
     #region Field Declarations
 
     private readonly ApiVersionRepsitory _apiVersionRepsitory = new();
+    private readonly DefaultMapperGenerationState _defaultMapperGenerationState = new();
 
     #endregion
 
@@ -93,8 +94,8 @@ public sealed class CommandScaffoldGenerator : IIncrementalGenerator
             string requestType = commandScaffoldAttribute.GetConstructorArgumentValue<string>(0);
             string responseType = commandScaffoldAttribute.GetConstructorArgumentValue<string>(1);
             int apiVersion = commandScaffoldAttribute.GetConstructorArgumentValue<int>(2);
-            bool useMessaging = commandScaffoldAttribute.GetConstructorArgumentValue<bool>(3);
-            bool useDefaultMapper = commandScaffoldAttribute.GetConstructorArgumentValue<bool>(4);
+            bool useDefaultMapper = commandScaffoldAttribute.GetConstructorArgumentValue<bool>(3);
+            bool useMessaging = commandScaffoldAttribute.GetConstructorArgumentValue<bool>(4);
             CommandScaffoldDetail detail = new(modelNamespace, modelName, requestType, responseType, apiVersion, useMessaging, useDefaultMapper, idPropertyName, propertyNames);
             details.Add(detail);
         }
@@ -121,9 +122,10 @@ public sealed class CommandScaffoldGenerator : IIncrementalGenerator
             GenerateApi(context, fullModelName, commandApiTemplate, detail);
             GenerateBusinessLogic(context, fullModelName, detail);
             commandEndpointInitiatorBuilder.GenerateInitiateCommandEndpoints(detail, _apiVersionRepsitory);
-            if (detail.UseDefaultMapper)
+            if (detail.UseDefaultMapper && !_defaultMapperGenerationState.IsGenerated(fullModelName))
             {
-                CommandMappingServiceGenerator.Generate(context, fullModelName, detail);  
+                CommandMappingServiceGenerator.Generate(context, fullModelName, detail);
+                _defaultMapperGenerationState.SetGenerated(fullModelName);
             }
         }
         GenerateCommandEndpointInitiator(context, commandEndpointInitiatorBuilder);

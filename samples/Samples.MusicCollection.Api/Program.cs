@@ -33,15 +33,8 @@ public sealed class Program
         WebApplicationBuilder webApplicationBuilder = WebApplication.CreateBuilder(args);
 
         webApplicationBuilder.ConfigureLogging(LoggingType.File);
-        webApplicationBuilder.Services.AddData();
-        webApplicationBuilder.Services.AddDefaultHealthChecks();
-        webApplicationBuilder.Services.AddDefaultServices();
-        webApplicationBuilder.Services.AddExceptionHandlers();
-        webApplicationBuilder.Services.AddHttpClientServices();
-        webApplicationBuilder.Services.AddPagination();
-        webApplicationBuilder.Services.AddSignalRServices();
-        webApplicationBuilder.Services.AddVersioning();
-        webApplicationBuilder.Services.ConfigureSwaggerGen();
+        webApplicationBuilder.Services.AddRequiredServices(true);
+        webApplicationBuilder.Services.AddSingleton<IModelIdService, ModelIdService>();
 
         webApplicationBuilder.BindConfigurationSection<AllMusicRoutes>();
         webApplicationBuilder.BindConfigurationSection<MicroserviceUris>();

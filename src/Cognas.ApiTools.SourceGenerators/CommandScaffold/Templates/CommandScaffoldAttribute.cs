@@ -28,12 +28,12 @@ public sealed class CommandScaffoldAttribute : Attribute
     /// <summary>
     /// 
     /// </summary>
-    public bool UseMessaging { get; }
+    public bool UseDefaultMapper { get; }
 
     /// <summary>
     /// 
     /// </summary>
-    public bool UseDefaultMapper { get; }
+    public bool UseMessaging { get; }
 
     #endregion
 
@@ -45,10 +45,10 @@ public sealed class CommandScaffoldAttribute : Attribute
     /// <param name="requestType"></param>
     /// <param name="responseType"></param>
     /// <param name="apiVersion"></param>
-    /// <param name="useMessaging"></param>
     /// <param name="useDefaultMapper"></param>
+    /// <param name="useMessaging"></param>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public CommandScaffoldAttribute(Type requestType, Type responseType, int apiVersion, bool useMessaging, bool useDefaultMapper)
+    public CommandScaffoldAttribute(Type requestType, Type responseType, int apiVersion, bool useDefaultMapper, bool useMessaging = false)
     {
         if (apiVersion < 1)
         {
@@ -57,8 +57,8 @@ public sealed class CommandScaffoldAttribute : Attribute
         RequestType = requestType;
         ResponseType = responseType;
         ApiVersion = apiVersion;
-        UseMessaging = useMessaging;
         UseDefaultMapper = useDefaultMapper;
+        UseMessaging = useMessaging;
     }
 
     #endregion

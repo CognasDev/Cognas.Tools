@@ -13,6 +13,7 @@ using Cognas.ApiTools.ServiceRegistration;
 using Cognas.ApiTools.Services;
 using Cognas.ApiTools.Swagger;
 using Cognas.Tools.Shared.Extensions;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -57,15 +58,25 @@ public static class ServiceCollectionExtensions
     /// 
     /// </summary>
     /// <param name="serviceCollection"></param>
-    public static void AddDefaultServices(this IServiceCollection serviceCollection)
+    /// <param name="useMessaging"></param>
+    public static void AddRequiredServices(this IServiceCollection serviceCollection, bool useMessaging = false)
     {
         serviceCollection.AddAuthorization();
+        serviceCollection.AddData();
         serviceCollection.AddEndpointsApiExplorer();
+        serviceCollection.AddExceptionHandlers();
+        serviceCollection.AddHealthChecks();
         serviceCollection.AddHttpContextAccessor();
+        serviceCollection.AddHttpClientServices();
         serviceCollection.AddMemoryCache();
         serviceCollection.AddProblemDetails();
+        serviceCollection.AddVersioning();
+        serviceCollection.AddSingleton<IPaginationFunctions, PaginationFunctions>();
 
-        serviceCollection.ConfigureOptions<ConfigureSwaggerGenOptions>();
+        if (useMessaging)
+        {
+            serviceCollection.AddSignalRServices();
+        }
 
         GenericServiceRegistration.Instance.AddServices(serviceCollection, typeof(ICommandApi<,,>), ServiceLifetime.Singleton);
         GenericServiceRegistration.Instance.AddServices(serviceCollection, typeof(ICommandBusinessLogic<>), ServiceLifetime.Singleton);
@@ -74,6 +85,9 @@ public static class ServiceCollectionExtensions
         GenericServiceRegistration.Instance.AddServices(serviceCollection, typeof(IQueryApi<,>), ServiceLifetime.Singleton);
         GenericServiceRegistration.Instance.AddServices(serviceCollection, typeof(IQueryBusinessLogic<>), ServiceLifetime.Singleton);
         GenericServiceRegistration.Instance.AddServices(serviceCollection, typeof(IQueryMappingService<,>), ServiceLifetime.Singleton);
+
+        serviceCollection.ConfigureOptions<ConfigureSwaggerGenOptions>();
+        serviceCollection.ConfigureSwaggerGen();
     }
 
     /// <summary>
@@ -102,12 +116,6 @@ public static class ServiceCollectionExtensions
     /// 
     /// </summary>
     /// <param name="serviceCollection"></param>
-    public static void AddPagination(this IServiceCollection serviceCollection) => serviceCollection.AddSingleton<IPaginationFunctions, PaginationFunctions>();
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="serviceCollection"></param>
     public static void AddSignalRServices(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddSignalR();
@@ -118,12 +126,13 @@ public static class ServiceCollectionExtensions
     /// 
     /// </summary>
     /// <param name="serviceCollection"></param>
-    public static void AddVersioning(this IServiceCollection serviceCollection)
+    /// <param name="defaulApiVersion"></param>
+    public static void AddVersioning(this IServiceCollection serviceCollection, int defaulApiVersion = 1)
     {
         serviceCollection.AddApiVersioning(apiVersioningAction =>
         {
             const string xApiVersion = "x-api-version";
-            apiVersioningAction.DefaultApiVersion = new ApiVersion(1);
+            apiVersioningAction.DefaultApiVersion = new ApiVersion(defaulApiVersion);
             apiVersioningAction.AssumeDefaultVersionWhenUnspecified = true;
             apiVersioningAction.ReportApiVersions = true;
             apiVersioningAction.ApiVersionReader = ApiVersionReader.Combine(new UrlSegmentApiVersionReader(),

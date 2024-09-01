@@ -6,8 +6,9 @@ namespace Samples.QuickStart.Example;
 /// 
 /// </summary>
 [IncludeInModelIdService]
-[CommandScaffold(typeof(ExampleRequest), typeof(ExampleResponse), 1, false, true)]
+[CommandScaffold(typeof(ExampleRequest), typeof(ExampleResponse), 1, true)]
 [QueryScaffold(typeof(ExampleResponse), 1, true)]
+[QueryScaffold(typeof(ExampleResponse), 2, true)]
 public sealed record ExampleModel
 {
     /// <summary>

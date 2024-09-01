@@ -19,6 +19,7 @@ public sealed class QueryScaffoldGenerator : IIncrementalGenerator
     #region Field Declarations
 
     private readonly ApiVersionRepsitory _apiVersionRepsitory = new();
+    private readonly DefaultMapperGenerationState _defaultMapperGenerationState = new();
 
     #endregion
 
@@ -121,9 +122,10 @@ public sealed class QueryScaffoldGenerator : IIncrementalGenerator
             GenerateApi(context, fullModelName, queryApiTemplate, detail);
             GenerateBusinessLogic(context, fullModelName, queryBusinessLogicTemplate, detail);
             queryEndpointInitiatorBuilder.GenerateInitiateQueryEndpoints(detail, _apiVersionRepsitory);
-            if (detail.UseDefaultMapper)
+            if (detail.UseDefaultMapper && !_defaultMapperGenerationState.IsGenerated(fullModelName))
             {
                 QueryMappingServiceGenerator.Generate(context, fullModelName, detail);
+                _defaultMapperGenerationState.SetGenerated(fullModelName);
             }
         }
         GenerateQueryEndpointInitiator(context, queryEndpointInitiatorBuilder);

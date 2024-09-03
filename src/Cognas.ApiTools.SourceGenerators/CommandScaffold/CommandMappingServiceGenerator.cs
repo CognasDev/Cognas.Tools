@@ -25,9 +25,11 @@ internal static class CommandMappingServiceGenerator
                                                            fullModelName,
                                                            detail.RequestName,
                                                            detail.ModelNamespace,
+                                                           detail.ApiVersion,
                                                            detail.ModelName,
                                                            propertyMaps);
-        string filename = $"{detail.ModelName}.{SourceFileNames.CommandMappingService}";
+        string versionFilename = string.Format(SourceFileNames.CommandMappingService, detail.ApiVersion);
+        string filename = $"{detail.ModelName}.{versionFilename}";
         context.AddSource(filename, commandMappingServiceSource);
     }
 

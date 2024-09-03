@@ -1,4 +1,4 @@
-﻿namespace Samples.QuickStart.Example;
+﻿namespace Samples.QuickStart.Example.v1;
 
 /// <summary>
 /// 

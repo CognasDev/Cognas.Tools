@@ -3,7 +3,7 @@
 /// <summary>
 /// 
 /// </summary>
-internal static class GeneratedFileNames
+internal static class SourceFileNames
 {
     #region Field Declarations
 

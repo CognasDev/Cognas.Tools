@@ -87,10 +87,10 @@ public sealed class QueryScaffoldGenerator : GeneratorBase<QueryScaffoldDetail>
             GenerateApi(context, fullModelName, queryApiTemplate, detail);
             GenerateBusinessLogic(context, fullModelName, queryBusinessLogicTemplate, detail);
             queryEndpointInitiatorBuilder.GenerateInitiateQueryEndpoints(detail, ApiVersionRepsitory);
-            if (detail.UseDefaultMapper && !DefaultMapperGenerationState.IsGenerated(fullModelName))
+            if (detail.UseDefaultMapper && !DefaultMapperGenerationState.IsGenerated(detail.ResponseName, fullModelName))
             {
                 QueryMappingServiceGenerator.Generate(context, fullModelName, detail);
-                DefaultMapperGenerationState.SetGenerated(fullModelName);
+                DefaultMapperGenerationState.SetGenerated(detail.ResponseName, fullModelName);
             }
         }
         GenerateEndpointInitiator(context, queryEndpointInitiatorBuilder);

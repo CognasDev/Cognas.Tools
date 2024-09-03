@@ -1,5 +1,4 @@
-﻿using Cognas.ApiTools.SourceGenerators.QueryScaffold;
-using Cognas.ApiTools.SourceGenerators.QueryScaffold.Names;
+﻿using Cognas.ApiTools.SourceGenerators.QueryScaffold.Names;
 using Microsoft.CodeAnalysis;
 using System.Text;
 
@@ -26,9 +25,11 @@ internal static class QueryMappingServiceGenerator
                                                          fullModelName,
                                                          detail.ResponseName,
                                                          detail.ModelNamespace,
+                                                         detail.ApiVersion,
                                                          detail.ModelName,
                                                          propertyMaps);
-        string filename = $"{detail.ModelName}.{SourceFileNames.QueryMappingService}";
+        string versionFilename = string.Format(SourceFileNames.QueryMappingService, detail.ApiVersion);
+        string filename = $"{detail.ModelName}.{versionFilename}";
         context.AddSource(filename, queryMappingServiceSource);
     }
 

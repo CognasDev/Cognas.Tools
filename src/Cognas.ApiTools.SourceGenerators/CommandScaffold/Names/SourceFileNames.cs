@@ -30,7 +30,7 @@ internal static class SourceFileNames
     /// <summary>
     /// 
     /// </summary>
-    public const string CommandMappingService = "CommandMappingService.g.cs";
+    public const string CommandMappingService = "CommandMappingService.v{0}.g.cs";
 
     #endregion
 }

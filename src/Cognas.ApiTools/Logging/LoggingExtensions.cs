@@ -11,6 +11,8 @@ namespace Cognas.ApiTools.Logging;
 /// </summary>
 public static class LoggingExtensions
 {
+    #region Static Method Declarations
+
     /// <summary>
     /// 
     /// </summary>
@@ -21,7 +23,7 @@ public static class LoggingExtensions
     /// <param name="openTelemetryApiKeyHeader"></param>
     /// <param name="openTelemetryApiKeyValue"></param>
     /// <param name="openTelemetryServiceName"></param>
-    /// <exception cref="LoggingConfigurationExecption"></exception>
+    /// <exception cref="LoggingConfigurationException"></exception>
     public static void ConfigureLogging(this WebApplicationBuilder webApplicationBuilder, LoggingType loggingType,
                                         string? fileLoggingPath = "log-.log",
                                         string? openTelemetryEndPoint = null,
@@ -34,7 +36,7 @@ public static class LoggingExtensions
         {
             if (string.IsNullOrWhiteSpace(fileLoggingPath))
             {
-                throw new LoggingConfigurationExecption(LoggingType.File);
+                throw new LoggingConfigurationException(LoggingType.File);
             }
             loggerConfiguration.ConfigureFileLogging(fileLoggingPath);
         }
@@ -50,7 +52,7 @@ public static class LoggingExtensions
                 string.IsNullOrWhiteSpace(openTelemetryApiKeyValue) ||
                 string.IsNullOrWhiteSpace(openTelemetryServiceName))
             {
-                throw new LoggingConfigurationExecption(LoggingType.OpenTelemetry);
+                throw new LoggingConfigurationException(LoggingType.OpenTelemetry);
             }
             loggerConfiguration.ConfigureOpenTelemetryLogging(openTelemetryEndPoint, openTelemetryApiKeyHeader, openTelemetryApiKeyValue, openTelemetryServiceName);
         }
@@ -58,4 +60,6 @@ public static class LoggingExtensions
         webApplicationBuilder.Logging.ClearProviders();
         webApplicationBuilder.Logging.AddSerilog(logger);
     }
+
+    #endregion
 }

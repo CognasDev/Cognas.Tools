@@ -11,6 +11,8 @@ namespace Cognas.ApiTools.Logging;
 /// </summary>
 public static class ApplicationInsightsExtensions
 {
+    #region Static Method Declarations
+
     /// <summary>
     /// 
     /// </summary>
@@ -21,7 +23,11 @@ public static class ApplicationInsightsExtensions
         string connectionString = webApplicationBuilder.Configuration.GetValue<string>("ApplicationInsights:ConnectionString") ?? throw new NullReferenceException("ApplicationInsights");
         TelemetryConfiguration telemetryConfiguration = new() { ConnectionString = connectionString };
         webApplicationBuilder.Logging.AddAzureWebAppDiagnostics();
-        webApplicationBuilder.Host.UseSerilog((hostBuilderContext, loggerConfiguration) => loggerConfiguration.ReadFrom.Configuration(hostBuilderContext.Configuration)
-                                                                                                                       .WriteTo.ApplicationInsights(telemetryConfiguration, TelemetryConverter.Traces));
+        webApplicationBuilder.Host.UseSerilog((hostBuilderContext, loggerConfiguration) => loggerConfiguration.ReadFrom
+                                                                                                              .Configuration(hostBuilderContext.Configuration)
+                                                                                                              .WriteTo
+                                                                                                              .ApplicationInsights(telemetryConfiguration, TelemetryConverter.Traces));
     }
+
+    #endregion
 }

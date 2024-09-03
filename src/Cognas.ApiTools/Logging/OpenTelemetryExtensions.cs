@@ -12,16 +12,16 @@ public static class OpenTelemetryExtensions
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="logger"></param>
-    /// <param name="endPoint"></param>
+    /// <param name="loggerConfiguration"></param>
+    /// <param name="endpoint"></param>
     /// <param name="apiKeyHeader"></param>
     /// <param name="apiKeyValue"></param>
     /// <param name="serviceName"></param>
-    public static void ConfigureOpenTelemetryLogging(this LoggerConfiguration logger, string endPoint, string apiKeyHeader, string apiKeyValue, string serviceName)
+    public static void ConfigureOpenTelemetryLogging(this LoggerConfiguration loggerConfiguration, string endpoint, string apiKeyHeader, string apiKeyValue, string serviceName)
     {
-        logger.WriteTo.OpenTelemetry(sinkOptions =>
+        loggerConfiguration.WriteTo.OpenTelemetry(sinkOptions =>
         {
-            sinkOptions.Endpoint = endPoint;
+            sinkOptions.Endpoint = endpoint;
             sinkOptions.Protocol = Serilog.Sinks.OpenTelemetry.OtlpProtocol.HttpProtobuf;
             sinkOptions.Headers = new Dictionary<string, string>(1) { [apiKeyHeader] = apiKeyValue };
             sinkOptions.ResourceAttributes = new Dictionary<string, object>(1) { ["service.name"] = serviceName };

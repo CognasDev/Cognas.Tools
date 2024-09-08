@@ -32,9 +32,9 @@ public sealed class Program
     {
         WebApplicationBuilder webApplicationBuilder = WebApplication.CreateBuilder(args);
 
-        webApplicationBuilder.ConfigureLogging(LoggingType.File);
         webApplicationBuilder.Services.AddRequiredServices(true);
         webApplicationBuilder.Services.AddSingleton<IModelIdService, ModelIdService>();
+        webApplicationBuilder.ConfigureLogging(LoggingType.File);
 
         webApplicationBuilder.BindConfigurationSection<AllMusicRoutes>();
         webApplicationBuilder.BindConfigurationSection<MicroserviceUris>();

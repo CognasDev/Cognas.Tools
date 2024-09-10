@@ -46,12 +46,12 @@ public sealed class ModelIdServiceGenerator : IIncrementalGenerator
             {
                 postInitializationContext.AddSource
                 (
-                    GeneratedFileNames.IdAttribute,
+                    SourceFileNames.IdAttribute,
                     TemplateCache.GetTemplate(TemplateNames.IdAttribute)
                 );
                 postInitializationContext.AddSource
                 (
-                    GeneratedFileNames.IncludeInModelIdServiceAttribute,
+                    SourceFileNames.IncludeInModelIdServiceAttribute,
                     TemplateCache.GetTemplate(TemplateNames.IncludeInModelIdServiceAttribute)
                 );
             }
@@ -116,7 +116,7 @@ public sealed class ModelIdServiceGenerator : IIncrementalGenerator
         string getModelIdName = getModelIdNameBuilder.ToString();
 
         string modelIdServiceSource = string.Format(template, getIds, setIds, idExpression, getModelIdName);
-        context.AddSource(GeneratedFileNames.ModelIdService, modelIdServiceSource);
+        context.AddSource(SourceFileNames.ModelIdService, modelIdServiceSource);
     }
 
     #endregion

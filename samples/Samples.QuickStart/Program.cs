@@ -20,9 +20,9 @@ public sealed class Program
     {
         WebApplicationBuilder webApplicationBuilder = WebApplication.CreateBuilder(args);
 
-        webApplicationBuilder.ConfigureLogging(LoggingType.File);
         webApplicationBuilder.Services.AddRequiredServices();
         webApplicationBuilder.Services.AddSingleton<IModelIdService, ModelIdService>();
+        webApplicationBuilder.ConfigureLogging(LoggingType.File);
 
         WebApplication webApplication = webApplicationBuilder.Build();
         webApplication.InitiateCommandEndpoints();

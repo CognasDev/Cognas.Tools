@@ -90,10 +90,10 @@ public sealed class CommandScaffoldGenerator : GeneratorBase<CommandScaffoldDeta
             GenerateApi(context, fullModelName, commandApiTemplate, detail);
             GenerateBusinessLogic(context, fullModelName, businessLogicTemplate, detail);
             commandEndpointInitiatorBuilder.GenerateInitiateCommandEndpoints(detail, ApiVersionRepsitory);
-            if (detail.UseDefaultMapper && !DefaultMapperGenerationState.IsGenerated(fullModelName))
+            if (detail.UseDefaultMapper && !DefaultMapperGenerationState.IsGenerated(detail.RequestName, fullModelName))
             {
                 CommandMappingServiceGenerator.Generate(context, fullModelName, detail);
-                DefaultMapperGenerationState.SetGenerated(fullModelName);
+                DefaultMapperGenerationState.SetGenerated(detail.RequestName, fullModelName);
             }
         }
         GenerateEndpointInitiator(context, commandEndpointInitiatorBuilder);

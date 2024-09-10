@@ -30,7 +30,7 @@ internal static class SourceFileNames
     /// <summary>
     /// 
     /// </summary>
-    public const string QueryMappingService = "QueryMappingService.g.cs";
+    public const string QueryMappingService = "QueryMappingService.v{0}.g.cs";
 
     #endregion
 }

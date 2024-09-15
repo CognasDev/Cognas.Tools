@@ -21,7 +21,7 @@ public sealed record KeyResponse
     /// 
     /// </summary>
     [JsonPropertyName("camelotCode")]
-    [Required]
+    [Required(AllowEmptyStrings = false)]
     [StringLength(3)]
     public required string CamelotCode { get; init; }
 
@@ -29,7 +29,7 @@ public sealed record KeyResponse
     /// 
     /// </summary>
     [JsonPropertyName("name")]
-    [Required]
+    [Required(AllowEmptyStrings = false)]
     [StringLength(250)]
     public required string Name { get; init; }
 

@@ -57,11 +57,17 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <AndroidResource Remove="- All Music\**" />
 	  <AndroidResource Remove="Views\**" />
+	  <Compile Remove="- All Music\**" />
 	  <Compile Remove="Views\**" />
+	  <EmbeddedResource Remove="- All Music\**" />
 	  <EmbeddedResource Remove="Views\**" />
+	  <MauiCss Remove="- All Music\**" />
 	  <MauiCss Remove="Views\**" />
+	  <MauiXaml Remove="- All Music\**" />
 	  <MauiXaml Remove="Views\**" />
+	  <None Remove="- All Music\**" />
 	  <None Remove="Views\**" />
 	</ItemGroup>
 
@@ -76,14 +82,10 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.82" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.82" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.90" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.90" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 		<PackageReference Include="System.Linq.Async" Version="6.0.1" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="- All Music\" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -43,6 +43,7 @@ public sealed record AlbumResponse
     /// </summary>
     [JsonPropertyName("name")]
     [StringLength(250)]
+    [Required(AllowEmptyStrings = false)]
     public required string Name { get; init; }
 
     /// <summary>

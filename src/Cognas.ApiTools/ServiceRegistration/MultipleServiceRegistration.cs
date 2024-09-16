@@ -49,7 +49,7 @@ public sealed class MultipleServiceRegistration : ServiceRegistrationBase
     public override void AddServices(IServiceCollection serviceCollection, Type interfaceType, ServiceLifetime serviceLifetime, Assembly? assembly = null)
     {
         string interfaceName = interfaceType.Name;
-        GetNonAbstractTypes().FastForEach(type =>
+        GetNonAbstractTypes(assembly).FastForEach(type =>
         {
             Type? implementedInterfaceType = type.GetInterface(interfaceName);
             if (implementedInterfaceType is not null)

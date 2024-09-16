@@ -21,7 +21,7 @@ public sealed record AlbumTrackResponse
     /// 
     /// </summary>
     [JsonPropertyName("name")]
-    [Required]
+    [Required(AllowEmptyStrings = false)]
     [StringLength(250)]
     public required string Name { get; init; }
 
@@ -29,7 +29,7 @@ public sealed record AlbumTrackResponse
     /// 
     /// </summary>
     [JsonPropertyName("genre")]
-    [Required]
+    [Required(AllowEmptyStrings = false)]
     [StringLength(250)]
     public required string Genre { get; init; }
 
@@ -44,7 +44,7 @@ public sealed record AlbumTrackResponse
     /// 
     /// </summary>
     [JsonPropertyName("camelotCode")]
-    [Required]
+    [Required(AllowEmptyStrings = false)]
     [StringLength(3)]
     public string? CamelotCode { get; init; }
 
@@ -52,7 +52,7 @@ public sealed record AlbumTrackResponse
     /// 
     /// </summary>
     [JsonPropertyName("key")]
-    [Required]
+    [Required(AllowEmptyStrings = false)]
     [StringLength(250)]
     public string? Key { get; init; }
 

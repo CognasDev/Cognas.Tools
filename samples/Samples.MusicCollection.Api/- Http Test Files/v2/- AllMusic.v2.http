@@ -4,6 +4,18 @@
 GET {{Samples.MusicCollection.Api_HostAddress}}/api/v2/allmusic
 Accept: application/json
 
+### POST a new album - 201
+POST {{Samples.MusicCollection.Api_HostAddress}}/api/v2/allmusic/albums/
+Content-Type: application/json
+
+{
+    "artistId" : 1,
+    "genreId" : 1,
+    "labelId" : 1,
+    "name" : "test",
+    "releaseDate": "2024-06-22T13:45:21.378Z"
+}
+
 ### Are mixable tracks - 200
 POST {{Samples.MusicCollection.Api_HostAddress}}/api/v2/allmusic/areMixableTracks
 Content-Type: application/json

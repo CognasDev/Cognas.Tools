@@ -21,7 +21,7 @@ public sealed record ArtistAlbumResponse
     /// 
     /// </summary>
     [JsonPropertyName("name")]
-    [Required]
+    [Required(AllowEmptyStrings = false)]
     [StringLength(250)]
     public required string Name { get; init; }
 
@@ -36,7 +36,7 @@ public sealed record ArtistAlbumResponse
     /// 
     /// </summary>
     [JsonPropertyName("label")]
-    [Required]
+    [Required(AllowEmptyStrings = false)]
     [StringLength(250)]
     public required string Label { get; init; }
 

@@ -20,7 +20,7 @@ public sealed record GenreRequest
     /// 
     /// </summary>
     [JsonPropertyName("name")]
-    [Required]
+    [Required(AllowEmptyStrings = false)]
     [StringLength(250)]
     public required string Name { get; init; }
 

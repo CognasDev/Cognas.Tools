@@ -50,7 +50,7 @@ public sealed class GenericServiceRegistration : ServiceRegistrationBase
     public override void AddServices(IServiceCollection serviceCollection, Type interfaceType, ServiceLifetime serviceLifetime, Assembly? assembly = null)
     {
         string interfaceName = interfaceType.Name;
-        GetNonAbstractTypes().FastForEach(type =>
+        GetNonAbstractTypes(assembly).FastForEach(type =>
         {
             Type? implementedInterfaceType = type.GetInterface(interfaceName);
             if (implementedInterfaceType is not null)
@@ -79,21 +79,6 @@ public sealed class GenericServiceRegistration : ServiceRegistrationBase
                 }
             }
         });
-    }
-
-    #endregion
-
-    #region Private Method Declarations
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    private static List<Type> GetNonAbstractTypes()
-    {
-        List<Type> types = [];
-        Assembly.GetEntryAssembly()?.GetTypes().FastForEach(type => !type.IsAbstract, type => types.Add(type));
-        return types;
     }
 
     #endregion

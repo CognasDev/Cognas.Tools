@@ -39,9 +39,6 @@ public sealed class Program
         webApplicationBuilder.BindConfigurationSection<AllMusicRoutes>();
         webApplicationBuilder.BindConfigurationSection<MicroserviceUris>();
 
-        //ModelIdService is auto-generated via SourceGeneration
-        webApplicationBuilder.Services.AddSingleton<IModelIdService, ModelIdService>();
-
         MultipleServiceRegistration.Instance.AddServices(webApplicationBuilder.Services, typeof(IMixableTracksRule), ServiceLifetime.Singleton);
         GenericServiceRegistration.Instance.AddServices(webApplicationBuilder.Services, typeof(ICommandMicroserviceBusinessLogic<,>), ServiceLifetime.Singleton);
         GenericServiceRegistration.Instance.AddServices(webApplicationBuilder.Services, typeof(IQueryMicroserviceBusinessLogic<>), ServiceLifetime.Singleton);

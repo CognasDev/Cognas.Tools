@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
-using Program = Samples.MusicCollection.Api.Program;
+
 
 namespace MusicCollectionApi.IntegrationTests;
 
 /// <summary>
 /// 
 /// </summary>
-public sealed class AlbumTests : IClassFixture<WebApplicationFactory<Program>>
+public sealed class AlbumTests : IClassFixture<TestServer>
 {
     #region Field Declarations
 
@@ -21,7 +21,7 @@ public sealed class AlbumTests : IClassFixture<WebApplicationFactory<Program>>
     /// 
     /// </summary>
     /// <param name="factory"></param>
-    public AlbumTests(WebApplicationFactory<Program> factory)
+    public AlbumTests(TestServer factory)
     {
         IServiceScope scope = factory.Services.CreateScope();
         _httpClient = factory.CreateClient();

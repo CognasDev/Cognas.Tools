@@ -220,18 +220,18 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
     /// <param name="httpContext"></param>
     /// <param name="request"></param>
     /// <returns></returns>
-    private async Task<Results<Created<TResponse>, BadRequest>> PostAsync(HttpContext httpContext, TRequest request)
+    private async Task<Results<CreatedAtRoute<TResponse>, BadRequest>> PostAsync(HttpContext httpContext, TRequest request)
     {
         TModel model = CommandMappingService.RequestToModel(request);
         Result<TModel> insertResult = await CommandBusinessLogic.InsertModelAsync(model).ConfigureAwait(false);
-        Results<Created<TResponse>, BadRequest> apiResult = insertResult.Match<Results<Created<TResponse>, BadRequest>>
+        Results<CreatedAtRoute<TResponse>, BadRequest> apiResult = insertResult.Match<Results<CreatedAtRoute<TResponse>, BadRequest>>
         (
             insertedModel =>
             {
                 int id = ModelIdService!.GetId(insertedModel);
                 TResponse response = QueryMappingService.ModelToResponse(insertedModel);
-                string locationUri = httpContext.BuildLocationUri(LowerPluralModelName, id);
-                return TypedResults.Created(locationUri, response);
+                string routeName = $"Post{PluralModelName}V{ApiVersion}";
+                return TypedResults.CreatedAtRoute<TResponse>(response, routeName, id);
             },
             exception => TypedResults.BadRequest()
         );

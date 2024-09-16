@@ -57,14 +57,13 @@ public abstract class CommandQueryMicroserviceEndpointsBase<TRequest, TResponse>
         return endpointRouteBuilder.MapPost
         (
             $"/{GetRoute(AllMusicRoutes)}",
-            async Task<Results<Created<TResponse>, BadRequest>> (HttpContext httpContext, [FromBody] TRequest request) =>
+            async Task<Results<CreatedAtRoute<TResponse>, BadRequest>> (HttpContext httpContext, [FromBody] TRequest request) =>
             {
                 LocationResponse<TResponse> locationResponse = await CommandBusinessLogic.PostAsync(request).ConfigureAwait(false);
                 if (locationResponse.Success)
                 {
-                    string route = GetRoute(AllMusicRoutes);
-                    string locationUri = httpContext.BuildLocationUri(route, locationResponse.Id!.Value);
-                    return TypedResults.Created(locationUri, locationResponse.Response!);
+                    string routeName = GetRoute(AllMusicRoutes);
+                    return TypedResults.CreatedAtRoute<TResponse>(locationResponse.Response, routeName, locationResponse.Id!.Value);
                 }
                 return TypedResults.BadRequest();
             }

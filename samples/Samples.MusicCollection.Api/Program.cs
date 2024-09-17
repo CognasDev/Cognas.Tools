@@ -1,3 +1,4 @@
+using Cognas.ApiTools.Configuration;
 using Cognas.ApiTools.Endpoints;
 using Cognas.ApiTools.Extensions;
 using Cognas.ApiTools.Logging;
@@ -5,6 +6,8 @@ using Cognas.ApiTools.Microservices;
 using Cognas.ApiTools.ServiceRegistration;
 using Cognas.ApiTools.Shared;
 using Cognas.ApiTools.SourceGenerators;
+using Cognas.ApiTools.Swagger;
+using Cognas.ApiTools.Versioning;
 using Samples.MusicCollection.Api.AllMusic;
 using Samples.MusicCollection.Api.AllMusic.Albums;
 using Samples.MusicCollection.Api.AllMusic.Artists;
@@ -32,6 +35,7 @@ public sealed class Program
     {
         WebApplicationBuilder webApplicationBuilder = WebApplication.CreateBuilder(args);
 
+        webApplicationBuilder.Configuration.ConfigureAppSettings(webApplicationBuilder.Environment);
         webApplicationBuilder.Services.AddRequiredServices(true);
         webApplicationBuilder.Services.AddSingleton<IModelIdService, ModelIdService>();
         webApplicationBuilder.ConfigureLogging(LoggingType.File);

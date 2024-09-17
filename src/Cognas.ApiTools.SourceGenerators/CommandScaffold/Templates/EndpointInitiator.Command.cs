@@ -1,5 +1,6 @@
 ﻿using Cognas.ApiTools.Extensions;
 using Cognas.ApiTools.MinimalApi;
+using Cognas.ApiTools.Versioning;
 using Cognas.Tools.Shared.Extensions;
 using System;
 

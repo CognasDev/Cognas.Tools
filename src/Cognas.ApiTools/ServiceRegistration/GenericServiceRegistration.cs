@@ -50,7 +50,7 @@ public sealed class GenericServiceRegistration : ServiceRegistrationBase
     public override void AddServices(IServiceCollection serviceCollection, Type interfaceType, ServiceLifetime serviceLifetime, Assembly? assembly = null)
     {
         string interfaceName = interfaceType.Name;
-        GetNonAbstractTypes(assembly).FastForEach(type =>
+        GetNonAbstractClasses(assembly).FastForEach(type =>
         {
             Type? implementedInterfaceType = type.GetInterface(interfaceName);
             if (implementedInterfaceType is not null)

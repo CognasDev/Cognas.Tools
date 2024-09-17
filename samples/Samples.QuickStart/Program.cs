@@ -9,8 +9,13 @@ using Cognas.ApiTools.Swagger;
 namespace Samples.QuickStart;
 
 /// <summary>
-/// A (non-functional - compiles and runs, but calling endpoints will return 500) sample of the minimum needed to get an API running.
-/// Please note this example does not include any actual data retreival or health-check endpoints.
+/// A (non-functional - compiles and runs, but calling endpoints will return 500 due to lack of business logic)
+/// sample of the minimum needed to get an API running.
+/// 
+/// The work to get the API functioning is done via the attributes on <see cref="Example.ExampleModel"/> as well
+/// as the service initation code below.
+/// 
+/// Please note, this example does not include any actual data retreival or health-check endpoints.
 /// </summary>
 public sealed class Program
 {

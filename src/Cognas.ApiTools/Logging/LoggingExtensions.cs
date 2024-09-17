@@ -24,7 +24,7 @@ public static class LoggingExtensions
     /// <param name="openTelemetryApiKeyValue"></param>
     /// <param name="openTelemetryServiceName"></param>
     /// <exception cref="LoggingConfigurationException"></exception>
-    public static void ConfigureLogging(this WebApplicationBuilder webApplicationBuilder, LoggingType loggingType,
+    public static ILoggingBuilder ConfigureLogging(this WebApplicationBuilder webApplicationBuilder, LoggingType loggingType,
                                         string? fileLoggingPath = "log-.log",
                                         string? openTelemetryEndPoint = null,
                                         string? openTelemetryApiKeyHeader = "X-Seq-ApiKey",
@@ -58,7 +58,7 @@ public static class LoggingExtensions
         }
         ILogger logger = loggerConfiguration.CreateLogger();
         webApplicationBuilder.Logging.ClearProviders();
-        webApplicationBuilder.Logging.AddSerilog(logger);
+        return webApplicationBuilder.Logging.AddSerilog(logger);
     }
 
     #endregion

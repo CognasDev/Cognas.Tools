@@ -18,13 +18,13 @@ public static class VersioningExtensions
     /// 
     /// </summary>
     /// <param name="serviceCollection"></param>
-    /// <param name="defaulApiVersion"></param>
-    public static void AddVersioning(this IServiceCollection serviceCollection, int defaulApiVersion = 1)
+    /// <param name="defaultApiVersion"></param>
+    public static IApiVersioningBuilder AddVersioning(this IServiceCollection serviceCollection, int defaultApiVersion = 1)
     {
-        serviceCollection.AddApiVersioning(apiVersioningAction =>
+        return serviceCollection.AddApiVersioning(apiVersioningAction =>
         {
             const string xApiVersion = "x-api-version";
-            apiVersioningAction.DefaultApiVersion = new ApiVersion(defaulApiVersion);
+            apiVersioningAction.DefaultApiVersion = new ApiVersion(defaultApiVersion);
             apiVersioningAction.AssumeDefaultVersionWhenUnspecified = true;
             apiVersioningAction.ReportApiVersions = true;
             apiVersioningAction.ApiVersionReader = ApiVersionReader.Combine(new UrlSegmentApiVersionReader(),
@@ -47,8 +47,7 @@ public static class VersioningExtensions
     public static RouteGroupBuilder GetApiVersionRoute(this WebApplication webApplication, int majorVersion)
     {
         ApiVersionSet apiVersionSet = webApplication.NewApiVersionSet().HasApiVersion(majorVersion).ReportApiVersions().Build();
-        RouteGroupBuilder routeGroupBuilder = webApplication.MapGroup("api/v{version:apiVersion}").WithApiVersionSet(apiVersionSet);
-        return routeGroupBuilder;
+        return webApplication.MapGroup("api/v{version:apiVersion}").WithApiVersionSet(apiVersionSet);
     }
 
     #endregion

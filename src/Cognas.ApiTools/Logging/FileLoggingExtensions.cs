@@ -14,10 +14,13 @@ public static class FileLoggingExtensions
     /// </summary>
     /// <param name="loggerConfiguration"></param>
     /// <param name="path"></param>
-    public static void ConfigureFileLogging(this LoggerConfiguration loggerConfiguration, string path)
+    public static LoggerConfiguration ConfigureFileLogging(this LoggerConfiguration loggerConfiguration, string path)
     {
-        loggerConfiguration.WriteTo.File(path, rollingInterval: RollingInterval.Day, outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
-                           .Enrich.FromLogContext();
+        return loggerConfiguration.WriteTo
+                                  .File(path,
+                                        rollingInterval: RollingInterval.Day,
+                                        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+                                  .Enrich.FromLogContext();
     }
 
     #endregion

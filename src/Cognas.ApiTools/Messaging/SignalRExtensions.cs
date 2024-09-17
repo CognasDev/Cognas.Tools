@@ -1,4 +1,5 @@
 ﻿using Cognas.ApiTools.ServiceRegistration;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Cognas.ApiTools.Messaging;
@@ -14,10 +15,10 @@ public static class SignalRExtensions
     /// 
     /// </summary>
     /// <param name="serviceCollection"></param>
-    public static void AddSignalRServices(this IServiceCollection serviceCollection)
+    public static ISignalRServerBuilder AddSignalRServices(this IServiceCollection serviceCollection)
     {
-        serviceCollection.AddSignalR();
         GenericServiceRegistration.Instance.AddServices(serviceCollection, typeof(IModelMessagingService<>), ServiceLifetime.Singleton);
+        return serviceCollection.AddSignalR();
     }
 
     #endregion

@@ -17,10 +17,9 @@ public static class HealthCheckExtensions
     public static IHealthChecksBuilder AddDefaultHealthChecks(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddSingleton<IHealthCheckResultHelper, HealthCheckResultHelper>();
-        IHealthChecksBuilder healthChecksBuilder = serviceCollection.AddHealthChecks()
-                                                                    .AddCheck<ApiHealthCheck>(nameof(ApiHealthCheck))
-                                                                    .AddCheck<DatabaseHealthCheck>(nameof(DatabaseHealthCheck));
-        return healthChecksBuilder;
+        return serviceCollection.AddHealthChecks()
+                                .AddCheck<ApiHealthCheck>(nameof(ApiHealthCheck))
+                                .AddCheck<DatabaseHealthCheck>(nameof(DatabaseHealthCheck));
     }
 
     #endregion

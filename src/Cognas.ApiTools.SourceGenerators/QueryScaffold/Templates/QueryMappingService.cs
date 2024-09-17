@@ -13,7 +13,7 @@ public sealed partial class {4}QueryMappingService : QueryMappingServiceBase<Mod
     #region Constructor / Finaliser Declarations
 
     /// <summary>
-    /// Default constructor for <see cref="{4}QueryMappingServic"/>
+    /// Default constructor for <see cref="{4}QueryMappingService"/>
     /// </summary>
     public {4}QueryMappingService()
     {{

@@ -1,8 +1,8 @@
-﻿using Cognas.ApiTools.Pagination;
+﻿using Cognas.ApiTools.ExceptionHandling;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace Cognas.ApiTools.ExceptionHandling;
+namespace Cognas.ApiTools.Pagination;
 
 /// <summary>
 /// 

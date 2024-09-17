@@ -1,5 +1,4 @@
-﻿using Cognas.ApiTools.ExceptionHandling;
-using Cognas.ApiTools.Pagination;
+﻿using Cognas.ApiTools.Pagination;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;

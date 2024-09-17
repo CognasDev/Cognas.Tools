@@ -1,6 +1,7 @@
 ﻿using Cognas.ApiTools.ServiceRegistration.Abstractions;
 using Cognas.Tools.Shared.Extensions;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Frozen;
 using System.Reflection;
 
 namespace Cognas.ApiTools.ServiceRegistration;
@@ -12,7 +13,7 @@ public abstract class ServiceRegistrationBase : IServiceRegistration
 {
     #region Field Declarations
 
-    private static readonly Lazy<IEnumerable<Type>> _typesFromEntryAssembly = new(() => GetNonAbstractTypesInternal());
+    private static readonly Lazy<FrozenSet<Type>> _types = new(() => GetNonAbstractClassesInternal());
 
     #endregion
 
@@ -43,7 +44,7 @@ public abstract class ServiceRegistrationBase : IServiceRegistration
     /// </summary>
     /// <param name="assembly"></param>
     /// <returns></returns>
-    protected static IEnumerable<Type> GetNonAbstractTypes(Assembly? assembly = null) => assembly == null ? _typesFromEntryAssembly.Value : GetNonAbstractTypesInternal(assembly);
+    protected static FrozenSet<Type> GetNonAbstractClasses(Assembly? assembly = null) => assembly == null ? _types.Value : GetNonAbstractClassesInternal(assembly);
 
     #endregion
 
@@ -54,12 +55,12 @@ public abstract class ServiceRegistrationBase : IServiceRegistration
     /// </summary>
     /// <param name="assembly"></param>
     /// <returns></returns>
-    private static List<Type> GetNonAbstractTypesInternal(Assembly? assembly = null)
+    private static FrozenSet<Type> GetNonAbstractClassesInternal(Assembly? assembly = null)
     {
         List<Type> types = [];
         Assembly assemblyForTypes = assembly ?? Assembly.GetEntryAssembly()!;
-        assemblyForTypes.GetTypes().FastForEach(type => !type.IsAbstract, type => types.Add(type));
-        return types;
+        assemblyForTypes.GetTypes().FastForEach(type => type.IsClass && !type.IsAbstract, type => types.Add(type));
+        return types.ToFrozenSet();
     }
 
     #endregion

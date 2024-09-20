@@ -205,7 +205,7 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
             Summary = $"Deletes a single model via the required '{configureOperation.Parameters[0].Name}' parameter.",
             Tags = [new() { Name = PluralModelName }]
         })
-        .Produces(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status204NoContent)
         .Produces(StatusCodes.Status404NotFound)
         .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError, MediaTypeNames.Application.Json);
     }
@@ -269,13 +269,13 @@ public abstract class CommandApiBase<TModel, TRequest, TResponse> : ICommandApi<
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    private async Task<Results<Ok, NotFound>> DeleteAsync(int id)
+    private async Task<Results<NoContent, NotFound>> DeleteAsync(int id)
     {
         IParameter idParameter = ModelIdService.IdParameter<TModel>(id);
         Result<bool> deleteResult = await CommandBusinessLogic.DeleteModelAsync(idParameter).ConfigureAwait(false);
-        Results<Ok, NotFound> apiResult = deleteResult.Match<Results<Ok, NotFound>>
+        Results<NoContent, NotFound> apiResult = deleteResult.Match<Results<NoContent, NotFound>>
         (
-            success => TypedResults.Ok(),
+            success => TypedResults.NoContent(),
             exception => TypedResults.NotFound()
         );
         return apiResult;

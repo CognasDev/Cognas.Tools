@@ -67,7 +67,7 @@ public static class RouteHandlerBuilderExtensions
             .WithTags(tag)
             .WithOpenApi()
             .Accepts<TRequest>(MediaTypeNames.Application.Json)
-            .Produces<TResponse>(StatusCodes.Status200OK, MediaTypeNames.Application.Json)
+            .Produces<TResponse>(StatusCodes.Status201Created, MediaTypeNames.Application.Json)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError, MediaTypeNames.Application.Json);
     }
@@ -107,7 +107,7 @@ public static class RouteHandlerBuilderExtensions
             .MapToApiVersion(apiVersion)
             .WithTags(tag)
             .WithOpenApi()
-            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status404NotFound)
             .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError, MediaTypeNames.Application.Json);
     }

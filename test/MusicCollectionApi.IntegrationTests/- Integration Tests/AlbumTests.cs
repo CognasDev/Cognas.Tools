@@ -22,7 +22,7 @@ public sealed class AlbumTests : IntegrationTestBase
 
     #endregion
 
-    #region Integration Test Declarations
+    #region Integration Test Declarations - GET
 
     /// <summary>
     /// 

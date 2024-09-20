@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Samples.MusicCollection.Api.AllMusic.MixableTracks.Rules;
 using System.Reflection;
 using Program = Samples.MusicCollection.Api.Program;
@@ -49,6 +50,9 @@ public sealed class TestServer : WebApplicationFactory<Program>
             GenericServiceRegistration.Instance.AddServices(services, typeof(IQueryApi<,>), ServiceLifetime.Singleton, apiAssembly);
             GenericServiceRegistration.Instance.AddServices(services, typeof(IQueryBusinessLogic<>), ServiceLifetime.Singleton, apiAssembly);
             GenericServiceRegistration.Instance.AddServices(services, typeof(IQueryMappingService<,>), ServiceLifetime.Singleton, apiAssembly);
+
+            services.RemoveAll<IHttpClientFactory>();
+            services.AddSingleton<IHttpClientFactory>(new TestHttpClientFactory(this));
         });
     }
 

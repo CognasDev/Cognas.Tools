@@ -1,4 +1,4 @@
-﻿namespace Samples.MusicCollection.App.Config;
+﻿namespace Samples.MusicCollection.App.Configuration;
 
 /// <summary>
 /// 

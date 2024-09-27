@@ -1,8 +1,7 @@
-﻿using Cognas.MauiTools.Shared.Services;
+﻿using Cognas.MaulTools.Shared.Commands;
 using Cognas.MaulTools.Shared.Mvvm;
+using Samples.MusicCollection.App.Navigation;
 using System.Windows.Input;
-using Cognas.MaulTools.Shared.Commands;
-using Samples.MusicCollection.App.Services;
 
 namespace Samples.MusicCollection.App.Artists;
 
@@ -16,7 +15,7 @@ public sealed class ArtistsViewModel : ViewModelBase
     private readonly INavigationService _navigationService;
 
     private ICommand? _getArtistsCommand;
-    private ICommand? _ViewArtistCommand;
+    private ICommand? _viewArtistCommand;
 
     #endregion
 
@@ -41,7 +40,7 @@ public sealed class ArtistsViewModel : ViewModelBase
     /// 
     /// </summary>
     public ICommand ViewArtistCommand =>
-        _ViewArtistCommand ??= new DelegateCommand<Artist>(async artist => await ViewArtistExecuteAsync(artist).ConfigureAwait(false));
+        _viewArtistCommand ??= new DelegateCommand<Artist>(async artist => await ViewArtistExecuteAsync(artist).ConfigureAwait(false));
 
     #endregion
 

@@ -6,7 +6,12 @@
              Title="Music Collection App"
              x:Class="Samples.MusicCollection.App.Artists.ArtistView"
              x:DataType="artists:ArtistViewModel">
-
-    <Label Text="{Binding Artist.Name}" />
+    <Grid>
+        <Grid.GestureRecognizers>
+            <SwipeGestureRecognizer Direction="Left"
+                                    Command="{Binding Path=BindingContext.ViewArtistsCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" />
+        </Grid.GestureRecognizers>
+        <Label Text="{Binding Artist.Name}" />
+    </Grid>
 
 </ContentPage>

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System.Reflection;
 
-namespace Samples.MusicCollection.App.Config;
+namespace Samples.MusicCollection.App.Configuration;
 
 /// <summary>
 /// 

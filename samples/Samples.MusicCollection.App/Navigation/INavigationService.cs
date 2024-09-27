@@ -1,6 +1,6 @@
 ﻿using Samples.MusicCollection.App.Artists;
 
-namespace Samples.MusicCollection.App.Services;
+namespace Samples.MusicCollection.App.Navigation;
 
 /// <summary>
 /// 
@@ -19,6 +19,12 @@ public interface INavigationService
     /// </summary>
     /// <param name="artist"></param>
     Task ToArtistViewAsync(Artist artist);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    Task ToArtistsViewAsync();
 
     #endregion
 }

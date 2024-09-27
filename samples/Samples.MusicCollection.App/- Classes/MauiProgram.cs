@@ -2,8 +2,8 @@
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using Samples.MusicCollection.App.Artists;
-using Samples.MusicCollection.App.Config;
-using Samples.MusicCollection.App.Services;
+using Samples.MusicCollection.App.Configuration;
+using Samples.MusicCollection.App.Navigation;
 
 namespace Samples.MusicCollection.App;
 

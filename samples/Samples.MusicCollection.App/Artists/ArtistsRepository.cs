@@ -1,6 +1,6 @@
 ﻿using Cognas.MauiTools.Shared.Services;
 using Microsoft.Extensions.Options;
-using Samples.MusicCollection.App.Config;
+using Samples.MusicCollection.App.Configuration;
 using System.Collections.ObjectModel;
 
 namespace Samples.MusicCollection.App.Artists;

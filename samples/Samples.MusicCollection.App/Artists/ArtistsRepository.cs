@@ -57,7 +57,8 @@ public sealed class ArtistsRepository : IArtistsRepository
     /// <returns></returns>
     public async Task InitiateAsync()
     {
-        IAsyncEnumerable<Artist> artists = _httpClientService.GetAsyncEnumerable<Artist>($"{_baseAddresses.GetBaseAddress()}{_microserviceUris.Artists}", CancellationToken.None);
+        string requestUri = $"{_baseAddresses.GetBaseAddress()}{_microserviceUris.Artists}";
+        IAsyncEnumerable<Artist> artists = _httpClientService.GetAsyncEnumerable<Artist>(requestUri, CancellationToken.None);
         _artists.Clear();
         await foreach (Artist artist in artists.ConfigureAwait(false))
         {

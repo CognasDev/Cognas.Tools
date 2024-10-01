@@ -1,5 +1,6 @@
 ﻿using Cognas.MaulTools.Shared.Commands;
 using Cognas.MaulTools.Shared.Mvvm;
+using Samples.MusicCollection.App.Albums;
 using Samples.MusicCollection.App.Navigation;
 using System.Windows.Input;
 
@@ -30,6 +31,11 @@ public sealed class ArtistViewModel : ViewModelBase, IQueryAttributable
         set => SetProperty(ref _artist, value);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public AlbumsView Albums { get; }
+
     #endregion
 
     #region Command Declarations
@@ -48,10 +54,11 @@ public sealed class ArtistViewModel : ViewModelBase, IQueryAttributable
     /// Default constructor for <see cref="ArtistViewModel"/>
     /// </summary>
     /// <param name="navigationService"></param>
-    public ArtistViewModel(INavigationService navigationService)
+    public ArtistViewModel(INavigationService navigationService, AlbumsView albumsView)
     {
         ArgumentNullException.ThrowIfNull(navigationService, nameof(navigationService));
         _navigationService = navigationService;
+        Albums = albumsView;
     }
 
     #endregion

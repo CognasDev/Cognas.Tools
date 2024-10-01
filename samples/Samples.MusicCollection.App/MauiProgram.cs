@@ -1,6 +1,7 @@
 ﻿using Cognas.MauiTools.Shared.Services;
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
+using Samples.MusicCollection.App.Albums;
 using Samples.MusicCollection.App.Artists;
 using Samples.MusicCollection.App.Configuration;
 using Samples.MusicCollection.App.Navigation;
@@ -33,10 +34,13 @@ public static class MauiProgram
                           fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                       });
 
+        mauiAppBuilder.Services.AddSingleton<AlbumsView>();
+        mauiAppBuilder.Services.AddSingleton<AlbumsViewModel>();
         mauiAppBuilder.Services.AddSingleton<ArtistViewModel>();
         mauiAppBuilder.Services.AddSingleton<ArtistView>();
         mauiAppBuilder.Services.AddSingleton<ArtistsViewModel>();
         mauiAppBuilder.Services.AddSingleton<ArtistsView>();
+        mauiAppBuilder.Services.AddSingleton<IAlbumsRepository, AlbumsRepository>();
         mauiAppBuilder.Services.AddSingleton<IArtistsRepository, ArtistsRepository>();
         mauiAppBuilder.Services.AddSingleton<IHttpClientService, HttpClientService>();
         mauiAppBuilder.Services.AddSingleton<INavigationService, NavigationService>();

@@ -15,7 +15,9 @@ public sealed class ArtistsViewModel : ViewModelBase
     private readonly INavigationService _navigationService;
 
     private ICommand? _getArtistsCommand;
+    private ICommand? _deleteArtistCommand;
     private ICommand? _viewArtistCommand;
+    private Artist? _selectedArtist;
 
     #endregion
 
@@ -26,6 +28,15 @@ public sealed class ArtistsViewModel : ViewModelBase
     /// </summary>
     public IArtistsRepository ArtistsRepository { get; }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public Artist? SelectedArtist
+    {
+        get => _selectedArtist;
+        set => SetProperty(ref _selectedArtist, value);
+    }
+
     #endregion
 
     #region Command Declarations
@@ -35,6 +46,12 @@ public sealed class ArtistsViewModel : ViewModelBase
     /// </summary>
     public ICommand GetArtistsCommand =>
         _getArtistsCommand ??= new DelegateCommand(async () => await GetArtistsExecuteAsync().ConfigureAwait(false));
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public ICommand DeleteArtistCommand =>
+        _deleteArtistCommand ??= new DelegateCommand<Artist>(async artist => await DeleteArtistExecuteAsync(artist).ConfigureAwait(false));
 
     /// <summary>
     /// 
@@ -69,6 +86,17 @@ public sealed class ArtistsViewModel : ViewModelBase
     private async Task GetArtistsExecuteAsync()
     {
         await ArtistsRepository.InitiateAsync().ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="artist"></param>
+    /// <returns></returns>
+    /// <exception cref="NullReferenceException"></exception>
+    private async Task DeleteArtistExecuteAsync(Artist? artist)
+    {
+        throw new NotImplementedException();
     }
 
     /// <summary>

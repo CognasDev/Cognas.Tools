@@ -93,6 +93,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Albums\AlbumsView.xaml.cs">
+	    <DependentUpon>AlbumsView.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Artists\ArtistView.xaml.cs">
 	    <DependentUpon>ArtistView.xaml</DependentUpon>
 	  </Compile>
@@ -102,6 +105,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Albums\AlbumsView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Artists\ArtistView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
